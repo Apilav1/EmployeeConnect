@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "568338257103",
+    "firebase_url": "https://employeeconnect19.firebaseio.com",
+    "project_id": "employeeconnect19",
+    "storage_bucket": "employeeconnect19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568338257103:android:0a54f29a208d3b33cd13ba",
+        "android_client_info": {
+          "package_name": "com.employeeconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "568338257103-sbbd85ka59ib1n48o4m0pb2t7vq7hr0r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_YJjDfP_YydWhghSQP8ug1huOTFTa4cU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "568338257103-sbbd85ka59ib1n48o4m0pb2t7vq7hr0r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

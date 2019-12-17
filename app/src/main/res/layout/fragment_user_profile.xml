@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollview_user_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.Fragments.UserProfileFragment">
+
+        <ImageView
+                android:id="@+id/background_user_profile"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:background="@drawable/blue_triangle_background"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/myProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="My Profile"
+            android:textColor="@android:color/white"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_user_profile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/circle"
+            android:text="Button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myProfile" />
+
+        <TextView
+            android:id="@+id/username_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="monospace"
+            android:text="Samuel Teroni"
+            android:textColor="@android:color/white"
+            android:textSize="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_user_profile" />
+
+        <TextView
+            android:id="@+id/mail_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="samuelteroni@gmail.com"
+            android:textColor="@android:color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/username_user_profile" />
+
+        <Button
+            android:id="@+id/edit_profile_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/border_button_white_edges"
+            android:padding="3dp"
+            android:text="Edit profile"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mail_user_profile" />
+
+        <TextView
+            android:id="@+id/skillsTittle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="46dp"
+            android:layout_marginTop="40dp"
+            android:text="POSITION"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/skills_user_profile"
+            app:layout_constraintTop_toBottomOf="@id/background_user_profile" />
+
+        <TextView
+            android:id="@+id/skills_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="55dp"
+            android:text="Kotlin programmer"
+            app:layout_constraintBottom_toTopOf="@+id/teamTitle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/skillsTittle" />
+
+
+        <TextView
+            android:id="@+id/teamTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="46dp"
+            android:text="TEAM"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@id/team_user_profile"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/skills_user_profile" />
+
+        <TextView
+            android:id="@+id/team_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="55dp"
+            android:text="Team 4"
+            app:layout_constraintBottom_toTopOf="@+id/currentProjectTitle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/teamTitle" />
+
+
+        <TextView
+            android:id="@+id/currentProjectTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="46dp"
+            android:text="CURRENT PROJECT"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/team_user_profile"
+            app:layout_constraintBottom_toTopOf="@id/currentProject_user_profile"/>
+
+        <TextView
+            android:id="@+id/currentProject_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="55dp"
+            android:layout_marginBottom="35dp"
+            android:text="Smart bad"
+            app:layout_constraintBottom_toTopOf="@id/logout_user_profile"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/currentProjectTitle"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+
+        <Button
+            android:id="@+id/logout_user_profile"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/currentProject_user_profile"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/delete_user_profile"
+            android:layout_marginRight="32dp"
+            android:layout_marginLeft="2dp"
+            android:text="Log out"
+            android:background="@drawable/border_button_blue_edges"
+            android:layout_marginBottom="32dp"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/picture_user_profile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@android:color/white"
+            android:elevation="22dp"
+            app:layout_constraintBottom_toBottomOf="@+id/button_user_profile"
+            app:layout_constraintEnd_toEndOf="@+id/button_user_profile"
+            app:layout_constraintStart_toStartOf="@+id/button_user_profile"
+            app:layout_constraintTop_toTopOf="@+id/button_user_profile" />
+
+        <Button
+            android:id="@+id/delete_user_profile"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:background="@drawable/border_button_blue_edges"
+            android:text="Delete profile"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/logout_user_profile"
+            app:layout_constraintTop_toBottomOf="@id/currentProject_user_profile"
+            app:layout_constraintVertical_bias="0.529" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

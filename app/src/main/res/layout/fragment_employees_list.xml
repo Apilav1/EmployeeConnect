@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/element_row_recycleview"
+    android:layout_margin="4dp"
+    app:cardElevation="1dp"
+    android:outlineAmbientShadowColor="@android:color/darker_gray">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@drawable/element_row_recycleview"
+        android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imageview_fragment_employees_list"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintBottom_toBottomOf="@id/position_fragment_employees_list"
+        android:layout_marginTop="12dp"
+        app:civ_border_color="@android:color/black"
+        app:civ_border_width="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/btn_star_big_on"
+        app:layout_constraintRight_toLeftOf="@id/username_fragment_employees_list"
+    />
+
+        <TextView
+            android:id="@+id/username_fragment_employees_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Andrey Breslav"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/position_fragment_employees_list"
+            app:layout_constraintStart_toEndOf="@+id/imageview_fragment_employees_list"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+        android:id="@+id/position_fragment_employees_list"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="32dp"
+        android:text="System Administrator"
+        android:textSize="14sp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/imageview_fragment_employees_list"
+        app:layout_constraintTop_toBottomOf="@+id/username_fragment_employees_list"
+        app:layout_constraintVertical_bias="0.0" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/github_logo_imageview"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageview_fragment_employees_list" />
+
+        <TextView
+            android:id="@+id/github_textview_fragment_employees_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="itsBreslav"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/github_logo_imageview"
+            app:layout_constraintTop_toBottomOf="@id/position_fragment_employees_list"
+            app:layout_constraintVertical_bias="0.27" />
+
+        <ImageView
+            android:id="@+id/linkedin_logo_imageview"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@id/github_textview_fragment_employees_list"
+            app:layout_constraintRight_toLeftOf="@id/linkedin_textview_fragment_employees_list"
+            app:layout_constraintTop_toBottomOf="@id/position_fragment_employees_list"
+            app:layout_constraintBottom_toBottomOf="@id/github_textview_fragment_employees_list"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/linkedin_textview_fragment_employees_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="iBreslav"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/linkedin_logo_imageview"
+            app:layout_constraintTop_toBottomOf="@id/position_fragment_employees_list"
+            app:layout_constraintVertical_bias="0.255" />
+
+        <TextView
+            android:id="@+id/sendmessage_textview_fragment_employees_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:text="Send message to this contact"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginBottom="8dp"
+            android:textSize="12dp"
+            android:textColor="@color/profileBackgroundColor"
+        />
+
+        <ImageView
+            android:id="@+id/arrow_fragment_employees_list"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

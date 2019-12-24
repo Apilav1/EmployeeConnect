@@ -16,8 +16,9 @@ data class User (
     val teamName: String,
     val currentProject: String,
     val verified: Boolean,
-    val moderator: Boolean
+    val moderator: Boolean,
+    val chatRooms: ArrayList<String>
 ): Parcelable{
     constructor(): this("", "", "","",
-        "", "", "", "", "", "", false, false)
+        "", "", "", "", "", "", false, false, ArrayList())
 }

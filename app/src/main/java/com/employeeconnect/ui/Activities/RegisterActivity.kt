@@ -70,7 +70,7 @@ class RegisterActivity : AppCompatActivity(),
         val user = User("", username_register.text.toString(),  BasicInfoRegisterFragment.selectedPhotoUriString,
                             email_register.text.toString(), github_username_register.text.toString(),
                             linkenin_link_register.text.toString(), skills_register.text.toString(),
-                            position_register.text.toString(), team_register.text.toString(), "", false, false)
+                            position_register.text.toString(), team_register.text.toString(), "", false, false, ArrayList())
 
         try {
             RegisterUserCommand(user, password_register.text.toString()){

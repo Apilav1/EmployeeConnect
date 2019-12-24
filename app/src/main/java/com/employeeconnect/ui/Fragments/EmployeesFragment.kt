@@ -1,6 +1,7 @@
 package com.employeeconnect.ui.Fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,6 +19,8 @@ import com.employeeconnect.data.dummy.DummyContent
 import com.employeeconnect.data.dummy.DummyContent.DummyItem
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.GetUsersCommand
+import com.employeeconnect.ui.Activities.ChatLogActivity
+import com.employeeconnect.ui.Activities.HomeActivity
 import com.employeeconnect.ui.view.UserRow
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -89,6 +92,13 @@ class EmployeesFragment : Fragment() {
         catch (e: Exception){
             Toast.makeText(context, e.message.toString(), Toast.LENGTH_SHORT).show()
         }
+
+        adapter.setOnItemClickListener { item, view ->
+            val userItem = item as UserRow
+            val intent = Intent(view.context, ChatLogActivity::class.java)
+            intent.putExtra(USER_KEY, userItem.user)
+            startActivity(intent)
+        }
     }
 
     override fun onDetach() {
@@ -109,13 +119,14 @@ class EmployeesFragment : Fragment() {
      */
     interface OnListEmployeesFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListEmployeesFragmentInteraction(item: DummyItem?)
+        fun onListEmployeesFragmentInteraction(user: User)
     }
 
     companion object {
 
         // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
+        const val USER_KEY = "USER_KEY"
 
         // TODO: Customize parameter initialization
         @JvmStatic

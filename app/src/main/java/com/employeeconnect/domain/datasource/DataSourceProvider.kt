@@ -2,6 +2,8 @@ package com.employeeconnect.domain.datasource
 
 import android.util.Log
 import com.employeeconnect.data.Server.FirebaseServer
+import com.employeeconnect.domain.Models.ChatRoom
+import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.extensions.firstResult
 
@@ -27,6 +29,22 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         catch (e: Exception){
             throw (e)
         }
+    }
+
+    fun getCurrentUserId() = requestToSources{
+          it.getCurrentUserId()
+    }
+
+    fun fetchCurrentUser() = requestToSources{
+          it.fetchCurrentUser()
+    }
+
+    fun createChatRoom(usersId: ArrayList<String>, callback: (chatRoomId: String) -> Unit) = requestToSources {
+         it.createChatRoom(ChatRoom(usersId), callback)
+    }
+
+    fun sendMessage(chatRoomId: String, message: Message) = requestToSources {
+        it.sendMessage(chatRoomId, message)
     }
 
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }

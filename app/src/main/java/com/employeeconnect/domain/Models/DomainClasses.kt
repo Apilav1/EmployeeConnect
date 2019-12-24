@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-
+@Parcelize
 data class User (
     var uid: String,
     val username: String,
@@ -17,54 +17,27 @@ data class User (
     val teamName: String,
     val currentProject: String,
     val verified: Boolean,
-    val moderator: Boolean
+    val moderator: Boolean,
+    val chatRooms: ArrayList<String>
 ): Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readString()!!,
-        parcel.readByte() != 0.toByte(),
-        parcel.readByte() != 0.toByte()
-    )
 
     constructor(): this("", "", "","",
-        "", "", "", "", "", "", false, false)
+        "", "", "", "", "", "", false, false, ArrayList())
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(uid)
-        parcel.writeString(username)
-        parcel.writeString(profileImageUrl)
-        parcel.writeString(email)
-        parcel.writeString(githubUsername)
-        parcel.writeString(linkedInUsername)
-        parcel.writeString(skills)
-        parcel.writeString(position)
-        parcel.writeString(teamName)
-        parcel.writeString(currentProject)
-        parcel.writeByte(if (verified) 1 else 0)
-        parcel.writeByte(if (moderator) 1 else 0)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object {
-        @JvmField val CREATOR = object : Parcelable.Creator<User> {
-            override fun createFromParcel(parcel: Parcel): User {
-                return User(parcel)
-            }
-
-            override fun newArray(size: Int): Array<User?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
 }
+
+@Parcelize
+class ChatRoom(val usersId: ArrayList<String>) : Parcelable {
+    constructor(): this(ArrayList())
+}
+
+@Parcelize
+class Message(val fromUser: String, val toUser: String, val text: String, val timeStamp: Long): Parcelable{
+    constructor(): this("", "", "", 0L)
+}
+
+
+class ChatMessage(val id: String, val text: String, val timeStamp: Long){
+    constructor(): this("", "", 0L)
+}
+

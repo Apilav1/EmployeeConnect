@@ -2,10 +2,10 @@ package com.employeeconnect.domain.commands
 
 import com.employeeconnect.domain.datasource.DataSourceProvider
 
-class VerifyUserIsLoggedInCommand (private val dataSourceProvider: DataSourceProvider = DataSourceProvider()) : Command<Boolean> {
+class GetCurrentUserIdCommand (private val dataSourceProvider: DataSourceProvider = DataSourceProvider()) : Command<String?> {
 
-    override fun execute(): Boolean {
-        return dataSourceProvider.verifyUserIsLoggedIn()
+    override fun execute(): String? {
+        return dataSourceProvider.getCurrentUserId()
     }
 
 }

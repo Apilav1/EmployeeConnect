@@ -10,12 +10,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import android.view.Menu
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
@@ -25,23 +23,13 @@ import com.employeeconnect.ui.Fragments.MessagesFragment
 import com.employeeconnect.ui.Fragments.UserProfileFragment
 import com.employeeconnect.R
 import com.employeeconnect.data.Server.Config
-import com.employeeconnect.data.Server.FirebaseGetUsersRequest
 import com.employeeconnect.data.dummy.DummyContent
 import com.employeeconnect.domain.Models.User
-import com.employeeconnect.domain.commands.GetUsersCommand
-import com.employeeconnect.domain.commands.RegisterUserCommand
-import com.employeeconnect.ui.view.UserRow
+import com.employeeconnect.domain.commands.FetchCurrentUserCommand
+import com.employeeconnect.domain.commands.GetCurrentUserIdCommand
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_home.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.doAsyncResult
-import org.jetbrains.anko.onComplete
-import org.jetbrains.anko.uiThread
-import java.lang.Exception
-import java.util.ArrayList
 
 
 class HomeActivity : AppCompatActivity(),
@@ -71,6 +59,8 @@ class HomeActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        verifyUserIsLoggedIn()
+
         replaceFragment(EmployeesFragment())
 
         mRegistrationBroadcastReceiver = object:BroadcastReceiver(){
@@ -84,6 +74,7 @@ class HomeActivity : AppCompatActivity(),
             }
 
         }
+
 
         bottom_navigation.setOnNavigationItemSelectedListener {
 
@@ -108,12 +99,26 @@ class HomeActivity : AppCompatActivity(),
         }
     }
 
+    private fun verifyUserIsLoggedIn() {
+
+        currentUserId = GetCurrentUserIdCommand().execute()
+        if(currentUserId == null){
+             val intent = Intent(this, LoginActivity::class.java)
+             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+             startActivity(intent)
+        }
+        else{
+             FetchCurrentUserCommand().execute()
+        }
+    }
+
     private fun showNotification(tittle: String, message: String?) {
         Log.d(TAG, tittle+" "+message)
 
         val intent = Intent(applicationContext, HomeActivity::class.java)
         val contentIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val builder = NotificationCompat.Builder(applicationContext)
+        //TODO: builder deprecated -> https://stackoverflow.com/questions/45462666/notificationcompat-builder-deprecated-in-android-o
+        val builder = NotificationCompat.Builder(applicationContext, "1")
         builder.setAutoCancel(true)
             .setDefaults(Notification.DEFAULT_ALL)
             .setWhen(System.currentTimeMillis())
@@ -135,12 +140,13 @@ class HomeActivity : AppCompatActivity(),
         fragmentTransaction.commit()
     }
 
-    override fun onListEmployeesFragmentInteraction(item: DummyContent.DummyItem?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onListEmployeesFragmentInteraction(user: User) {
+
     }
 
     override fun onListMessagesFragmentInteraction(item: com.employeeconnect.ui.Fragments.dummy.DummyContent.DummyItem?) {
         val intent = Intent(this, ChatLogActivity::class.java)
+//        intent.putExtra(USER_KEY, )
         startActivity(intent)
     }
 
@@ -274,5 +280,10 @@ class HomeActivity : AppCompatActivity(),
 
     companion object{
         private const val TAG =  "HomeAkttt"
+
+        var currentUser: User? = null
+        var currentUserId: String? = null
+
+        const val USER_KEY = "USER_KEY"
     }
 }

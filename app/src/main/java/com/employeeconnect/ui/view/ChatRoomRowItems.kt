@@ -8,7 +8,7 @@ import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.chat_left_side_row.view.*
 import kotlinx.android.synthetic.main.chat_right_side_row.view.*
 
-class ChatFromCurrentUserItem(val text: String, val user: User): Item<GroupieViewHolder>() {
+class ChatFromCurrentUserItem(val text: String): Item<GroupieViewHolder>() {
 
     override fun getLayout(): Int {
         return R.layout.chat_right_side_row

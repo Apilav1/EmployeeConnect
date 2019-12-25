@@ -21,7 +21,7 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
 
     companion object{
 
-        private val TAG = "FirebaseSERVER"
+        private val TAG = "CHATTT"
     }
 
     override fun registerNewUser(
@@ -86,14 +86,39 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
 
     override fun sendMessage(chatRoomId: String, message: Message){
 
-        FirebaseFirestore.getInstance().collection("chatRooms").document(chatRoomId).collection("messages")
+        FirebaseFirestore.getInstance().collection("chatRooms")
+            .document(chatRoomId).collection("messages")
             .add(message)
             .addOnSuccessListener {
-
+                Log.d(TAG, "message sent")
             }
             .addOnFailureListener {
-                Log.d(TAG, "New chat room messages not created")
+                Log.d(TAG, "message was not sent")
             }
+    }
+
+    override fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit){
+            FirebaseFirestore.getInstance().collection("chatRooms")
+                .document(chatRoomId).collection("messages")
+                .addSnapshotListener { snapshot, firebaseFirestoreException ->
+                        if (firebaseFirestoreException != null) {
+                            Log.w(TAG, "Listen failed.", firebaseFirestoreException)
+                            return@addSnapshotListener
+                        }
+
+                        val result: ArrayList<Message>
+
+                        if(snapshot != null){
+                            result = ArrayList()
+                            for(message in snapshot){
+                                Log.d("CHATTT", message.toString())
+                                result.add(message.toObject(Message::class.java))
+
+                                callback(result)
+                            }
+                        }
+
+                }
     }
 
     fun firebaseMessaging(){

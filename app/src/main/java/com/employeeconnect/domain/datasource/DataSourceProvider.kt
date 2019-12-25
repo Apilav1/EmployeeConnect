@@ -47,6 +47,10 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         it.sendMessage(chatRoomId, message)
     }
 
+    fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit) = requestToSources {
+        it.setMessageListener(chatRoomId, callback)
+    }
+
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }
 
 }

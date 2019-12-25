@@ -18,4 +18,6 @@ interface DataSource{
 
     fun sendMessage(chatRoomId: String, message: Message)
 
+    fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit)
+
 }

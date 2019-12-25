@@ -18,11 +18,11 @@ data class User (
     val currentProject: String,
     val verified: Boolean,
     val moderator: Boolean,
-    val chatRooms: ArrayList<String>
+    val chatRooms: HashMap<String, String> // chatRoom id and users
 ): Parcelable {
 
     constructor(): this("", "", "","",
-        "", "", "", "", "", "", false, false, ArrayList())
+        "", "", "", "", "", "", false, false, HashMap())
 
 }
 

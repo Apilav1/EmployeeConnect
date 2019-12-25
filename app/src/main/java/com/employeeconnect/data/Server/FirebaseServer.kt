@@ -65,6 +65,14 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
                 return@addSnapshotListener
             }
             if (snapshot != null && snapshot.exists()) {
+                val map = snapshot.data?.get("chatRooms") as HashMap<String, String>
+
+//                for(m in map)
+//                    Log.d("hhh", m)
+                for ((key, value) in map) {
+                    Log.d("hhh", "$key = $value")
+                }
+                Log.d("hhh", snapshot.data?.get("chatRooms")?.toString())
                 HomeActivity.currentUser = snapshot.toObject(User::class.java)
             }
         }
@@ -126,12 +134,20 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
         Log.d("CHATTT", "ulazim u addChatRoomIdToUs"+usersIds.size.toString())
         val ref = FirebaseFirestore.getInstance().collection("users")
 
-        usersIds.forEach {
-             ref.document(it).update("rooms", FieldValue.arrayUnion(chatRoomId))
-                 .addOnSuccessListener {
-                     Log.d("CHATTT", "dodao ")
-                 }
-        }
+        val user1 = usersIds[0]
+        val user2 = usersIds[1]
+
+        val map1 = mutableMapOf(chatRoomId to user1)
+        val map2 = mutableMapOf(chatRoomId to user2)
+
+        ref.document(user1).update("chatRooms", map2)
+            .addOnSuccessListener {
+                Log.d("CHATTT", "dodao ")
+            }
+        ref.document(user2).update("chatRooms", map1)
+            .addOnSuccessListener {
+                Log.d("CHATTT", "dodao ")
+            }
 
     }
 

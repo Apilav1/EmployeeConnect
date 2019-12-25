@@ -41,19 +41,26 @@ class ChatLogActivity : AppCompatActivity() {
          */
         if(currentUser?.chatRooms?.size == 0){
             Log.d(TAG, "nema soba")
-            CreateChatRoomCommand(arrayListOf(currentUser!!.uid, toUser!!.uid)){
-                 currentUser!!.chatRooms.add(it)
-                 currentCharRoomId = it
-
-                 AddChatRoomIdToUsersCommand(arrayListOf(currentUser!!.uid, toUser!!.uid), currentCharRoomId!!).execute()
-                Log.d(TAG, "dobili id $it")
-            }.execute()
+            createRoom()
         }
         else{
             Log.d(TAG, "ima soba")
             /**
              * find the correct room
              */
+            var charRoomAlreadyExists: Boolean = false
+            for ((key, value) in currentUser!!.chatRooms){
+                Log.d("CHATTT", key+" "+value)
+                if(value == toUser!!.uid) {
+                    currentCharRoomId = key
+                    charRoomAlreadyExists = true
+                    setMessageListener()
+                    break
+                }
+            }
+            if(!charRoomAlreadyExists){
+                //createRoom()
+            }
 
         }
         //TODO: u createRoom or FindCorrectRoom ide listener
@@ -69,22 +76,37 @@ class ChatLogActivity : AppCompatActivity() {
 
             if(!messageListenerSet){
                 messageListenerSet = true
-
-                SetMessagesListenerCommand(currentCharRoomId!!){ messages->
-                    adapter.clear()
-
-                    messages.forEach {
-                        if(it.fromUser == currentUser!!.uid){
-                            adapter.add(ChatFromCurrentUserItem(it.text))
-                        }
-                        else{
-                            adapter.add(ChatToUserItem(it.text, toUser!!))
-                        }
-                    }
-                }.execute()
+                setMessageListener()
             }
             //TODO: latest messages
         }
+    }
+
+    private fun setMessageListener(){
+
+        SetMessagesListenerCommand(currentCharRoomId!!){ messages->
+            adapter.clear()
+
+            messages.forEach {
+                if(it.fromUser == currentUser!!.uid){
+                    adapter.add(ChatFromCurrentUserItem(it.text))
+                }
+                else{
+                    adapter.add(ChatToUserItem(it.text, toUser!!))
+                }
+            }
+        }.execute()
+
+    }
+
+    private fun createRoom(){
+        CreateChatRoomCommand(arrayListOf(currentUser!!.uid, toUser!!.uid)){
+            //currentUser!!.chatRooms.add(it)
+            currentCharRoomId = it
+
+            AddChatRoomIdToUsersCommand(arrayListOf(currentUser!!.uid, toUser!!.uid), currentCharRoomId!!).execute()
+            Log.d(TAG, "dobili id $it")
+        }.execute()
     }
 
     companion object{

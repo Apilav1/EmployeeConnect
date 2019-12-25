@@ -7,6 +7,7 @@ import com.employeeconnect.R
 import com.employeeconnect.domain.Models.ChatRoom
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
+import com.employeeconnect.domain.commands.AddChatRoomIdToUsersCommand
 import com.employeeconnect.domain.commands.CreateChatRoomCommand
 import com.employeeconnect.domain.commands.SendMessageCommand
 import com.employeeconnect.domain.commands.SetMessagesListenerCommand
@@ -43,6 +44,8 @@ class ChatLogActivity : AppCompatActivity() {
             CreateChatRoomCommand(arrayListOf(currentUser!!.uid, toUser!!.uid)){
                  currentUser!!.chatRooms.add(it)
                  currentCharRoomId = it
+
+                 AddChatRoomIdToUsersCommand(arrayListOf(currentUser!!.uid, toUser!!.uid), currentCharRoomId!!).execute()
                 Log.d(TAG, "dobili id $it")
             }.execute()
         }
@@ -67,11 +70,11 @@ class ChatLogActivity : AppCompatActivity() {
             if(!messageListenerSet){
                 messageListenerSet = true
 
-                SetMessagesListenerCommand(currentCharRoomId!!){
+                SetMessagesListenerCommand(currentCharRoomId!!){ messages->
                     adapter.clear()
 
-                    it.forEach {
-                        if(it.fromUser.equals(currentUser!!.uid)){
+                    messages.forEach {
+                        if(it.fromUser == currentUser!!.uid){
                             adapter.add(ChatFromCurrentUserItem(it.text))
                         }
                         else{

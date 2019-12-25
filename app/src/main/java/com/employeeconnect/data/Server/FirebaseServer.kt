@@ -12,6 +12,7 @@ import com.employeeconnect.ui.Activities.HomeActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import org.jetbrains.anko.doAsync
@@ -119,6 +120,19 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
                         }
 
                 }
+    }
+
+    override fun addChatRoomIdToUsers(usersIds: ArrayList<String>, chatRoomId: String) {
+        Log.d("CHATTT", "ulazim u addChatRoomIdToUs"+usersIds.size.toString())
+        val ref = FirebaseFirestore.getInstance().collection("users")
+
+        usersIds.forEach {
+             ref.document(it).update("rooms", FieldValue.arrayUnion(chatRoomId))
+                 .addOnSuccessListener {
+                     Log.d("CHATTT", "dodao ")
+                 }
+        }
+
     }
 
     fun firebaseMessaging(){

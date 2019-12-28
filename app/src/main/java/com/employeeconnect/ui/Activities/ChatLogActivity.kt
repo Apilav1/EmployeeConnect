@@ -37,10 +37,32 @@ class ChatLogActivity : AppCompatActivity() {
 
         recycleview_chat_log.adapter = adapter
 
-        /*
-         * new user
-         */
-        if(currentUser?.chatRooms?.size == 0){
+        dealWithChatRooms()
+
+       sendbutton_chat_log.setOnClickListener {
+                performSendMessage()
+        }
+    }
+
+    private fun performSendMessage(){
+
+        val message = Message(currentUser!!.uid, toUser!!.uid, edittext_chat_log.text.toString(), System.currentTimeMillis() / 1000)
+        SendMessageCommand(currentCharRoomId!!, message).execute()
+
+        edittext_chat_log.text.clear()
+        recycleview_chat_log.scrollToPosition(adapter.itemCount - 1)
+
+        if(!messageListenerSet){
+            messageListenerSet = true
+            setMessageListener()
+        }
+        //TODO: latest messages
+    }
+
+    private fun dealWithChatRooms(){
+        val currentUserHaveNoRooms = currentUser?.chatRooms?.size == 0
+
+        if(currentUserHaveNoRooms){
             Log.d(TAG, "nema soba")
             createRoom()
         }
@@ -66,22 +88,6 @@ class ChatLogActivity : AppCompatActivity() {
 
         }
         //TODO: u createRoom or FindCorrectRoom ide listener
-        sendbutton_chat_log.setOnClickListener {
-
-            val message = Message(currentUser!!.uid, toUser!!.uid, edittext_chat_log.text.toString(), System.currentTimeMillis() / 1000)
-            SendMessageCommand(currentCharRoomId!!, message).execute()
-
-            //adapter.add(ChatFromCurrentUserItem(edittext_chat_log.text.toString()))
-
-            edittext_chat_log.text.clear()
-            recycleview_chat_log.scrollToPosition(adapter.itemCount - 1)
-
-            if(!messageListenerSet){
-                messageListenerSet = true
-                setMessageListener()
-            }
-            //TODO: latest messages
-        }
     }
 
     private fun setMessageListener(){
@@ -109,6 +115,8 @@ class ChatLogActivity : AppCompatActivity() {
         CreateChatRoomCommand(arrayListOf(currentUser!!.uid, toUser!!.uid)){
             //currentUser!!.chatRooms.add(it)
             currentCharRoomId = it
+
+            window.setBackgroundDrawableResource(R.drawable.lightblueandwhitebackground22)
 
             currentUser!!.chatRooms.put(currentCharRoomId!!, toUser!!.uid)
             toUser!!.chatRooms.put(currentCharRoomId!!, currentUser!!.uid)

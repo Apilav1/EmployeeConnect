@@ -50,6 +50,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
+        android:id="@+id/messageDate_fragment_message_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Monday"

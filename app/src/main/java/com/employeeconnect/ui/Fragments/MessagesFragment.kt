@@ -15,6 +15,8 @@ import com.employeeconnect.R
 
 import com.employeeconnect.ui.Fragments.dummy.DummyContent
 import com.employeeconnect.ui.Fragments.dummy.DummyContent.DummyItem
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_messages.*
 
 /**
@@ -26,39 +28,23 @@ class MessagesFragment : Fragment() {
 
     // TODO: Customize parameters
     private var columnCount = 1
+    private var adapter = GroupAdapter<GroupieViewHolder>()
 
     private var listener: OnMessagesListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
+//        arguments?.let {
+//            columnCount = it.getInt(ARG_COLUMN_COUNT)
+//        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_messages, container, false)
-
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                adapter =
-                    MyMessageRecyclerViewAdapter(
-                        DummyContent.ITEMS,
-                        listener
-                    )
-            }
-        }
-
-        return view
+        return inflater.inflate(R.layout.fragment_messages, container, false)
     }
 
     override fun onStart() {

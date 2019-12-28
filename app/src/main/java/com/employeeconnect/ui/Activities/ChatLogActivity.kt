@@ -32,6 +32,7 @@ class ChatLogActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat_log)
 
         toUser = intent.getParcelableExtra(EmployeesFragment.USER_KEY)
+        Log.d("CHATTT", "to user ${toUser!!.uid}")
         currentUser = HomeActivity.currentUser
 
         recycleview_chat_log.adapter = adapter
@@ -50,8 +51,8 @@ class ChatLogActivity : AppCompatActivity() {
              */
             var charRoomAlreadyExists: Boolean = false
             for ((key, value) in currentUser!!.chatRooms){
-                Log.d("CHATTT", key+" "+value)
                 if(value == toUser!!.uid) {
+                    Log.d("CHATTT", "key: "+ key+" value: "+value)
                     currentCharRoomId = key
                     charRoomAlreadyExists = true
                     setMessageListener()
@@ -59,7 +60,8 @@ class ChatLogActivity : AppCompatActivity() {
                 }
             }
             if(!charRoomAlreadyExists){
-                //createRoom()
+                Log.d("CHATTT", "NEMA")
+                createRoom()
             }
 
         }
@@ -87,7 +89,10 @@ class ChatLogActivity : AppCompatActivity() {
         SetMessagesListenerCommand(currentCharRoomId!!){ messages->
             adapter.clear()
 
-            messages.forEach {
+            //Because firebase firestore add documents in random order
+            messages.sortBy { it.timeStamp }
+
+            messages.forEach{
                 if(it.fromUser == currentUser!!.uid){
                     adapter.add(ChatFromCurrentUserItem(it.text))
                 }
@@ -95,6 +100,7 @@ class ChatLogActivity : AppCompatActivity() {
                     adapter.add(ChatToUserItem(it.text, toUser!!))
                 }
             }
+            //TODO: latest message right here
         }.execute()
 
     }
@@ -104,8 +110,17 @@ class ChatLogActivity : AppCompatActivity() {
             //currentUser!!.chatRooms.add(it)
             currentCharRoomId = it
 
-            AddChatRoomIdToUsersCommand(arrayListOf(currentUser!!.uid, toUser!!.uid), currentCharRoomId!!).execute()
+            currentUser!!.chatRooms.put(currentCharRoomId!!, toUser!!.uid)
+            toUser!!.chatRooms.put(currentCharRoomId!!, currentUser!!.uid)
+
+            AddChatRoomIdToUsersCommand(arrayListOf(currentUser!!, toUser!!), currentCharRoomId!!).execute()
+
             Log.d(TAG, "dobili id $it")
+
+            if(!messageListenerSet){
+                messageListenerSet = true
+                setMessageListener()
+            }
         }.execute()
     }
 

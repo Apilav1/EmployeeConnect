@@ -20,6 +20,6 @@ interface DataSource{
 
     fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit)
 
-    fun addChatRoomIdToUsers(usersIds: ArrayList<String>, chatRoomId: String)
+    fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String)
 
 }

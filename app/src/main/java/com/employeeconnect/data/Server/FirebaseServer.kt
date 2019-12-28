@@ -120,9 +120,7 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
                         if(snapshot != null){
                             result = ArrayList()
                             for(message in snapshot){
-                                Log.d("CHATTT", message.toString())
                                 result.add(message.toObject(Message::class.java))
-
                                 callback(result)
                             }
                         }
@@ -130,21 +128,21 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
                 }
     }
 
-    override fun addChatRoomIdToUsers(usersIds: ArrayList<String>, chatRoomId: String) {
-        Log.d("CHATTT", "ulazim u addChatRoomIdToUs"+usersIds.size.toString())
+    override fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String) {
+
         val ref = FirebaseFirestore.getInstance().collection("users")
 
-        val user1 = usersIds[0]
-        val user2 = usersIds[1]
+        val user1 = users[0]
+        val user2 = users[1]
 
-        val map1 = mutableMapOf(chatRoomId to user1)
-        val map2 = mutableMapOf(chatRoomId to user2)
+        val map1 = user1.chatRooms
+        val map2 = user2.chatRooms
 
-        ref.document(user1).update("chatRooms", map2)
+        ref.document(user1.uid).update("chatRooms", map1)
             .addOnSuccessListener {
                 Log.d("CHATTT", "dodao ")
             }
-        ref.document(user2).update("chatRooms", map1)
+        ref.document(user2.uid).update("chatRooms", map2)
             .addOnSuccessListener {
                 Log.d("CHATTT", "dodao ")
             }

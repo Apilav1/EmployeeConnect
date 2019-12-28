@@ -51,8 +51,8 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         it.setMessageListener(chatRoomId, callback)
     }
 
-    fun addChatRoomIdToUsers(usersIds: ArrayList<String>, chatRoomId: String) = requestToSources{
-        it.addChatRoomIdToUsers(usersIds, chatRoomId)
+    fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String) = requestToSources{
+        it.addChatRoomIdToUsers(users, chatRoomId)
     }
 
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }

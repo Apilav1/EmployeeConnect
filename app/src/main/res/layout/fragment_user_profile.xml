@@ -43,31 +43,33 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/myProfile" />
 
-        <TextView
+        <EditText
             android:id="@+id/username_user_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:fontFamily="monospace"
             android:text="Samuel Teroni"
+            android:background="@android:color/transparent"
             android:textColor="@android:color/white"
             android:textSize="18dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button_user_profile" />
 
-        <TextView
-            android:id="@+id/mail_user_profile"
+        <EditText
+            android:id="@+id/email_user_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="samuelteroni@gmail.com"
             android:textColor="@android:color/white"
+            android:background="@android:color/transparent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/username_user_profile" />
 
         <Button
-            android:id="@+id/edit_profile_user_profile"
+            android:id="@+id/edit_button_profile_user_profile"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
@@ -78,7 +80,35 @@
             android:textSize="12dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mail_user_profile" />
+            app:layout_constraintTop_toBottomOf="@id/email_user_profile" />
+
+        <Button
+            android:id="@+id/cancel_button_profile_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/border_button_white_edges"
+            android:padding="3dp"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@id/edit_button_profile_user_profile"
+            app:layout_constraintTop_toBottomOf="@id/email_user_profile" />
+
+        <Button
+            android:id="@+id/save_button_profile_user_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/border_button_white_edges"
+            android:padding="3dp"
+            android:text="Save"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            app:layout_constraintLeft_toLeftOf="@id/edit_button_profile_user_profile"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_user_profile" />
 
         <TextView
             android:id="@+id/skillsTittle"
@@ -93,12 +123,14 @@
             app:layout_constraintBottom_toTopOf="@id/skills_user_profile"
             app:layout_constraintTop_toBottomOf="@id/background_user_profile" />
 
-        <TextView
+        <EditText
             android:id="@+id/skills_user_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="55dp"
             android:text="Kotlin programmer"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/darker_gray"
             app:layout_constraintBottom_toTopOf="@+id/teamTitle"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/skillsTittle" />
@@ -117,12 +149,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/skills_user_profile" />
 
-        <TextView
+        <EditText
             android:id="@+id/team_user_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="55dp"
             android:text="Team 4"
+            android:textColor="@android:color/darker_gray"
+            android:background="@android:color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/currentProjectTitle"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/teamTitle" />
@@ -141,18 +175,19 @@
             app:layout_constraintTop_toBottomOf="@id/team_user_profile"
             app:layout_constraintBottom_toTopOf="@id/currentProject_user_profile"/>
 
-        <TextView
+        <EditText
             android:id="@+id/currentProject_user_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="55dp"
             android:layout_marginBottom="35dp"
             android:text="Smart bad"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/darker_gray"
             app:layout_constraintBottom_toTopOf="@id/logout_user_profile"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/currentProjectTitle"
             app:layout_constraintVertical_bias="0.0" />
-
 
 
         <Button

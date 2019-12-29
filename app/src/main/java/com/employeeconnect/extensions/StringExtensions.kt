@@ -65,6 +65,11 @@ fun String.getDateTimeFromTimestamp() : String? {
 
               if(messageIsSentInThisMonth && messageIsSentInThisWeek){
 
+                  if(messageDateDayOfMonth == currentDayOfMonth)
+                      return "Today"
+                  if(messageDateDayOfMonth == currentDayOfMonth-1)
+                      return "Yesterday"
+
                   val monthFormat = SimpleDateFormat("EEEE")
                   return monthFormat.format(calendar.time)
               }

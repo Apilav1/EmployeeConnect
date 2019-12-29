@@ -19,11 +19,10 @@ import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.employeeconnect.ui.Fragments.EmployeesFragment
-import com.employeeconnect.ui.Fragments.MessagesFragment
+import com.employeeconnect.ui.Fragments.LatestMessagesFragment
 import com.employeeconnect.ui.Fragments.UserProfileFragment
 import com.employeeconnect.R
 import com.employeeconnect.data.Server.Config
-import com.employeeconnect.data.dummy.DummyContent
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.FetchCurrentUserCommand
 import com.employeeconnect.domain.commands.GetCurrentUserIdCommand
@@ -34,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity(),
                                         EmployeesFragment.OnListEmployeesFragmentInteractionListener,
-                                        MessagesFragment.OnMessagesListFragmentInteractionListener,
+                                        LatestMessagesFragment.OnMessagesListFragmentInteractionListener,
                                         UserProfileFragment.OnUserProfileFragmentInteractionListener{
     private var bundle = Bundle.EMPTY
     lateinit var mRegistrationBroadcastReceiver: BroadcastReceiver
@@ -85,7 +84,7 @@ class HomeActivity : AppCompatActivity(),
                     true
                 }
                 R.id.nav_messages ->{
-                    replaceFragment(MessagesFragment())
+                    replaceFragment(LatestMessagesFragment())
                     Log.d(TAG, "messages pressed")
                     true
                 }
@@ -144,14 +143,13 @@ class HomeActivity : AppCompatActivity(),
 
     }
 
-    override fun onListMessagesFragmentInteraction(item: com.employeeconnect.ui.Fragments.dummy.DummyContent.DummyItem?) {
+    override fun onListMessagesFragmentInteraction(user: User) {
         val intent = Intent(this, ChatLogActivity::class.java)
 //        intent.putExtra(USER_KEY, )
         startActivity(intent)
     }
 
     override fun onUserProfileFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {

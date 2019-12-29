@@ -55,6 +55,18 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         it.addChatRoomIdToUsers(users, chatRoomId)
     }
 
+    fun getLatestMessages(callback: (ArrayList<Message>) -> Unit) = requestToSources {
+        it.getLatestMessages(callback)
+    }
+
+    fun getUserById(userId: String, callback: (User) -> Unit) = requestToSources {
+        it.getUserById(userId, callback)
+    }
+
+    fun getMultipleUsersById(usersIds: ArrayList<String>, callback: (ArrayList<User>) -> Unit) = requestToSources {
+        it.getMultipleUsersById(usersIds, callback)
+    }
+
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }
 
 }

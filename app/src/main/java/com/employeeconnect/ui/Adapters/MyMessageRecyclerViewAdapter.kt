@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.employeeconnect.R
 
 
-import com.employeeconnect.ui.Fragments.MessagesFragment.OnMessagesListFragmentInteractionListener
+import com.employeeconnect.ui.Fragments.LatestMessagesFragment.OnMessagesListFragmentInteractionListener
 import com.employeeconnect.ui.Fragments.dummy.DummyContent.DummyItem
 import com.squareup.picasso.Picasso
 
@@ -30,7 +30,7 @@ class MyMessageRecyclerViewAdapter(
             val item = v.tag as DummyItem
             // Notify the active callbacks interface (the activity, if the fragment is attached to
             // one) that an item has been selected.
-            mListener?.onListMessagesFragmentInteraction(item)
+           // mListener?.onListMessagesFragmentInteraction(item)
         }
     }
 

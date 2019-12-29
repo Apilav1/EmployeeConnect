@@ -131,7 +131,7 @@ class BasicInfoRegisterFragment : Fragment() {
         if(requestCode == REQUESTCODE_PHOTO && resultCode == Activity.RESULT_OK && data != null){
             selectedPhotoUri = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, selectedPhotoUri)
-            picture_user_profile_fragment.setImageBitmap(bitmap)
+            picture_user_profile_register.setImageBitmap(bitmap)
             photo_button_register.alpha = 0f
 
             selectedPhotoUriString = selectedPhotoUri.toString()

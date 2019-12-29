@@ -1,5 +1,6 @@
 package com.employeeconnect.ui.view
 
+import android.util.Log
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
@@ -9,18 +10,23 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.fragment_messages_row.view.*
 
-class LatestMessageRow(val user: User, val message: Message): Item<GroupieViewHolder>(){
+class LatestMessageRow(val toUser: User, val message: Message): Item<GroupieViewHolder>(){
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
-        viewHolder.itemView.username_fragment_messages.setText(user.username)
-        Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.imageView_fragment_messages)
 
-        viewHolder.itemView.messagetext_fragment_messages.text = message.text
+        val currentUserSentMessage = toUser.uid == message.toUser
+
+        viewHolder.itemView.username_fragment_messages.setText(toUser.username)
+        Picasso.get().load(toUser.profileImageUrl).into(viewHolder.itemView.imageView_fragment_messages)
+
+        if(currentUserSentMessage)
+            viewHolder.itemView.messagetext_fragment_messages.text = "You: ${message.text}"
+        else
+            viewHolder.itemView.messagetext_fragment_messages.text = message.text
 
         val messageDate = message.timeStamp.toString()
-        messageDate.getDateTimeFromTimestamp()
 
-        viewHolder.itemView.messageDate_fragment_message_row.text = messageDate
+        viewHolder.itemView.messageDate_fragment_message_row.text = messageDate.getDateTimeFromTimestamp()
     }
 
     override fun getLayout(): Int {

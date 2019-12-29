@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.onComplete
+import com.employeeconnect.data.Server.User as ServerUser
 
 class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMapper()) : DataSource {
 
@@ -100,9 +101,95 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             .add(message)
             .addOnSuccessListener {
                 Log.d(TAG, "message sent")
+                updateLatestMessage(chatRoomId, message)
             }
             .addOnFailureListener {
                 Log.d(TAG, "message was not sent")
+            }
+    }
+
+    fun updateLatestMessage(chatRoomId: String, message: Message){
+        val docRef = FirebaseFirestore.getInstance().collection("latestMessages")
+            .document(chatRoomId)
+
+            docRef.get().addOnSuccessListener { document ->
+                if(!document.exists() || document == null){
+                    docRef.set(message)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "new document added to latest messages")
+                        }
+                        .addOnFailureListener {
+                            Log.d(TAG, it.message)
+                        }
+                }
+                else {
+                    docRef
+                        .update("text", message.text, "fromUser", message.fromUser,
+                            "toUser", message.toUser, "timeStamp", message.timeStamp)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "latest messages updated")
+                        }
+                        .addOnFailureListener {
+                            Log.d(TAG, "latest message was not sent ${it.message}")
+                        }
+                }
+            }
+    }
+
+    override fun getLatestMessages(callback: (ArrayList<Message>) -> Unit) {
+            FirebaseFirestore.getInstance().collection("latestMessages")
+                .addSnapshotListener { snapshot, firebaseFirestoreException ->
+                    if (firebaseFirestoreException != null) {
+                        Log.w(TAG, "getting latest messages failed", firebaseFirestoreException)
+                        return@addSnapshotListener
+                    }
+
+                    val result: ArrayList<Message>
+
+                    if(snapshot != null){
+                        result = ArrayList()
+                        for(message in snapshot){
+                            result.add(message.toObject(Message::class.java))
+                        }
+                        callback(result)
+                    }
+                }
+    }
+
+    override fun getUserById(userId: String, callback: (User) -> Unit){
+        val ref = FirebaseFirestore.getInstance()
+        val docRef = ref.collection("users").document(userId)
+
+        lateinit var user: User
+
+        docRef.addSnapshotListener { value, e ->
+
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+            if(value != null){
+                user = value.toObject(User::class.java)!!
+                callback(user)
+            }
+        }
+    }
+
+    override fun getMultipleUsersById(usersIds: ArrayList<String>, callback: (ArrayList<User>) -> Unit){
+        val ref = FirebaseFirestore.getInstance().collection("users")
+
+        var users: ArrayList<com.employeeconnect.data.Server.User> = ArrayList()
+
+        ref.whereIn("uid", usersIds)
+            .get()
+            .addOnSuccessListener { value ->
+                for (doc in value!!) {
+                    users.add(doc.toObject(ServerUser::class.java))
+                }
+                callback(FirebaseDataMapper().convertToDomain(users))
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "get multiple users failed")
             }
     }
 
@@ -124,7 +211,6 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
                                 callback(result)
                             }
                         }
-
                 }
     }
 

@@ -1,20 +1,23 @@
 package com.employeeconnect.ui.Fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.employeeconnect.ui.Adapters.MyMessageRecyclerViewAdapter
 import com.employeeconnect.R
+import com.employeeconnect.domain.Models.Message
+import com.employeeconnect.domain.Models.User
+import com.employeeconnect.domain.commands.GetLatestMessagesCommand
+import com.employeeconnect.domain.commands.GetMultipleUsersByIdCommand
+import com.employeeconnect.ui.Activities.ChatLogActivity
+import com.employeeconnect.ui.view.LatestMessageRow
+import com.employeeconnect.ui.view.UserRow
 
-import com.employeeconnect.ui.Fragments.dummy.DummyContent
-import com.employeeconnect.ui.Fragments.dummy.DummyContent.DummyItem
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_messages.*
@@ -22,15 +25,16 @@ import kotlinx.android.synthetic.main.fragment_messages.*
 /**
  * A fragment representing a list of Items.
  * Activities containing this fragment MUST implement the
- * [MessagesFragment.OnMessagesListFragmentInteractionListener] interface.
+ * [LatestMessagesFragment.OnMessagesListFragmentInteractionListener] interface.
  */
-class MessagesFragment : Fragment() {
+class LatestMessagesFragment : Fragment() {
 
     // TODO: Customize parameters
     private var columnCount = 1
     private var adapter = GroupAdapter<GroupieViewHolder>()
 
     private var listener: OnMessagesListFragmentInteractionListener? = null
+    private var latestMessagesWithoutUsers: ArrayList<Message>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +54,50 @@ class MessagesFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        adapter = GroupAdapter()
+        recycleview_messages.adapter = adapter
         recycleview_messages.addItemDecoration(
             DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
+        getLatestMessages()
     }
 
+    private fun getLatestMessages(){
+
+        GetLatestMessagesCommand{ messages ->
+            if(messages.size == 0) return@GetLatestMessagesCommand
+
+            latestMessagesWithoutUsers = messages
+            val toUserIds: ArrayList<String> = ArrayList()
+
+            latestMessagesWithoutUsers!!.sortBy { it.timeStamp }
+            latestMessagesWithoutUsers!!.forEach {
+                toUserIds.add(it.toUser)
+            }
+
+            GetMultipleUsersByIdCommand(toUserIds){ users ->
+
+                adapter.clear()
+
+                latestMessagesWithoutUsers!!.forEach { message ->
+                    users.forEach{user ->
+                        if(user.uid == message.toUser){
+                            adapter.add(LatestMessageRow(user, message))
+                        }
+                    }
+                }
+
+            }.execute()
+
+        }.execute()
+
+        adapter.setOnItemClickListener { item, view ->
+            val userItem = item as LatestMessageRow
+            val intent = Intent(view.context, ChatLogActivity::class.java)
+            intent.putExtra(EmployeesFragment.USER_KEY, userItem.toUser)
+            startActivity(intent)
+        }
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnMessagesListFragmentInteractionListener) {
@@ -83,7 +127,7 @@ class MessagesFragment : Fragment() {
      */
     interface OnMessagesListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListMessagesFragmentInteraction(item: DummyItem?)
+        fun onListMessagesFragmentInteraction(user: User)
     }
 
     companion object {
@@ -94,7 +138,7 @@ class MessagesFragment : Fragment() {
         // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            MessagesFragment().apply {
+            LatestMessagesFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }

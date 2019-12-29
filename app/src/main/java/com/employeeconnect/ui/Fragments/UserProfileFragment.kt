@@ -61,25 +61,22 @@ class UserProfileFragment : Fragment() {
         view.currentProject_user_profile.setText(currentUser!!.currentProject)
         view.team_user_profile.setText(currentUser!!.teamName)
 
-        view.username_user_profile.setFocusable(false) // to disable editing
-        view.email_user_profile.setFocusable(false)
-        view.skills_user_profile.setFocusable(false)
-        view.currentProject_user_profile.setFocusable(false)
-        view.team_user_profile.setFocusable(false)
+        disableEditing()
+
+        view.save_button_profile_user_profile.alpha = 0.0F
+        view.cancel_button_profile_user_profile.alpha = 0.0F
 
         Picasso.get().load(currentUser!!.profileImageUrl).into(view.picture_user_profile)
 
-        edit_button_profile_user_profile.setOnClickListener {
-            edit_button_profile_user_profile.alpha = 0.0F
-            view.username_user_profile.setFocusableInTouchMode(true)// to enable editing;
-            view.email_user_profile.setFocusableInTouchMode(true)
-            view.skills_user_profile.setFocusableInTouchMode(true)
-            view.currentProject_user_profile.setFocusableInTouchMode(true)
-            view.team_user_profile.setFocusableInTouchMode(true)
-        }
-
-
         return view
+    }
+
+    fun disableEditing(){
+        view?.username_user_profile?.setFocusable(false) // to disable editing
+        view?.email_user_profile?.setFocusable(false)
+        view?.skills_user_profile?.setFocusable(false)
+        view?.currentProject_user_profile?.setFocusable(false)
+        view?.team_user_profile?.setFocusable(false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -99,13 +96,37 @@ class UserProfileFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-
+        disableEditing()
         val picture = view?.picture_user_profile
 
         picture?.setOnClickListener{
             Log.d("TAG", "oooo")
         }
-        Picasso.get().load(R.drawable.andreybreslav).into(picture)
+        //Picasso.get().load(R.drawable.andreybreslav).into(picture)
+        view?.edit_button_profile_user_profile?.setOnClickListener {
+            view?.edit_button_profile_user_profile?.alpha = 0.0F
+            view?.username_user_profile?.setFocusableInTouchMode(true)// to enable editing;
+            view?.email_user_profile?.setFocusableInTouchMode(true)
+            view?.skills_user_profile?.setFocusableInTouchMode(true)
+            view?.currentProject_user_profile?.setFocusableInTouchMode(true)
+            view?.team_user_profile?.setFocusableInTouchMode(true)
+
+            save_button_profile_user_profile.alpha = 1.0F
+            cancel_button_profile_user_profile.alpha = 1.0F
+        }
+
+        save_button_profile_user_profile.setOnClickListener {
+            view?.edit_button_profile_user_profile?.alpha = 1.0F
+            save_button_profile_user_profile.alpha = 0.0F
+            cancel_button_profile_user_profile.alpha = 0.0F
+            disableEditing()
+        }
+        cancel_button_profile_user_profile.setOnClickListener {
+            view?.edit_button_profile_user_profile?.alpha = 1.0F
+            save_button_profile_user_profile.alpha = 0.0F
+            cancel_button_profile_user_profile.alpha = 0.0F
+            disableEditing()
+        }
     }
 
     override fun onDetach() {

@@ -10,7 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.employeeconnect.R
+import com.employeeconnect.domain.Models.User
+import com.employeeconnect.ui.Activities.HomeActivity
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_basic_info_register.view.*
+import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.android.synthetic.main.fragment_user_profile.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -31,9 +35,13 @@ class UserProfileFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var listenerUserProfile: OnUserProfileFragmentInteractionListener? = null
+    var currentUser: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        currentUser = HomeActivity.currentUser
+
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -46,6 +54,31 @@ class UserProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_user_profile, container, false)
+
+        view.username_user_profile.setText(currentUser!!.username)
+        view.email_user_profile.setText(currentUser!!.email)
+        view.skills_user_profile.setText(currentUser!!.position)
+        view.currentProject_user_profile.setText(currentUser!!.currentProject)
+        view.team_user_profile.setText(currentUser!!.teamName)
+
+        view.username_user_profile.setFocusable(false) // to disable editing
+        view.email_user_profile.setFocusable(false)
+        view.skills_user_profile.setFocusable(false)
+        view.currentProject_user_profile.setFocusable(false)
+        view.team_user_profile.setFocusable(false)
+
+        Picasso.get().load(currentUser!!.profileImageUrl).into(view.picture_user_profile)
+
+        edit_button_profile_user_profile.setOnClickListener {
+            edit_button_profile_user_profile.alpha = 0.0F
+            view.username_user_profile.setFocusableInTouchMode(true)// to enable editing;
+            view.email_user_profile.setFocusableInTouchMode(true)
+            view.skills_user_profile.setFocusableInTouchMode(true)
+            view.currentProject_user_profile.setFocusableInTouchMode(true)
+            view.team_user_profile.setFocusableInTouchMode(true)
+        }
+
+
         return view
     }
 

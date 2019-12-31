@@ -28,4 +28,6 @@ interface DataSource{
 
     fun getMultipleUsersById(usersIds: ArrayList<String>, callback: (ArrayList<User>) -> Unit)
 
+    fun updateUser(user: User, pictureChaged: Boolean,callback: () -> Unit)
+
 }

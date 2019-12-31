@@ -1,5 +1,6 @@
 package com.employeeconnect.data.Server
 
+import android.net.Uri
 import android.provider.Settings.Global.getString
 import android.util.Log
 import android.widget.Toast
@@ -15,8 +16,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.storage.FirebaseStorage
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.onComplete
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import com.employeeconnect.data.Server.User as ServerUser
 
 class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMapper()) : DataSource {
@@ -234,6 +239,49 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             }
 
     }
+
+    override fun updateUser(user: User, pictureChaged: Boolean, callback: ()->Unit){
+
+        val docRef = FirebaseFirestore.getInstance().collection("users").document(user.uid)
+
+        docRef.update("currentProject", user.currentProject,
+                                    "position", user.position,
+                                    "profileImageUrl", user.profileImageUrl,
+                                    "skills", user.skills,
+                                    "teamName", user.teamName,
+                                    "username", user.username)
+            .addOnSuccessListener {
+                Log.d(TAG, "user updated")
+
+                if(pictureChaged)
+                    uploadImageToFirebaseStorage(Uri.parse(user.profileImageUrl))
+
+                callback()
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "user update failed")
+            }
+
+    }
+
+
+    fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri){
+
+        val filename = UUID.randomUUID().toString() //random string
+        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+
+        ref.putFile(selectedPhotoUri)
+            .addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener {
+                    Log.d(TAG, "File Location: $it")
+                }
+            }
+            .addOnFailureListener{
+                throw(it)
+            }
+
+    }
+
 
     fun firebaseMessaging(){
 

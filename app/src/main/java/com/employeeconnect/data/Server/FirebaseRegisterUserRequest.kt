@@ -39,7 +39,7 @@ class FirebaseRegisterUserRequest {
 
     }
 
-    private fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri){
+     private fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri){
 
         val filename = UUID.randomUUID().toString() //random string
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")

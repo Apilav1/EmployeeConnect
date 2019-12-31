@@ -67,6 +67,10 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         it.getMultipleUsersById(usersIds, callback)
     }
 
+    fun updateUserCommand(user: User, pictureChaged: Boolean,callback: () -> Unit) = requestToSources {
+        it.updateUser(user, pictureChaged, callback)
+    }
+
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }
 
 }

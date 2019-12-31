@@ -1,18 +1,24 @@
 package com.employeeconnect.ui.Fragments
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
+import com.employeeconnect.domain.commands.UpdateUserCommand
 import com.employeeconnect.ui.Activities.HomeActivity
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_basic_info_register.*
 import kotlinx.android.synthetic.main.fragment_basic_info_register.view.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.android.synthetic.main.fragment_user_profile.view.*
@@ -35,7 +41,9 @@ class UserProfileFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var listenerUserProfile: OnUserProfileFragmentInteractionListener? = null
-    var currentUser: User? = null
+    private var currentUser: User? = null
+    private var pictureIsChanged = false
+    private var REQUESTCODE_PHOTO = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,30 +110,74 @@ class UserProfileFragment : Fragment() {
         picture?.setOnClickListener{
             Log.d("TAG", "oooo")
         }
-        //Picasso.get().load(R.drawable.andreybreslav).into(picture)
-        view?.edit_button_profile_user_profile?.setOnClickListener {
-            view?.edit_button_profile_user_profile?.alpha = 0.0F
-            view?.username_user_profile?.setFocusableInTouchMode(true)// to enable editing;
-            view?.email_user_profile?.setFocusableInTouchMode(true)
-            view?.skills_user_profile?.setFocusableInTouchMode(true)
-            view?.currentProject_user_profile?.setFocusableInTouchMode(true)
-            view?.team_user_profile?.setFocusableInTouchMode(true)
+        var editMode = false
+
+        edit_button_profile_user_profile?.setOnClickListener {
+            edit_button_profile_user_profile?.alpha = 0.0F
+            username_user_profile?.setFocusableInTouchMode(true)// to enable editing;
+            email_user_profile?.setFocusableInTouchMode(true)
+            skills_user_profile?.setFocusableInTouchMode(true)
+            currentProject_user_profile?.setFocusableInTouchMode(true)
+            team_user_profile?.setFocusableInTouchMode(true)
 
             save_button_profile_user_profile.alpha = 1.0F
             cancel_button_profile_user_profile.alpha = 1.0F
+
+            editMode = true
+        }
+
+        picture_user_profile.setOnClickListener{
+
+            if(!editMode) return@setOnClickListener
+
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, REQUESTCODE_PHOTO)
+
         }
 
         save_button_profile_user_profile.setOnClickListener {
-            view?.edit_button_profile_user_profile?.alpha = 1.0F
+            edit_button_profile_user_profile?.alpha = 1.0F
             save_button_profile_user_profile.alpha = 0.0F
             cancel_button_profile_user_profile.alpha = 0.0F
             disableEditing()
+
+            currentUser!!.username = username_user_profile.text.toString()
+            currentUser!!.email = email_user_profile.text.toString()
+            currentUser!!.position = skills_user_profile.text.toString()
+            currentUser!!.teamName = team_user_profile.text.toString()
+            currentUser!!.currentProject = currentProject_user_profile.text.toString()
+
+            UpdateUserCommand(currentUser!!, pictureIsChanged){
+                Toast.makeText(context, "User updated", Toast.LENGTH_SHORT).show()
+            }.execute()
+
+            editMode = false
         }
         cancel_button_profile_user_profile.setOnClickListener {
-            view?.edit_button_profile_user_profile?.alpha = 1.0F
+            edit_button_profile_user_profile?.alpha = 1.0F
             save_button_profile_user_profile.alpha = 0.0F
             cancel_button_profile_user_profile.alpha = 0.0F
             disableEditing()
+
+            editMode = false
+        }
+    }
+
+    var selectedPhotoUri: Uri? = null
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == REQUESTCODE_PHOTO && resultCode == Activity.RESULT_OK && data != null){
+            selectedPhotoUri = data.data
+            currentUser!!.profileImageUrl = selectedPhotoUri.toString()
+
+            val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, selectedPhotoUri)
+            picture_user_profile_register.setImageBitmap(bitmap)
+            photo_button_register.alpha = 0f
+
+            pictureIsChanged = true
         }
     }
 

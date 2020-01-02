@@ -1,5 +1,6 @@
 package com.employeeconnect.data.Server
 
+import android.content.Intent
 import android.net.Uri
 import android.provider.Settings.Global.getString
 import android.util.Log
@@ -264,6 +265,20 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
 
     }
 
+    override fun deleteUser(userId: String, callback: () -> Unit){
+
+        FirebaseFirestore.getInstance().collection("users")
+            .document(userId)
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "User successfully deleted")
+                callback()
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "User delete problem")
+            }
+    }
+
 
     fun uploadImageToFirebaseStorage(selectedPhotoUri: Uri){
 
@@ -280,6 +295,17 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
                 throw(it)
             }
 
+    }
+
+    override fun signInUserWithEmailAndPassword(
+        email: String,
+        password: String,
+        callback: (signInSuccessful: Boolean) -> Unit
+    ) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener {
+                callback(it.isSuccessful)
+            }
     }
 
 

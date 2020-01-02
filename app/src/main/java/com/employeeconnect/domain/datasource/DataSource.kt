@@ -30,4 +30,8 @@ interface DataSource{
 
     fun updateUser(user: User, pictureChaged: Boolean,callback: () -> Unit)
 
+    fun deleteUser(userId: String, callback: () -> Unit)
+
+    fun signInUserWithEmailAndPassword(email: String, password: String, callback: (signInSuccessful: Boolean) -> Unit)
+
 }

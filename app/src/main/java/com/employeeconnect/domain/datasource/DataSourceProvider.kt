@@ -71,6 +71,15 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         it.updateUser(user, pictureChaged, callback)
     }
 
+    fun deleteUser(userId: String, callback: () -> Unit) = requestToSources {
+        it.deleteUser(userId, callback)
+    }
+
+    fun signInUserWithEmailAndPassword(email: String, password: String, callback: (signInSuccessful: Boolean) -> Unit)
+            = requestToSources {
+        it.signInUserWithEmailAndPassword(email, password, callback)
+    }
+
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }
 
 }

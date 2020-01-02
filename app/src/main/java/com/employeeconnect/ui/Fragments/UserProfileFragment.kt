@@ -1,6 +1,7 @@
 package com.employeeconnect.ui.Fragments
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -15,8 +16,10 @@ import android.widget.Toast
 
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
+import com.employeeconnect.domain.commands.DeleteUserCommand
 import com.employeeconnect.domain.commands.UpdateUserCommand
 import com.employeeconnect.ui.Activities.HomeActivity
+import com.employeeconnect.ui.Activities.LoginActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_basic_info_register.*
 import kotlinx.android.synthetic.main.fragment_basic_info_register.view.*
@@ -161,6 +164,33 @@ class UserProfileFragment : Fragment() {
             disableEditing()
 
             editMode = false
+        }
+
+        delete_user_profile.setOnClickListener {
+
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Confirm deletion")
+            builder.setMessage("Are you sure you want to permanently delete your EConnect profile?")
+
+            builder.setPositiveButton("YES"){ dialog, which ->
+
+                val intent = Intent(context, LoginActivity::class.java)
+
+                DeleteUserCommand(currentUser!!.uid){
+
+                    //to clear stack
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+
+                    Toast.makeText(context, "This user profile is successfully deleted", Toast.LENGTH_SHORT).show()
+                }.execute()
+            }
+
+            builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+
+            val dialog = builder.create()
+
+            dialog.show()
         }
     }
 

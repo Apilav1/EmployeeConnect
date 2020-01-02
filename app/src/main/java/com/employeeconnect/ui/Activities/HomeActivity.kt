@@ -23,6 +23,7 @@ import com.employeeconnect.ui.Fragments.LatestMessagesFragment
 import com.employeeconnect.ui.Fragments.UserProfileFragment
 import com.employeeconnect.R
 import com.employeeconnect.data.Server.Config
+import com.employeeconnect.data.Server.FirebaseServer
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.FetchCurrentUserCommand
 import com.employeeconnect.domain.commands.GetCurrentUserIdCommand
@@ -36,23 +37,23 @@ class HomeActivity : AppCompatActivity(),
                                         LatestMessagesFragment.OnMessagesListFragmentInteractionListener,
                                         UserProfileFragment.OnUserProfileFragmentInteractionListener{
     private var bundle = Bundle.EMPTY
-    lateinit var mRegistrationBroadcastReceiver: BroadcastReceiver
+//    lateinit var mRegistrationBroadcastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         //
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.w(TAG, "getInstanceId failed", task.exception)
-                    return@OnCompleteListener
-                }
-
-                // Get new Instance ID token
-                val token = task.result?.token
-
-                Log.d(TAG, token)
-            })
+//        FirebaseInstanceId.getInstance().instanceId
+//            .addOnCompleteListener(OnCompleteListener { task ->
+//                if (!task.isSuccessful) {
+//                    Log.w(TAG, "getInstanceId failed", task.exception)
+//                    return@OnCompleteListener
+//                }
+//
+//                // Get new Instance ID token
+//                val token = task.result?.token
+//
+//                Log.d(TAG, token)
+//            })
         //
 
         super.onCreate(savedInstanceState)
@@ -60,19 +61,18 @@ class HomeActivity : AppCompatActivity(),
 
         verifyUserIsLoggedIn()
 
-        replaceFragment(EmployeesFragment())
 
-        mRegistrationBroadcastReceiver = object:BroadcastReceiver(){
-            override fun onReceive(context: Context?, intent: Intent?) {
-                Log.d(TAG, "primio")
-                if(intent!!.action == Config.STR_PUSH){
-                    Log.d(TAG, "IF ispunjen")
-                     val message = intent.getStringExtra("message")
-                     showNotification("New message", message.toString())
-                }
-            }
-
-        }
+//        mRegistrationBroadcastReceiver = object:BroadcastReceiver(){
+//            override fun onReceive(context: Context?, intent: Intent?) {
+//                Log.d(TAG, "primio")
+//                if(intent!!.action == Config.STR_PUSH){
+//                    Log.d(TAG, "IF ispunjen")
+//                     val message = intent.getStringExtra("message")
+//                     showNotification("New message", message.toString())
+//                }
+//            }
+//
+//        }
 
 
         bottom_navigation.setOnNavigationItemSelectedListener {
@@ -99,16 +99,22 @@ class HomeActivity : AppCompatActivity(),
     }
 
     private fun verifyUserIsLoggedIn() {
+        GetCurrentUserIdCommand{result->
 
-        currentUserId = GetCurrentUserIdCommand().execute()
-        if(currentUserId == null){
-             val intent = Intent(this, LoginActivity::class.java)
-             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-             startActivity(intent)
-        }
-        else{
-             FetchCurrentUserCommand().execute()
-        }
+            currentUserId = result
+
+            if(currentUserId == null){
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }
+            else{
+                FetchCurrentUserCommand().execute()
+
+                replaceFragment(EmployeesFragment())
+            }
+
+        }.execute()
     }
 
     private fun showNotification(tittle: String, message: String?) {
@@ -263,16 +269,16 @@ class HomeActivity : AppCompatActivity(),
 
     override fun onPause() {
         Log.d(TAG, "onPause()")
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver)
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver)
         super.onPause()
     }
 
     override fun onResume(){
         super.onResume()
         Log.d(TAG, "onResume()")
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(mRegistrationBroadcastReceiver, IntentFilter("newMessage"))
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, IntentFilter(Config.STR_PUSH))
+//        LocalBroadcastManager.getInstance(this)
+//            .registerReceiver(mRegistrationBroadcastReceiver, IntentFilter("newMessage"))
+//        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, IntentFilter(Config.STR_PUSH))
 
     }
 

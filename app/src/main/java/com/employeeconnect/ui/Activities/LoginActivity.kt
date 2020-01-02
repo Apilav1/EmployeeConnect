@@ -3,6 +3,7 @@ package com.employeeconnect.ui.Activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.employeeconnect.R
 import com.employeeconnect.domain.commands.SignInUserWithEmailAndPassword
@@ -23,24 +24,29 @@ class LoginActivity : AppCompatActivity() {
         }
 
         button_login.setOnClickListener {
+
+            Log.d("CHATTT", "LOGIN PRESSED")
             val email = email_login.text.toString()
             val password = password_login.text.toString()
 
             if(!email.isEmailValid()){
                 Toast.makeText(applicationContext, "Please enter a valid email!", Toast.LENGTH_SHORT).show()
+                Log.d("CHATTT", "email not valid")
                 return@setOnClickListener
             }
 
             SignInUserWithEmailAndPassword(email, password){ signInSuccessful ->
 
                 if(signInSuccessful){
+                    Log.d("CHATTT", "SIGN in successful")
                     val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
                 }
                 else{
+                    Log.d("CHATTT", "SIGN not successful")
                     Toast.makeText(applicationContext, "Please enter a valid info!", Toast.LENGTH_SHORT).show()
                 }
-            }
+            }.execute()
         }
     }
 }

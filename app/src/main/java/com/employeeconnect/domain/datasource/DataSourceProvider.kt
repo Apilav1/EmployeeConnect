@@ -31,8 +31,8 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         }
     }
 
-    fun getCurrentUserId() = requestToSources{
-          it.getCurrentUserId()
+    fun getCurrentUserId(callback: (uid: String?) -> Unit) = requestToSources{
+            it.getCurrentUserId(callback)
     }
 
     fun fetchCurrentUser() = requestToSources{
@@ -83,6 +83,7 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
     fun logoutUser(callback: () -> Unit) = requestToSources {
         it.logoutUser(callback)
     }
+
 
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }
 

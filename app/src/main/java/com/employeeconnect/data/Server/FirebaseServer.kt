@@ -57,8 +57,12 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
 
     }
 
-    override fun getCurrentUserId(): String? {
-        return FirebaseAuth.getInstance().uid
+    override fun getCurrentUserId(callback: (uid: String?) -> Unit){
+        var uid: String?
+
+        uid = FirebaseAuth.getInstance().uid
+        Log.d("CHATTT", "uid: $uid")
+        callback(uid)
     }
 
     override fun fetchCurrentUser() {
@@ -72,7 +76,7 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
                 return@addSnapshotListener
             }
             if (snapshot != null && snapshot.exists()) {
-                val map = snapshot.data?.get("chatRooms") as HashMap<String, String>
+                val map = snapshot.data?.get("chatRooms") as HashMap<*, *>
 
 //                for(m in map)
 //                    Log.d("hhh", m)
@@ -241,7 +245,7 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
 
     }
 
-    override fun updateUser(user: User, pictureChaged: Boolean, callback: ()->Unit){
+    override fun updateUser(user: User, pictureChanged: Boolean, callback: ()->Unit){
 
         val docRef = FirebaseFirestore.getInstance().collection("users").document(user.uid)
 
@@ -254,7 +258,7 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             .addOnSuccessListener {
                 Log.d(TAG, "user updated")
 
-                if(pictureChaged)
+                if(pictureChanged)
                     uploadImageToFirebaseStorage(Uri.parse(user.profileImageUrl))
 
                 callback()
@@ -306,6 +310,10 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             .addOnCompleteListener {
                 callback(it.isSuccessful)
             }
+            .addOnFailureListener {
+                Log.d("CHATTT", "FAILED ${it.message}")
+
+                }
     }
 
     override fun logoutUser(callback: () -> Unit){

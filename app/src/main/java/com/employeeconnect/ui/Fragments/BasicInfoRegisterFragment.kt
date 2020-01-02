@@ -111,7 +111,7 @@ class BasicInfoRegisterFragment : Fragment() {
             return false
         }
 
-        if(!password.isPasswordValid(password)){
+        if(!password.isPasswordValid()){
             Toast.makeText(context, "Password must be longer than 7 characters", Toast.LENGTH_SHORT).show()
             return false
         }

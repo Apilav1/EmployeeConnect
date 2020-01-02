@@ -10,7 +10,7 @@ interface DataSource{
 
     fun getUsers(callback: (ArrayList<User>) -> Unit)
 
-    fun getCurrentUserId(): String?
+    fun getCurrentUserId(callback: (uid: String?) -> Unit)
 
     fun fetchCurrentUser()
 
@@ -28,7 +28,7 @@ interface DataSource{
 
     fun getMultipleUsersById(usersIds: ArrayList<String>, callback: (ArrayList<User>) -> Unit)
 
-    fun updateUser(user: User, pictureChaged: Boolean,callback: () -> Unit)
+    fun updateUser(user: User, pictureChanged: Boolean,callback: () -> Unit)
 
     fun deleteUser(userId: String, callback: () -> Unit)
 

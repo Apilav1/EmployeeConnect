@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.employeeconnect.R
 import com.employeeconnect.domain.commands.SignInUserWithEmailAndPassword
 import com.employeeconnect.extensions.isEmailValid
@@ -17,6 +18,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         getSupportActionBar()?.hide()
+        gif_imageView_login.alpha = 0.0f
 
         register_textview_login.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
@@ -24,6 +26,9 @@ class LoginActivity : AppCompatActivity() {
         }
 
         button_login.setOnClickListener {
+
+            gif_imageView_login.alpha = 1.0f
+            Glide.with(this).load(R.drawable.loading).into(gif_imageView_login);
 
             Log.d("CHATTT", "LOGIN PRESSED")
             val email = email_login.text.toString()
@@ -46,6 +51,8 @@ class LoginActivity : AppCompatActivity() {
                     Log.d("CHATTT", "SIGN not successful")
                     Toast.makeText(applicationContext, "Please enter a valid info!", Toast.LENGTH_SHORT).show()
                 }
+
+                gif_imageView_login.alpha = 0.0f
             }.execute()
         }
     }

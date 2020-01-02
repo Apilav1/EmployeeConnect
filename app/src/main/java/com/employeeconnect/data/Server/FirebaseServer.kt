@@ -308,6 +308,10 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             }
     }
 
+    override fun logoutUser(callback: () -> Unit){
+        FirebaseAuth.getInstance().signOut()
+        callback()
+    }
 
     fun firebaseMessaging(){
 

@@ -80,6 +80,10 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         it.signInUserWithEmailAndPassword(email, password, callback)
     }
 
+    fun logoutUser(callback: () -> Unit) = requestToSources {
+        it.logoutUser(callback)
+    }
+
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }
 
 }

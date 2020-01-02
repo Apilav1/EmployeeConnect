@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.DeleteUserCommand
+import com.employeeconnect.domain.commands.LogoutUserCommand
 import com.employeeconnect.domain.commands.UpdateUserCommand
 import com.employeeconnect.ui.Activities.HomeActivity
 import com.employeeconnect.ui.Activities.LoginActivity
@@ -177,8 +178,6 @@ class UserProfileFragment : Fragment() {
                 val intent = Intent(context, LoginActivity::class.java)
 
                 DeleteUserCommand(currentUser!!.uid){
-
-                    //to clear stack
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
 
@@ -191,6 +190,15 @@ class UserProfileFragment : Fragment() {
             val dialog = builder.create()
 
             dialog.show()
+        }
+
+        logout_user_profile.setOnClickListener {
+            val intent = Intent(context, LoginActivity::class.java)
+
+            LogoutUserCommand{
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            }.execute()
         }
     }
 

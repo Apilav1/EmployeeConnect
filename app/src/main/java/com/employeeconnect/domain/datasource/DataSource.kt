@@ -34,4 +34,6 @@ interface DataSource{
 
     fun signInUserWithEmailAndPassword(email: String, password: String, callback: (signInSuccessful: Boolean) -> Unit)
 
+    fun logoutUser(callback: () -> Unit)
+
 }

@@ -6,7 +6,7 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-fun String.isEmailValid(email: String): Boolean{
+fun String.isEmailValid(): Boolean{
 
     val regExpn = ("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
                 + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
@@ -15,7 +15,7 @@ fun String.isEmailValid(email: String): Boolean{
                 + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
                 + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$")
 
-    val inputStr: CharSequence = email
+    val inputStr: CharSequence = this
 
     val pattern: Pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE)
     val matcher: Matcher = pattern.matcher(inputStr)
@@ -23,13 +23,13 @@ fun String.isEmailValid(email: String): Boolean{
     return matcher.matches()
 }
 
-fun String.isPasswordValid(password: String): Boolean{
-    return password.length > 7
+fun String.isPasswordValid(): Boolean{
+    return this.length > 7
 }
 
-fun String.isGithubProfileValide(githubUser: String): Boolean{
+fun String.isGithubProfileValide(): Boolean{
     val url = "https://api.github.com/users/"
-    val COMPLETE_URL = url + githubUser
+    val COMPLETE_URL = url + this
     var githubJsonStr: String?= null
 //    doAsync {
 //        val githubJsonStr = URL(COMPLETE_URL).readText()

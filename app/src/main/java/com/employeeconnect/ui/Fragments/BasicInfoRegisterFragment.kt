@@ -106,7 +106,7 @@ class BasicInfoRegisterFragment : Fragment() {
             return false
         }
 
-        if(!email.isEmailValid(email)) {
+        if(!email.isEmailValid()) {
             Toast.makeText(context, "Please enter valid email", Toast.LENGTH_SHORT).show()
             return false
         }

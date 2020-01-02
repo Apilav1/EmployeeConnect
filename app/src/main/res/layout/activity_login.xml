@@ -9,7 +9,7 @@
 
 
     <EditText
-        android:id="@+id/username_login"
+        android:id="@+id/email_login"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="24dp"
@@ -17,8 +17,8 @@
         android:layout_marginEnd="24dp"
         android:ems="10"
         android:background="@drawable/rounded_edittext"
-        android:inputType="textPersonName"
-        android:hint="Username"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
         android:paddingLeft="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,12 +31,12 @@
         android:layout_marginTop="24dp"
         android:ems="10"
         android:background="@drawable/rounded_edittext"
-        android:hint="password"
+        android:hint="Password"
         android:paddingLeft="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/username_login"
+        app:layout_constraintEnd_toEndOf="@+id/email_login"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/username_login"
-        app:layout_constraintTop_toBottomOf="@+id/username_login" />
+        app:layout_constraintStart_toStartOf="@+id/email_login"
+        app:layout_constraintTop_toBottomOf="@+id/email_login" />
 
     <Button
         android:id="@+id/button_login"
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/password_login" />
 
     <TextView
-        android:id="@+id/textView_login"
+        android:id="@+id/register_textview_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

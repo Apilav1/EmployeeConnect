@@ -22,7 +22,7 @@ interface DataSource{
 
     fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String)
 
-    fun getLatestMessages(callback: (ArrayList<Message>) -> Unit)
+    fun getLatestMessages(chatRooms: ArrayList<String>, callback: (ArrayList<Message>) -> Unit)
 
     fun getUserById(userId: String, callback: (User) -> Unit)
 

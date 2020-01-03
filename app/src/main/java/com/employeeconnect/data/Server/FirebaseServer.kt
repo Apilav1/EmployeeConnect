@@ -96,12 +96,24 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             .add(chatRoom)
             .addOnSuccessListener {
                 Log.d("CHATTT", "New chat room is created")
+                updateChatRoomWithId(it.id)
                 callback(it.id)
             }
             .addOnFailureListener {
                 Log.d("CHATTT", "New chat room not created")
             }
 
+    }
+
+    fun updateChatRoomWithId(chatRoomId: String){
+        FirebaseFirestore.getInstance().collection("chatRooms").document(chatRoomId)
+            .update("uid", chatRoomId)
+            .addOnSuccessListener {
+                Log.d(TAG, "Chatroom updated successful")
+            }
+            .addOnFailureListener {
+                Log.d(TAG, it.message)
+            }
     }
 
     override fun sendMessage(chatRoomId: String, message: Message){
@@ -146,8 +158,9 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             }
     }
 
-    override fun getLatestMessages(callback: (ArrayList<Message>) -> Unit) {
-            FirebaseFirestore.getInstance().collection("latestMessages")
+    override fun getLatestMessages(chatRooms: ArrayList<String>, callback: (ArrayList<Message>) -> Unit) {
+            val ref = FirebaseFirestore.getInstance().collection("latestMessages")
+                ref.whereIn("chatRoomId", chatRooms)
                 .addSnapshotListener { snapshot, firebaseFirestoreException ->
                     if (firebaseFirestoreException != null) {
                         Log.w(TAG, "getting latest messages failed", firebaseFirestoreException)
@@ -161,6 +174,7 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
                         for(message in snapshot){
                             result.add(message.toObject(Message::class.java))
                         }
+                        Log.d(TAG, "GET LATEST MESSAGES: ${result.size.toString()}")
                         callback(result)
                     }
                 }

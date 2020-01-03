@@ -15,6 +15,7 @@ import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.GetLatestMessagesCommand
 import com.employeeconnect.domain.commands.GetMultipleUsersByIdCommand
 import com.employeeconnect.ui.Activities.ChatLogActivity
+import com.employeeconnect.ui.Activities.HomeActivity
 import com.employeeconnect.ui.view.LatestMessageRow
 import com.employeeconnect.ui.view.UserRow
 
@@ -32,12 +33,15 @@ class LatestMessagesFragment : Fragment() {
     // TODO: Customize parameters
     private var columnCount = 1
     private var adapter = GroupAdapter<GroupieViewHolder>()
+    private var currentUser: User? = null
 
     private var listener: OnMessagesListFragmentInteractionListener? = null
     private var latestMessagesWithoutUsers: ArrayList<Message>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        this.currentUser = HomeActivity.currentUser
 
 //        arguments?.let {
 //            columnCount = it.getInt(ARG_COLUMN_COUNT)
@@ -64,7 +68,13 @@ class LatestMessagesFragment : Fragment() {
 
     private fun getLatestMessages(){
 
-        GetLatestMessagesCommand{ messages ->
+        var chatRooms: ArrayList<String> = ArrayList()
+
+        for((key, value) in currentUser!!.chatRooms){
+            chatRooms.add(key)
+        }
+
+        GetLatestMessagesCommand(chatRooms){ messages ->
             if(messages.size == 0) return@GetLatestMessagesCommand
 
             latestMessagesWithoutUsers = messages

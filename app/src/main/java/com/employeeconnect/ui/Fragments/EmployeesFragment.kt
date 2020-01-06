@@ -82,8 +82,10 @@ class EmployeesFragment : Fragment() {
                 adapter.clear()
 
                 it.forEach { user ->
-                    users?.add(user)
-                    adapter.add(UserRow(user))
+                    if(user.uid != HomeActivity.currentUserId) {
+                        users?.add(user)
+                        adapter.add(UserRow(user))
+                    }
                 }
 
                 adapter.notifyDataSetChanged()

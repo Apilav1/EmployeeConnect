@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.employeeconnect.extensions.revealAndDropAnimation
 
 import com.employeeconnect.R
@@ -51,6 +52,8 @@ class EmployeeInfoRegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        gif_imageView_register.alpha = 0.0f
+
         fragmentContainer.revealAndDropAnimation(listOf<View>(
             position_register,
             team_register,
@@ -62,7 +65,14 @@ class EmployeeInfoRegisterFragment : Fragment() {
             onButtonPressed(it)
         }
         complete_registration_button_register.setOnClickListener {
-            if(employeeInfoValidation()) onButtonPressed(it)
+            if(employeeInfoValidation()){
+                it.isClickable = false
+                back_button_employee_info_register.isClickable = false
+                onButtonPressed(it)
+
+                gif_imageView_register.alpha = 1.0f
+                Glide.with(this).load(R.drawable.loading).into(gif_imageView_register);
+            }
         }
     }
 

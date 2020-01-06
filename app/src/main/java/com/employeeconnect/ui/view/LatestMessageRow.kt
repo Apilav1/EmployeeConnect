@@ -5,6 +5,7 @@ import com.employeeconnect.R
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.extensions.getDateTimeFromTimestamp
+import com.employeeconnect.ui.Activities.HomeActivity
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -14,8 +15,9 @@ class LatestMessageRow(val toUser: User, val message: Message): Item<GroupieView
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
 
-        val currentUserSentMessage = toUser.uid == message.toUser
+        val currentUserSentMessage = HomeActivity.currentUserId == message.fromUser
 
+        Log.d("CHATTT", "u adapteru->"+toUser.username+ " "+ toUser.uid)
         viewHolder.itemView.username_fragment_messages.setText(toUser.username)
         Picasso.get().load(toUser.profileImageUrl).into(viewHolder.itemView.imageView_fragment_messages)
 

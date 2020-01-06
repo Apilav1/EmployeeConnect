@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.employeeconnect.R
 import com.employeeconnect.domain.commands.SignInUserWithEmailAndPassword
 import com.employeeconnect.extensions.isEmailValid
+import com.employeeconnect.ui.Fragments.EmployeesFragment
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -45,13 +46,13 @@ class LoginActivity : AppCompatActivity() {
                 if(signInSuccessful){
                     Log.d("CHATTT", "SIGN in successful")
                     val intent = Intent(this, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
                 else{
                     Log.d("CHATTT", "SIGN not successful")
                     Toast.makeText(applicationContext, "Please enter a valid info!", Toast.LENGTH_SHORT).show()
                 }
-
                 gif_imageView_login.alpha = 0.0f
             }.execute()
         }

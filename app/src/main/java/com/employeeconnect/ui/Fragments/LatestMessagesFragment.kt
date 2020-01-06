@@ -78,21 +78,33 @@ class LatestMessagesFragment : Fragment() {
             if(messages.size == 0) return@GetLatestMessagesCommand
 
             latestMessagesWithoutUsers = messages
+
             val toUserIds: ArrayList<String> = ArrayList()
 
             latestMessagesWithoutUsers!!.sortBy { it.timeStamp }
+
+
             latestMessagesWithoutUsers!!.forEach {
-                toUserIds.add(it.toUser)
+                //toUserIds.add(it.toUser)
+                for((key, value) in currentUser!!.chatRooms){
+                    if(it.chatRoomId == key)
+                        toUserIds.add(value)
+                }
             }
+            Log.d("CHATTT", "toUserids: "+toUserIds.size)
+
+            for(id in toUserIds)
+                Log.d("CHATTT", "id->"+id)
 
             GetMultipleUsersByIdCommand(toUserIds){ users ->
 
                 adapter.clear()
 
                 latestMessagesWithoutUsers!!.forEach { message ->
-                    users.forEach{user ->
-                        if(user.uid == message.toUser){
+                    for(user in users){
+                        if(user.uid == message.toUser || user.uid == message.fromUser ){
                             adapter.add(LatestMessageRow(user, message))
+                            break
                         }
                     }
                 }
@@ -105,6 +117,8 @@ class LatestMessagesFragment : Fragment() {
             val userItem = item as LatestMessageRow
             val intent = Intent(view.context, ChatLogActivity::class.java)
             intent.putExtra(EmployeesFragment.USER_KEY, userItem.toUser)
+
+            HomeActivity.currentFragmet = LatestMessagesFragment()
             startActivity(intent)
         }
     }

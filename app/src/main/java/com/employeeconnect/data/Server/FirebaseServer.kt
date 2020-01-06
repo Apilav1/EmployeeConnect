@@ -80,11 +80,15 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
 
 //                for(m in map)
 //                    Log.d("hhh", m)
+                Log.d("CHATTT", "-------------------currentuser-------")
+
                 for ((key, value) in map) {
-                    Log.d("hhh", "$key = $value")
+                    Log.d("CHATTT", "$key = $value")
                 }
-                Log.d("hhh", snapshot.data?.get("chatRooms")?.toString())
+                Log.d("CHATTT", snapshot.data?.get("chatRooms")?.toString())
                 HomeActivity.currentUser = snapshot.toObject(User::class.java)
+                HomeActivity.currentUserId = HomeActivity.currentUser!!.uid
+                Log.d("CHATTT", "---------------${HomeActivity.currentUser}-----------------------")
             }
         }
     }
@@ -208,7 +212,9 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             .get()
             .addOnSuccessListener { value ->
                 for (doc in value!!) {
-                    users.add(doc.toObject(ServerUser::class.java))
+                    val userr = doc.toObject(ServerUser::class.java)
+                    users.add(userr)
+                    Log.d("CHATTT", "vracam->"+userr.username)
                 }
                 callback(FirebaseDataMapper().convertToDomain(users))
             }
@@ -295,6 +301,16 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
             .addOnFailureListener {
                 Log.d(TAG, "User delete problem")
             }
+
+        val user = FirebaseAuth.getInstance().currentUser
+
+        user?.delete()
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "User account deleted.")
+                }
+            }
+
     }
 
 

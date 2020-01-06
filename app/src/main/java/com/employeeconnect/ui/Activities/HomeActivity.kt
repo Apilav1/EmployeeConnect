@@ -28,6 +28,7 @@ import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.FetchCurrentUserCommand
 import com.employeeconnect.domain.commands.GetCurrentUserIdCommand
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -99,6 +100,9 @@ class HomeActivity : AppCompatActivity(),
     }
 
     private fun verifyUserIsLoggedIn() {
+
+//        viewModel.validate()dfsfsdfs
+
         GetCurrentUserIdCommand{result->
 
             currentUserId = result
@@ -111,7 +115,7 @@ class HomeActivity : AppCompatActivity(),
             else{
                 FetchCurrentUserCommand().execute()
 
-                replaceFragment(EmployeesFragment())
+                replaceFragment(currentFragmet)
             }
 
         }.execute()
@@ -151,7 +155,7 @@ class HomeActivity : AppCompatActivity(),
 
     override fun onListMessagesFragmentInteraction(user: User) {
         val intent = Intent(this, ChatLogActivity::class.java)
-//        intent.putExtra(USER_KEY, )
+        currentFragmet = EmployeesFragment()
         startActivity(intent)
     }
 
@@ -276,6 +280,7 @@ class HomeActivity : AppCompatActivity(),
     override fun onResume(){
         super.onResume()
         Log.d(TAG, "onResume()")
+        currentFragmet = EmployeesFragment()
 //        LocalBroadcastManager.getInstance(this)
 //            .registerReceiver(mRegistrationBroadcastReceiver, IntentFilter("newMessage"))
 //        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, IntentFilter(Config.STR_PUSH))
@@ -287,6 +292,8 @@ class HomeActivity : AppCompatActivity(),
 
         var currentUser: User? = null
         var currentUserId: String? = null
+
+        var currentFragmet: Fragment = EmployeesFragment()
 
         const val USER_KEY = "USER_KEY"
     }

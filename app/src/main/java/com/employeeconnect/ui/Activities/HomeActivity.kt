@@ -121,6 +121,7 @@ class HomeActivity : AppCompatActivity(),
         }.execute()
     }
 
+
     private fun showNotification(tittle: String, message: String?) {
         Log.d(TAG, tittle+" "+message)
 
@@ -220,56 +221,7 @@ class HomeActivity : AppCompatActivity(),
         return true
     }*/
 
-    fun showKeyboard(ettext: SearchView) {
-        Log.d("OVOO", "POKAZUJEM")
-        ettext.requestFocus()
-        ettext.postDelayed(Runnable {
-            val keyboard =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            keyboard.showSoftInput(ettext, 0)
-        }
-            , 200)
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-
-        menuInflater.inflate(R.menu.nav_menu, menu)
-        val searchItem = menu?.findItem(R.id.action_search)
-        if(searchItem != null){
-            Log.d("TAGGG", "it is not null")
-            val searchView = searchItem.actionView as SearchView
-            searchView.isClickable
-
-            val searchManager =
-                getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            val searchableInfo = searchManager.getSearchableInfo(componentName)
-
-            searchView.setSearchableInfo(searchableInfo)
-
-            //val edittexthint = searchView.findViewById<EditText>(R.id.search_src_text)
-            //edittexthint.hint = "seach here..."
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-//                    if(newText!!.isNotEmpty()){
-//                          val search = newText.toLowerCase()
-//                            .forEach{
-//                              if(it.toLowerCase().contrains(search))
-//                            }
-//                    }else{
-//
-//                    }
-                    return true
-                }
-
-            })
-        }
-
-        return super.onCreateOptionsMenu(menu)
-    }
 
     override fun onPause() {
         Log.d(TAG, "onPause()")

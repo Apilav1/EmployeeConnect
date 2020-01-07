@@ -57,5 +57,4 @@ class UserRow (val context: Context, val user: User) : Item<GroupieViewHolder>()
         }
     }
 
-
 }

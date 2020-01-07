@@ -1,16 +1,19 @@
 package com.employeeconnect.ui.Fragments
 
 import android.app.AlertDialog
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.Filter
+import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import com.employeeconnect.R
 
 import com.employeeconnect.domain.Models.User
@@ -39,15 +42,17 @@ class EmployeesFragment : Fragment() {
     private var columnCount = 1
 
     private var listener: OnListEmployeesFragmentInteractionListener? = null
-    private var users: ArrayList<User>? = null
+    private var users: ArrayList<User> = ArrayList()
+
     private var adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setHasOptionsMenu(true)
+
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
-            //users = it.getParcelableArrayList<User>("users")
         }
     }
 
@@ -84,7 +89,7 @@ class EmployeesFragment : Fragment() {
 
                 it.forEach { user ->
                     if(user.uid != HomeActivity.currentUserId) {
-                        users?.add(user)
+                        users.add(user)
                         adapter.add(UserRow(context!!, user))
                     }
                 }
@@ -155,6 +160,49 @@ class EmployeesFragment : Fragment() {
         listener = null
     }
 
+    fun showKeyboard(ettext: SearchView) {
+        Log.d("OVOO", "POKAZUJEM")
+        ettext.requestFocus()
+//        ettext.postDelayed(Runnable {
+//            val keyboard =
+//                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//            keyboard.showSoftInput(ettext, 0)
+//        }
+//            , 200)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.nav_menu, menu)
+
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem!!.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.clear()
+                val result: ArrayList<User> = ArrayList()
+
+                val filterPattern = newText.toString().toLowerCase().trim()
+
+                result.addAll(users.filter{
+                    it.username.toLowerCase().contains(filterPattern)
+                })
+
+                result.forEach {
+                    adapter.add(UserRow(context!!, it))
+                }
+                adapter.notifyDataSetChanged()
+
+                return false
+            }
+        })
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
 
     /**

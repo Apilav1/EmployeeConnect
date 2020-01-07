@@ -7,11 +7,9 @@ import android.util.Log
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.employeeconnect.R
-import com.employeeconnect.domain.commands.CheckIfUserIsVerifiedCommand
+import com.employeeconnect.domain.commands.CheckIfUserIsVerifiedByEmailCommand
 import com.employeeconnect.domain.commands.SignInUserWithEmailAndPassword
 import com.employeeconnect.extensions.isEmailValid
-import com.employeeconnect.ui.Fragments.EmployeesFragment
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -45,13 +43,13 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            CheckIfUserIsVerifiedCommand(email){exists, isVerified ->
+            CheckIfUserIsVerifiedByEmailCommand(email){ exists, isVerified ->
 
                 if(!exists){
                     Toast.makeText(applicationContext, "Please enter a valid info!", Toast.LENGTH_SHORT).show()
                     gif_imageView_login.alpha = 0.0f
                     button_login.isClickable = true
-                    return@CheckIfUserIsVerifiedCommand
+                    return@CheckIfUserIsVerifiedByEmailCommand
                 }
 
                 if(isVerified){

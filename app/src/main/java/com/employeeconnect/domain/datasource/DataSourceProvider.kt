@@ -84,6 +84,17 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
         it.logoutUser(callback)
     }
 
+    fun verifyUserProfile(userId: String, callback: () -> Unit) = requestToSources {
+        it.verifyUserProfile(userId, callback)
+    }
+
+    fun makeUserAModerator(userId: String, callback: () -> Unit) = requestToSources {
+        it.makeUserAModerator(userId, callback)
+    }
+
+    fun checkIfUserIsVerified(email: String, callback: (emailExists: Boolean, emailVerified: Boolean) -> Unit) = requestToSources {
+        it.checkIfUserIsVerified(email, callback)
+    }
 
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }
 

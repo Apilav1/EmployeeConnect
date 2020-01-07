@@ -36,4 +36,9 @@ interface DataSource {
 
     fun logoutUser(callback: () -> Unit)
 
+    fun verifyUserProfile(userId: String, callback: () -> Unit)
+
+    fun makeUserAModerator(userId: String, callback: () -> Unit)
+
+    fun checkIfUserIsVerified(email: String, callback: (emailExists: Boolean, emailVerified: Boolean) -> Unit)
 }

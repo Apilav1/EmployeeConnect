@@ -7,9 +7,11 @@ import android.util.Log
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.employeeconnect.R
+import com.employeeconnect.domain.commands.CheckIfUserIsVerifiedCommand
 import com.employeeconnect.domain.commands.SignInUserWithEmailAndPassword
 import com.employeeconnect.extensions.isEmailValid
 import com.employeeconnect.ui.Fragments.EmployeesFragment
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -28,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
 
         button_login.setOnClickListener {
 
+            button_login.isClickable = false
+
             gif_imageView_login.alpha = 1.0f
             Glide.with(this).load(R.drawable.loading).into(gif_imageView_login);
 
@@ -41,19 +45,42 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            SignInUserWithEmailAndPassword(email, password){ signInSuccessful ->
+            CheckIfUserIsVerifiedCommand(email){exists, isVerified ->
 
-                if(signInSuccessful){
-                    Log.d("CHATTT", "SIGN in successful")
-                    val intent = Intent(this, HomeActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                if(!exists){
+                    Toast.makeText(applicationContext, "Please enter a valid info!", Toast.LENGTH_SHORT).show()
+                    gif_imageView_login.alpha = 0.0f
+                    button_login.isClickable = true
+                    return@CheckIfUserIsVerifiedCommand
+                }
+
+                if(isVerified){
+
+                    SignInUserWithEmailAndPassword(email, password){ signInSuccessful ->
+                        if(signInSuccessful){
+                            val intent = Intent(this, HomeActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
+                        else{
+                            Log.d("CHATTT", "SIGN not successful")
+                            Toast.makeText(applicationContext, "Please enter a valid info!", Toast.LENGTH_SHORT).show()
+                        }
+                        gif_imageView_login.alpha = 0.0f
+                        button_login.isClickable = true
+                    }.execute()
                 }
                 else{
-                    Log.d("CHATTT", "SIGN not successful")
-                    Toast.makeText(applicationContext, "Please enter a valid info!", Toast.LENGTH_SHORT).show()
+                    val company = resources.getString(R.string.company_name)
+
+                    Toast.makeText(applicationContext,
+                        "Your user profile is not verified yet by $company's team, please try later!",
+                        Toast.LENGTH_LONG).show()
+
+                    button_login.isClickable = true
+                    gif_imageView_login.alpha = 0.0f
                 }
-                gif_imageView_login.alpha = 0.0f
+
             }.execute()
         }
     }

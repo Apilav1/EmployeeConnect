@@ -1,30 +1,31 @@
 package com.employeeconnect.ui.Fragments
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.Toast
-import com.employeeconnect.ui.Adapters.MyEmployeesRecyclerViewAdapter
 import com.employeeconnect.R
 
-import com.employeeconnect.data.dummy.DummyContent
-import com.employeeconnect.data.dummy.DummyContent.DummyItem
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.GetUsersCommand
+import com.employeeconnect.domain.commands.MakeUserAModeratorCommand
+import com.employeeconnect.domain.commands.VerifyUserCommand
 import com.employeeconnect.ui.Activities.ChatLogActivity
 import com.employeeconnect.ui.Activities.HomeActivity
 import com.employeeconnect.ui.view.UserRow
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_employees.*
+import kotlinx.android.synthetic.main.fragment_employees_list.*
+import kotlinx.android.synthetic.main.fragment_employees_list.view.*
 import java.lang.Exception
 
 /**
@@ -84,7 +85,7 @@ class EmployeesFragment : Fragment() {
                 it.forEach { user ->
                     if(user.uid != HomeActivity.currentUserId) {
                         users?.add(user)
-                        adapter.add(UserRow(user))
+                        adapter.add(UserRow(context!!, user))
                     }
                 }
 
@@ -97,9 +98,55 @@ class EmployeesFragment : Fragment() {
 
         adapter.setOnItemClickListener { item, view ->
             val userItem = item as UserRow
+
             val intent = Intent(view.context, ChatLogActivity::class.java)
             intent.putExtra(USER_KEY, userItem.user)
             startActivity(intent)
+        }
+
+        adapter.setOnItemLongClickListener { item, view ->
+
+            if(!HomeActivity.currentUser!!.moderator) return@setOnItemLongClickListener true
+
+            val userItem = item as UserRow
+            val user = userItem.user
+
+            if(!user.verified){
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Confirm verification")
+                builder.setMessage("Are you sure you want to verify this profile?")
+
+                builder.setPositiveButton("YES"){ dialog, which ->
+
+                    VerifyUserCommand(user.uid){
+                        verification_icon_employees_list.alpha = 0.0F
+                    }.execute()
+                }
+
+                builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+
+                val dialog = builder.create()
+                dialog.show()
+            }
+            else if(!user.moderator){
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Confirm this update")
+                builder.setMessage("Are you sure you want to allow this user to be moderator?")
+
+                builder.setPositiveButton("YES"){ dialog, which ->
+
+                    MakeUserAModeratorCommand(user.uid){
+                        moderator_imageview_employees_list.alpha = 1.0F
+                    }.execute()
+                }
+
+                builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+
+                val dialog = builder.create()
+                dialog.show()
+            }
+
+            true
         }
     }
 
@@ -107,6 +154,8 @@ class EmployeesFragment : Fragment() {
         super.onDetach()
         listener = null
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this

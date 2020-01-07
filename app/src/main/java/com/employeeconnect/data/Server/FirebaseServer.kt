@@ -351,6 +351,51 @@ class FirebaseServer(private val dataMapper: FirebaseDataMapper = FirebaseDataMa
         callback()
     }
 
+    override fun verifyUserProfile(userId: String, callback: () -> Unit){
+
+        val ref = FirebaseFirestore.getInstance().collection("users").document(userId)
+
+        ref.update("verified", true)
+            .addOnSuccessListener {
+                callback()
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "verification failed")
+            }
+    }
+
+    override fun makeUserAModerator(userId: String, callback: () -> Unit){
+
+        val ref = FirebaseFirestore.getInstance().collection("users").document(userId)
+
+        ref.update("moderator", true)
+            .addOnSuccessListener {
+                callback()
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "verification failed")
+            }
+    }
+
+    override fun checkIfUserIsVerified(email: String, callback: (emailExists: Boolean, emailVerified: Boolean) -> Unit){
+        val ref = FirebaseFirestore.getInstance().collection("users")
+
+        ref.whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot != null && snapshot.size()>0) {
+                    val user = snapshot.documents[0].toObject(ServerUser::class.java)
+                    callback(true, user!!.verified)
+                }
+                else{
+                    callback(false, false)
+                }
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "verification check failed")
+            }
+    }
+
     fun firebaseMessaging(){
 
         FirebaseInstanceId.getInstance().instanceId

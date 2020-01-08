@@ -17,7 +17,6 @@ class LatestMessageRow(val toUser: User, val message: Message): Item<GroupieView
 
         val currentUserSentMessage = HomeActivity.currentUserId == message.fromUser
 
-        Log.d("CHATTT", "u adapteru->"+toUser.username+ " "+ toUser.uid)
         viewHolder.itemView.username_fragment_messages.setText(toUser.username)
         Picasso.get().load(toUser.profileImageUrl).into(viewHolder.itemView.imageView_fragment_messages)
 
@@ -29,6 +28,7 @@ class LatestMessageRow(val toUser: User, val message: Message): Item<GroupieView
         val messageDate = message.timeStamp.toString()
 
         viewHolder.itemView.messageDate_fragment_message_row.text = messageDate.getDateTimeFromTimestamp()
+
     }
 
     override fun getLayout(): Int {

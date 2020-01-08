@@ -172,10 +172,10 @@ class EmployeesFragment : Fragment(){
 //            , 200)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.nav_menu, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.nav_menu, menu)
 
-        val searchItem = menu?.findItem(R.id.action_search)
+        val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem!!.actionView as SearchView
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{

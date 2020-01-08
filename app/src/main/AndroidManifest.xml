@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name="com.employeeconnect.data.Server.MyFirebaseMessagingService"
+            android:name="com.employeeconnect.data.Server.firebase.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

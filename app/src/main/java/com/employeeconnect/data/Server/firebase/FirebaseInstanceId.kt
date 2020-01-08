@@ -1,7 +1,6 @@
-package com.employeeconnect.data.Server
+package com.employeeconnect.data.Server.firebase
 
 import android.util.Log
-import com.employeeconnect.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 

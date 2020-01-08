@@ -8,4 +8,5 @@
     <color name="lightBlue">#ddeefd</color>
     <color name="register_background_gray_color">#f9f9f9</color>
     <color name="unverified_user_yellow">#FFFF00</color>
+    <color name="darkBlue">#061c42</color>
 </resources>

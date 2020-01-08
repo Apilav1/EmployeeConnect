@@ -18,6 +18,8 @@ import com.employeeconnect.ui.Activities.ChatLogActivity
 import com.employeeconnect.ui.Activities.HomeActivity
 import com.employeeconnect.ui.view.LatestMessageRow
 import com.employeeconnect.ui.view.UserRow
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder

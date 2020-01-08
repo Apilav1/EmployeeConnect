@@ -1,4 +1,4 @@
-package com.employeeconnect.data.Server
+package com.employeeconnect.data.Server.firebase
 
 import android.net.Uri
 import android.util.Log

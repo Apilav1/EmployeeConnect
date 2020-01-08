@@ -1,11 +1,10 @@
-package com.employeeconnect.data.Server
+package com.employeeconnect.data.Server.firebase
 
 import android.util.Log
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 
 import com.employeeconnect.domain.Models.User as DomainUser
-import com.employeeconnect.data.Server.User as ServerUser
+import com.employeeconnect.data.Server.firebase.User as ServerUser
 
 
 class FirebaseGetUsersRequest {

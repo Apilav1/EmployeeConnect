@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar">
 
     <FrameLayout
         android:id="@+id/fragment_containter"
@@ -18,5 +19,6 @@
         android:layout_height="55dp"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
+        app:backgroundTint="@android:color/white"
         app:menu="@menu/bottom_navigation" />
 </RelativeLayout>

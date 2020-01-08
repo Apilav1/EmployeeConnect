@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.inputmethod.InputMethodManager
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
@@ -27,36 +28,23 @@ import com.employeeconnect.data.Server.FirebaseServer
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.FetchCurrentUserCommand
 import com.employeeconnect.domain.commands.GetCurrentUserIdCommand
+import com.employeeconnect.networks.ConnectivityReceiver
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_home.*
 
 
-class HomeActivity : AppCompatActivity(),
+class HomeActivity : BaseActivity(),
                                         EmployeesFragment.OnListEmployeesFragmentInteractionListener,
                                         LatestMessagesFragment.OnMessagesListFragmentInteractionListener,
-                                        UserProfileFragment.OnUserProfileFragmentInteractionListener{
-    private var bundle = Bundle.EMPTY
+                                        UserProfileFragment.OnUserProfileFragmentInteractionListener,
+                                        ConnectivityReceiver.ConnectivityReceiverListener {
 //    lateinit var mRegistrationBroadcastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        //
-//        FirebaseInstanceId.getInstance().instanceId
-//            .addOnCompleteListener(OnCompleteListener { task ->
-//                if (!task.isSuccessful) {
-//                    Log.w(TAG, "getInstanceId failed", task.exception)
-//                    return@OnCompleteListener
-//                }
-//
-//                // Get new Instance ID token
-//                val token = task.result?.token
-//
-//                Log.d(TAG, token)
-//            })
-        //
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
@@ -81,18 +69,12 @@ class HomeActivity : AppCompatActivity(),
             return@setOnNavigationItemSelectedListener when (it.itemId){
                 R.id.nav_home ->{
                     replaceFragment(EmployeesFragment())
-                    Log.d(TAG, "home pressed")
-                    true
                 }
                 R.id.nav_messages ->{
                     replaceFragment(LatestMessagesFragment())
-                    Log.d(TAG, "messages pressed")
-                    true
                 }
                 R.id.nav_userprofile -> {
-                    Log.d(TAG, "userprofile pressed")
                     replaceFragment(UserProfileFragment())
-                    true
                 }
                 else -> false
             }
@@ -142,12 +124,21 @@ class HomeActivity : AppCompatActivity(),
         notificationManager.notify(1, builder.build())
     }
 
-    private fun replaceFragment(fragment: Fragment){
+    private fun replaceFragment(fragment: Fragment): Boolean{
+
+        if(!deviceIsConnected){
+            Toast.makeText(applicationContext, "Please check your internet connection!",
+                            Toast.LENGTH_SHORT).show()
+            return false
+        }
+
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         //fragment.arguments = bundle
         fragmentTransaction.replace(R.id.fragment_containter, fragment)
         fragmentTransaction.commit()
+
+        return true
     }
 
     override fun onListEmployeesFragmentInteraction(user: User) {
@@ -162,66 +153,6 @@ class HomeActivity : AppCompatActivity(),
 
     override fun onUserProfileFragmentInteraction(uri: Uri) {
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.nav_menu, menu)
-//
-//        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
-//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//        val searchView: SearchView? = searchItem?.actionView as SearchView
-//
-//        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-//        return super.onCreateOptionsMenu(menu)
-//    }
-   /* override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.nav_menu, menu)
-
-        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
-        val searchView: SearchView? = searchItem?.actionView as SearchView
-
-        val inputMethodManager: InputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.toggleSoftInputFromWindow(searchView?.getApplicationWindowToken(),
-            InputMethodManager.SHOW_FORCED, 0
-        )
-
-        searchView?.requestFocus()
-
-        searchView?.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-
-        showKeyboard(searchView!!)
-        searchView.setSubmitButtonEnabled(true)
-
-        // Associate searchable configuration with the SearchView
-        /*val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        (menu.findItem(R.id.action_search).actionView as SearchView).apply {
-            setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        }
-
-        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
-        val searchView: SearchView? = searchItem?.actionView as SearchView
-
-        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if(newText!!.isNotEmpty()){
-                    //.forEach{ it.lowerCase().contains(newText.toLowerCase())
-
-                }
-                else{
-
-                }
-                return true
-            }
-
-        })*/
-        return true
-    }*/
-
-
 
     override fun onPause() {
         Log.d(TAG, "onPause()")
@@ -239,6 +170,7 @@ class HomeActivity : AppCompatActivity(),
 
     }
 
+
     companion object{
         private const val TAG =  "HomeAkttt"
 
@@ -249,4 +181,5 @@ class HomeActivity : AppCompatActivity(),
 
         const val USER_KEY = "USER_KEY"
     }
+
 }

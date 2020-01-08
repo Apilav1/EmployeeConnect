@@ -20,6 +20,7 @@ import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.GetUsersCommand
 import com.employeeconnect.domain.commands.MakeUserAModeratorCommand
 import com.employeeconnect.domain.commands.VerifyUserCommand
+import com.employeeconnect.ui.Activities.BaseActivity
 import com.employeeconnect.ui.Activities.ChatLogActivity
 import com.employeeconnect.ui.Activities.HomeActivity
 import com.employeeconnect.ui.view.UserRow
@@ -36,7 +37,7 @@ import java.lang.Exception
  * Activities containing this fragment MUST implement the
  * [EmployeesFragment.OnListEmployeesFragmentInteractionListener] interface.
  */
-class EmployeesFragment : Fragment() {
+class EmployeesFragment : Fragment(){
 
     // TODO: Customize parameters
     private var columnCount = 1

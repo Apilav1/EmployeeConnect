@@ -20,10 +20,9 @@ import com.employeeconnect.domain.commands.DeleteUserCommand
 import com.employeeconnect.domain.commands.LogoutUserCommand
 import com.employeeconnect.domain.commands.UpdateUserCommand
 import com.employeeconnect.ui.Activities.HomeActivity
-import com.employeeconnect.ui.Activities.LoginActivity
+import com.employeeconnect.ui.Login.LoginActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_basic_info_register.*
-import kotlinx.android.synthetic.main.fragment_basic_info_register.view.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.android.synthetic.main.fragment_user_profile.view.*
 

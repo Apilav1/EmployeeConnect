@@ -42,9 +42,9 @@
         <activity android:name="com.employeeconnect.ui.Activities.RegisterActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.employeeconnect.ui.Activities.LoginActivity" />
+                android:value="com.employeeconnect.ui.Login.LoginActivity" />
         </activity>
-        <activity android:name="com.employeeconnect.ui.Activities.LoginActivity">
+        <activity android:name="com.employeeconnect.ui.Login.LoginActivity">
 
         </activity>
 

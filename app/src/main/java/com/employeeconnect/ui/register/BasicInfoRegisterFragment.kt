@@ -1,4 +1,4 @@
-package com.employeeconnect.ui.Fragments
+package com.employeeconnect.ui.register
 
 import android.app.Activity
 import android.content.Context
@@ -17,6 +17,7 @@ import com.employeeconnect.extensions.revealAndDropAnimation
 
 import com.employeeconnect.R
 import kotlinx.android.synthetic.main.fragment_basic_info_register.*
+import kotlinx.android.synthetic.main.fragment_basic_info_register.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,13 +32,14 @@ private const val ARG_PARAM2 = "param2"
  * Use the [BasicInfoRegisterFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class BasicInfoRegisterFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+class BasicInfoRegisterFragment : Fragment(){
     private var param1: String? = null
     private var param2: String? = null
     private var listenerBasicInfoRegister: OnBasicInfoRegisterFragmentInteractionListener? = null
     private var fragmentContainer: ViewGroup? = null
     private var REQUESTCODE_PHOTO = 0
+    private var isPhotoSet = false
+    private lateinit var myView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,13 +54,10 @@ class BasicInfoRegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_basic_info_register, container, false)
+        myView = inflater.inflate(R.layout.fragment_basic_info_register, container, false)
 
         fragmentContainer = container
-
-
-        // Inflate the layout for this fragment
-        return view
+        return myView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,12 +73,17 @@ class BasicInfoRegisterFragment : Fragment() {
         ))
 
         back_button_basic_register?.setOnClickListener {
-            onButtonPressed(it)
+            onButtonPressed(it, "", "", "", false)
         }
 
         next_button_basic_register?.setOnClickListener {
-            if(basicInfoValidation()) onButtonPressed(it)
-            else return@setOnClickListener
+
+            val username = username_register.text.toString()
+            val email = email_register.text.toString()
+            val password = password_register.text.toString()
+            val isPhotoSet = photo_button_register.alpha == 0.0f
+
+            onButtonPressed(it, username, email, password, isPhotoSet)
         }
 
         photo_button_register.setOnClickListener {
@@ -90,40 +94,11 @@ class BasicInfoRegisterFragment : Fragment() {
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(view: View) {
-        listenerBasicInfoRegister?.onBasicInfoRegisterFragmentInteraction(view)
+    fun onButtonPressed(view: View, username: String, email: String, password: String, isPhotoSet: Boolean) {
+        listenerBasicInfoRegister?.onBasicInfoRegisterFragmentInteraction(view, username, email, password, isPhotoSet)
     }
 
-    fun basicInfoValidation(): Boolean{
-
-        val username = username_register.text.toString()
-        val email = email_register.text.toString()
-        val password = password_register.text.toString()
-
-        if(username.isEmpty()) {
-            Toast.makeText(context, "Please enter your username", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(!email.isEmailValid()) {
-            Toast.makeText(context, "Please enter valid email", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(!password.isPasswordValid()){
-            Toast.makeText(context, "Password must be longer than 7 characters", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(photo_button_register.alpha != 0.0f){
-            Toast.makeText(context, "Please insert your profile photo", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        return true
-    }
-
-    var selectedPhotoUri: Uri? = null
+    private var selectedPhotoUri: Uri? = null
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -135,6 +110,7 @@ class BasicInfoRegisterFragment : Fragment() {
             photo_button_register.alpha = 0f
 
             selectedPhotoUriString = selectedPhotoUri.toString()
+            isPhotoSet = true
         }
     }
 
@@ -165,7 +141,8 @@ class BasicInfoRegisterFragment : Fragment() {
      */
     interface OnBasicInfoRegisterFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onBasicInfoRegisterFragmentInteraction(view: View)
+        fun onBasicInfoRegisterFragmentInteraction(view: View, username: String, email: String,
+                                                   password: String, isPhotoSet: Boolean)
     }
 
     companion object {

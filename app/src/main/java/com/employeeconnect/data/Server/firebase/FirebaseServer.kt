@@ -1,23 +1,10 @@
 package com.employeeconnect.data.Server.firebase
 
-import android.net.Uri
-import android.util.Log
 import com.employeeconnect.domain.Models.ChatRoom
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.datasource.DataSource
-import com.employeeconnect.networks.ConnectivityReceiver
-import com.employeeconnect.ui.Activities.BaseActivity
-import com.employeeconnect.ui.Activities.HomeActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.storage.FirebaseStorage
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import com.employeeconnect.data.Server.firebase.User as ServerUser
 
 class FirebaseServer : DataSource {
 

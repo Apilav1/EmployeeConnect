@@ -1,20 +1,19 @@
-package com.employeeconnect.ui.Activities
+package com.employeeconnect.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.employeeconnect.R
-import com.employeeconnect.domain.Models.ChatRoom
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.AddChatRoomIdToUsersCommand
 import com.employeeconnect.domain.commands.CreateChatRoomCommand
 import com.employeeconnect.domain.commands.SendMessageCommand
 import com.employeeconnect.domain.commands.SetMessagesListenerCommand
-import com.employeeconnect.ui.Fragments.EmployeesFragment
+import com.employeeconnect.ui.home.EmployeesFragment
+import com.employeeconnect.ui.home.HomeActivity
 import com.employeeconnect.ui.view.ChatFromCurrentUserItem
 import com.employeeconnect.ui.view.ChatToUserItem
-import com.google.firebase.firestore.FirebaseFirestore
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.activity_chat_log.*

@@ -1,4 +1,4 @@
-package com.employeeconnect.ui.Fragments
+package com.employeeconnect.ui.register
 
 import android.content.Context
 import android.os.Bundle
@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.employeeconnect.extensions.revealAndDropAnimation
 
 import com.employeeconnect.R
-import kotlinx.android.synthetic.main.fragment_contact_info_register.*
+import kotlinx.android.synthetic.main.fragment_employee_info_register.*
+import kotlinx.android.synthetic.main.fragment_employee_info_register.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,17 +22,17 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [ContactInfoRegisterFragment.OnContactInfoRegisterFragmentInteractionListener] interface
+ * [EmployeeInfoRegisterFragment.OnEmployeeInfoRegisterFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [ContactInfoRegisterFragment.newInstance] factory method to
+ * Use the [EmployeeInfoRegisterFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ContactInfoRegisterFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+class EmployeeInfoRegisterFragment : Fragment(){
     private var param1: String? = null
     private var param2: String? = null
-    private var listenerContactInfoRegister: OnContactInfoRegisterFragmentInteractionListener? = null
+    private var listenerEmployeeInfoRegister: OnEmployeeInfoRegisterFragmentInteractionListener? = null
     private var fragmentContainer: ViewGroup? = null
+    private lateinit var myView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,62 +46,48 @@ class ContactInfoRegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragmentContainer = container
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact_info_register, container, false)
-    }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(view: View) {
-        listenerContactInfoRegister?.onContactInfoRegisterFragmentInteraction(view)
+        myView =  inflater.inflate(R.layout.fragment_employee_info_register, container, false)
+        return myView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         fragmentContainer.revealAndDropAnimation(listOf<View>(
-            github_username_register,
-            linkenin_link_register,
-            skills_register,
-            back_button_contact_info_register,
-            next_button_contact_info_register
+            position_register,
+            team_register,
+            project_register,
+            back_button_employee_info_register,
+            complete_registration_button_register
         ))
 
-        back_button_contact_info_register.setOnClickListener {
-            onButtonPressed(it)
+        back_button_employee_info_register.setOnClickListener {
+            onButtonPressed(it, "", "", "")
         }
-        next_button_contact_info_register.setOnClickListener {
-            if(contactInfoValidation()) onButtonPressed(it)
+        complete_registration_button_register.setOnClickListener {
+
+            val position = position_register.text.toString()
+            val teamName = team_register.text.toString()
+            val currentProject = project_register.text.toString()
+
+//            it.isClickable = false
+            progress_register.visibility = View.VISIBLE
+            onButtonPressed(it, position, teamName, currentProject)
         }
     }
 
-    private fun contactInfoValidation(): Boolean{
+    public fun hideProgress(){
+        progress_register.visibility = View.GONE
+    }
 
-        val githubUsername = github_username_register.text.toString()
-        val linkedInUsername = linkenin_link_register.text.toString()
-        val skills = skills_register.text.toString()
-
-        if(githubUsername.isEmpty()){
-            Toast.makeText(context, "Please enter valid Github username", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        if(linkedInUsername.isEmpty()){
-            Toast.makeText(context, "Please enter valid LinkedIn username", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        if(skills.isEmpty()){
-            Toast.makeText(context, "Please enter at least one of your's skills in programming field", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        return true
+    fun onButtonPressed(view: View, position: String, teamName: String, currentProject: String) {
+        listenerEmployeeInfoRegister?.onEmployeeInfoRegisterFragmentInteraction(view, position, teamName, currentProject)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnContactInfoRegisterFragmentInteractionListener) {
-            listenerContactInfoRegister = context
+        if (context is OnEmployeeInfoRegisterFragmentInteractionListener) {
+            listenerEmployeeInfoRegister = context
         } else {
             throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
@@ -107,7 +95,7 @@ class ContactInfoRegisterFragment : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        listenerContactInfoRegister = null
+        listenerEmployeeInfoRegister = null
     }
 
     /**
@@ -121,9 +109,9 @@ class ContactInfoRegisterFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnContactInfoRegisterFragmentInteractionListener {
+    interface OnEmployeeInfoRegisterFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onContactInfoRegisterFragmentInteraction(view: View)
+        fun onEmployeeInfoRegisterFragmentInteraction(view: View, position: String, teamName: String, currentProject: String)
     }
 
     companion object {
@@ -133,12 +121,12 @@ class ContactInfoRegisterFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ContactInfoRegisterFragment.
+         * @return A new instance of fragment EmployeeInfoRegisterFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ContactInfoRegisterFragment().apply {
+            EmployeeInfoRegisterFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -1,17 +1,13 @@
-package com.employeeconnect.ui.Login
+package com.employeeconnect.ui.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.employeeconnect.R
-import com.employeeconnect.domain.commands.CheckIfUserIsVerifiedByEmailCommand
-import com.employeeconnect.domain.commands.SignInUserWithEmailAndPassword
-import com.employeeconnect.extensions.isEmailValid
-import com.employeeconnect.ui.Activities.HomeActivity
-import com.employeeconnect.ui.Activities.RegisterActivity
+import com.employeeconnect.ui.home.HomeActivity
+import com.employeeconnect.ui.register.RegisterActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity(), LoginView {

@@ -1,4 +1,4 @@
-package com.employeeconnect.ui.Login
+package com.employeeconnect.ui.login
 
 class LoginPresenter(var loginView: LoginView?, val loginInteractor: LoginInteractor) :
     LoginInteractor.OnLoginFinishedListener{

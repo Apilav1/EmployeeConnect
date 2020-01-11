@@ -1,14 +1,10 @@
-package com.employeeconnect.ui.Activities
+package com.employeeconnect.ui.activities
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.employeeconnect.R
 import com.employeeconnect.networks.ConnectivityReceiver
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -20,10 +16,14 @@ import com.google.android.material.snackbar.Snackbar
 @SuppressLint("Registered")
 open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
     private var mSnackBar: Snackbar? = null
+    private var receiver: ConnectivityReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        registerReceiver(ConnectivityReceiver(),
+
+        receiver = ConnectivityReceiver()
+
+        registerReceiver(receiver,
             IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         )
     }
@@ -57,6 +57,11 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
      */
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         showMessage(isConnected)
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
     }
 
     companion object{

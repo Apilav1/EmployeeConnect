@@ -1,4 +1,4 @@
-package com.employeeconnect.ui.Activities
+package com.employeeconnect.ui.home
 
 import android.app.Notification
 import android.app.NotificationManager
@@ -11,15 +11,15 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
-import com.employeeconnect.ui.Fragments.EmployeesFragment
-import com.employeeconnect.ui.Fragments.LatestMessagesFragment
-import com.employeeconnect.ui.Fragments.UserProfileFragment
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.FetchCurrentUserCommand
 import com.employeeconnect.domain.commands.GetCurrentUserIdCommand
 import com.employeeconnect.networks.ConnectivityReceiver
-import com.employeeconnect.ui.Login.LoginActivity
+import com.employeeconnect.ui.activities.BaseActivity
+import com.employeeconnect.ui.activities.ChatLogActivity
+import com.employeeconnect.ui.login.LoginActivity
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_home.*
 
 
@@ -163,7 +163,8 @@ class HomeActivity : BaseActivity(),
         var currentUser: User? = null
         var currentUserId: String? = null
 
-        var currentFragmet: Fragment = EmployeesFragment()
+        var currentFragmet: Fragment =
+            EmployeesFragment()
 
         const val USER_KEY = "USER_KEY"
     }

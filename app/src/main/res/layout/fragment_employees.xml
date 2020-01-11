@@ -8,6 +8,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.Fragments.EmployeesFragment"
+    tools:context=".ui.home.EmployeesFragment"
     tools:listitem="@layout/fragment_employees_list"
     />

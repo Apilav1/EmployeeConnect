@@ -1,35 +1,26 @@
-package com.employeeconnect.ui.Fragments
+package com.employeeconnect.ui.home
 
 import android.app.AlertDialog
-import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import android.widget.CheckBox
-import android.widget.Filter
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import com.employeeconnect.R
 
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.GetUsersCommand
 import com.employeeconnect.domain.commands.MakeUserAModeratorCommand
 import com.employeeconnect.domain.commands.VerifyUserCommand
-import com.employeeconnect.ui.Activities.BaseActivity
-import com.employeeconnect.ui.Activities.ChatLogActivity
-import com.employeeconnect.ui.Activities.HomeActivity
+import com.employeeconnect.ui.activities.ChatLogActivity
 import com.employeeconnect.ui.view.UserRow
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_employees.*
 import kotlinx.android.synthetic.main.fragment_employees_list.*
-import kotlinx.android.synthetic.main.fragment_employees_list.view.*
 import java.lang.Exception
 
 /**

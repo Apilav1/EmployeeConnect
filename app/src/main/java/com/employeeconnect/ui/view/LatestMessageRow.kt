@@ -1,11 +1,10 @@
 package com.employeeconnect.ui.view
 
-import android.util.Log
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.extensions.getDateTimeFromTimestamp
-import com.employeeconnect.ui.Activities.HomeActivity
+import com.employeeconnect.ui.home.HomeActivity
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item

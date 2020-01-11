@@ -1,7 +1,6 @@
 package com.employeeconnect.data.Server.firebase
 
-import android.util.Log
-import com.employeeconnect.ui.Activities.BaseActivity
+import com.employeeconnect.ui.activities.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class GetCurrentUserIdRequest {

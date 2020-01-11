@@ -68,6 +68,7 @@ class FirebaseRegisterUserRequest {
         newUser.set(user)
             .addOnSuccessListener {
                 Log.d(TAG, "Document added")
+                FirebaseAuth.getInstance().signOut()
                 onSuccess()
             }
             .addOnFailureListener {

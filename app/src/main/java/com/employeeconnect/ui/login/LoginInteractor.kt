@@ -1,6 +1,5 @@
-package com.employeeconnect.ui.Login
+package com.employeeconnect.ui.login
 
-import android.util.Log
 import com.employeeconnect.domain.commands.CheckIfUserIsVerifiedByEmailCommand
 import com.employeeconnect.domain.commands.SignInUserWithEmailAndPassword
 import com.employeeconnect.extensions.isEmailValid

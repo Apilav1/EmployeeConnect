@@ -1,4 +1,4 @@
-package com.employeeconnect.ui.Fragments
+package com.employeeconnect.ui.home
 
 import android.content.Context
 import android.content.Intent
@@ -14,12 +14,8 @@ import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.GetLatestMessagesCommand
 import com.employeeconnect.domain.commands.GetMultipleUsersByIdCommand
-import com.employeeconnect.ui.Activities.ChatLogActivity
-import com.employeeconnect.ui.Activities.HomeActivity
+import com.employeeconnect.ui.activities.ChatLogActivity
 import com.employeeconnect.ui.view.LatestMessageRow
-import com.employeeconnect.ui.view.UserRow
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -120,7 +116,8 @@ class LatestMessagesFragment : Fragment() {
             val intent = Intent(view.context, ChatLogActivity::class.java)
             intent.putExtra(EmployeesFragment.USER_KEY, userItem.toUser)
 
-            HomeActivity.currentFragmet = LatestMessagesFragment()
+            HomeActivity.currentFragmet =
+                LatestMessagesFragment()
             startActivity(intent)
         }
     }

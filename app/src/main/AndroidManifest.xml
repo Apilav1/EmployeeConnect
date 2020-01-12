@@ -22,7 +22,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.employeeconnect.ui.activities.ChatLogActivity">
+        <activity android:name="com.employeeconnect.ui.chatLog.ChatLogActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.employeeconnect.ui.home.HomeActivity" />

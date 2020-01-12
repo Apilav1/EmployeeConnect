@@ -1,8 +1,10 @@
 package com.employeeconnect.data.Server.firebase
 
-import com.employeeconnect.domain.Models.ChatRoom
-import com.employeeconnect.domain.Models.Message
-import com.employeeconnect.domain.Models.User
+
+import com.employeeconnect.domain.Models.User as DomainUser
+import com.employeeconnect.domain.Models.Message as DomainMessage
+import com.employeeconnect.domain.Models.ChatRoom as DomainChatRoom
+
 import com.employeeconnect.domain.datasource.DataSource
 import kotlin.collections.ArrayList
 
@@ -13,7 +15,7 @@ class FirebaseServer : DataSource {
     }
 
     override fun registerNewUser(
-        user: User,
+        user: DomainUser,
         password: String,
         onSuccess: () -> Unit
     ){
@@ -26,7 +28,7 @@ class FirebaseServer : DataSource {
         }
      }
 
-    override fun getUsers(callback: (ArrayList<User>) -> Unit){
+    override fun getUsers(callback: (ArrayList<DomainUser>) -> Unit){
 
         try{
             FirebaseGetUsersRequest().execute(callback)
@@ -42,47 +44,49 @@ class FirebaseServer : DataSource {
         GetCurrentUserIdRequest().execute(callback)
     }
 
-    override fun fetchCurrentUser(callback: (user: User) -> Unit) {
+    override fun fetchCurrentUser(callback: (user: DomainUser) -> Unit) {
 
         return FetchCurrentUserRequest().execute(callback)
     }
 
-    override fun createChatRoom(chatRoom: ChatRoom, callback: (chatRoomId: String) -> Unit) {
+    override fun createChatRoom(chatRoom: DomainChatRoom, callback: (chatRoomId: String) -> Unit) {
 
         CreateChatRoomRequest().execute(chatRoom, callback)
     }
 
-    override fun sendMessage(chatRoomId: String, message: Message){
+    override fun sendMessage(chatRoomId: String, message: DomainMessage, callback: () -> Unit){
 
-        SendMessageRequest().execute(chatRoomId, message)
+        SendMessageRequest().execute(chatRoomId, message, callback)
+
     }
 
-    override fun getLatestMessages(chatRooms: ArrayList<String>, callback: (ArrayList<Message>) -> Unit) {
+    override fun getLatestMessages(chatRooms: ArrayList<String>, callback: (ArrayList<DomainMessage>) -> Unit) {
 
         GetLatestMessagesRequest().execute(chatRooms, callback)
     }
 
-    override fun getUserById(userId: String, callback: (User) -> Unit){
+    override fun getUserById(userId: String, callback: (DomainUser) -> Unit){
 
         GetUserByIdRequest().execute(userId, callback)
     }
 
-    override fun getMultipleUsersById(usersIds: ArrayList<String>, callback: (ArrayList<User>) -> Unit){
+    override fun getMultipleUsersById(usersIds: ArrayList<String>, callback: (ArrayList<DomainUser>) -> Unit){
 
         GetMultipleUsersByIdRequest().execute(usersIds, callback)
+
     }
 
-    override fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit){
+    override fun setMessageListener(chatRoomId: String, callback: (ArrayList<DomainMessage>) -> Unit){
 
         SetMessageListenerRequest().execute(chatRoomId, callback)
     }
 
-    override fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String) {
+    override fun addChatRoomIdToUsers(users: ArrayList<DomainUser>, chatRoomId: String, callback: () -> Unit) {
 
-        AddChatRoomIdToUsersRequest().execute(users, chatRoomId)
+        AddChatRoomIdToUsersRequest().execute(users, chatRoomId, callback)
     }
 
-    override fun updateUser(user: User, pictureChanged: Boolean, callback: ()->Unit){
+    override fun updateUser(user: DomainUser, pictureChanged: Boolean, callback: ()->Unit){
 
         UpdateUserRequest().execute(user, pictureChanged, callback)
     }
@@ -121,7 +125,7 @@ class FirebaseServer : DataSource {
         CheckIfUserIsVerifiedRequest().execute(email, callback)
     }
 
-    override fun updateLatestMessages(message: Message, callback: () -> Unit) {
+    override fun updateLatestMessages(message: DomainMessage, callback: () -> Unit) {
 
         UpdateLatestMessageRequest().execute(message.chatRoomId, message, callback)
 

@@ -1,15 +1,15 @@
 package com.employeeconnect.data.Server.firebase
 
 import android.util.Log
-import com.employeeconnect.domain.Models.User
 import com.employeeconnect.ui.activities.BaseActivity
-import com.employeeconnect.ui.home.HomeActivity
+import com.employeeconnect.data.Server.firebase.User as ServerUser
+import com.employeeconnect.domain.Models.User as DomainUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class FetchCurrentUserRequest {
 
-    fun execute(callback: (user: User) -> Unit) {
+    fun execute(callback: (user: DomainUser) -> Unit) {
 
         if(!BaseActivity.deviceIsConnected) return
 
@@ -23,8 +23,8 @@ class FetchCurrentUserRequest {
                 return@addSnapshotListener
             }
             if (snapshot != null && snapshot.exists()) {
-                val result = snapshot.toObject(User::class.java)
-                callback(result!!)
+                val result= snapshot.toObject(ServerUser::class.java)
+                callback(FirebaseDataMapper().convertUserToDomain(result!!))
             }
         }
     }

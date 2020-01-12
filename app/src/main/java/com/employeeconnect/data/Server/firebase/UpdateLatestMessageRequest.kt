@@ -1,13 +1,14 @@
 package com.employeeconnect.data.Server.firebase
 
 import android.util.Log
-import com.employeeconnect.domain.Models.Message
+import com.employeeconnect.data.Server.firebase.Message as ServerMessage
+import com.employeeconnect.domain.Models.Message as DomainMessage
 import com.employeeconnect.ui.activities.BaseActivity
 import com.google.firebase.firestore.FirebaseFirestore
 
 class UpdateLatestMessageRequest {
 
-    fun execute(chatRoomId: String, message: Message, callback: () -> Unit){
+    fun execute(chatRoomId: String, message: DomainMessage, callback: () -> Unit){
 
         if(!BaseActivity.deviceIsConnected) return
 
@@ -16,7 +17,7 @@ class UpdateLatestMessageRequest {
 
         docRef.get().addOnSuccessListener { document ->
             if(!document.exists() || document == null){
-                docRef.set(message)
+                docRef.set(FirebaseDataMapper().convertMessageToServer(message))
                     .addOnSuccessListener {
                         Log.d(FirebaseServer.TAG, "new document added to latest messages")
                     }

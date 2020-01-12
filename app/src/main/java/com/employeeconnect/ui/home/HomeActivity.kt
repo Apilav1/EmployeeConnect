@@ -9,7 +9,7 @@ import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.networks.ConnectivityReceiver
 import com.employeeconnect.ui.activities.BaseActivity
-import com.employeeconnect.ui.activities.ChatLogActivity
+import com.employeeconnect.ui.chatLog.ChatLogActivity
 import com.employeeconnect.ui.login.LoginActivity
 import com.google.android.material.badge.BadgeDrawable
 import kotlinx.android.synthetic.main.activity_home.*
@@ -23,7 +23,6 @@ class HomeActivity : BaseActivity(), HomeView,
 
 
     private val presenter = HomePresenter(this, HomeInteractor())
-    private val bundle = Bundle()
     private var latestMessagesWithoutUsers: ArrayList<Message>? = null
     private var badge: BadgeDrawable? = null
     private var CHAT_LOG_CODE = 0
@@ -51,6 +50,7 @@ class HomeActivity : BaseActivity(), HomeView,
         }
 
         badge = bottom_navigation.getOrCreateBadge(R.id.nav_messages)
+        badge?.isVisible = false
     }
 
     private fun replaceFragment(fragment: Fragment): Boolean{
@@ -65,7 +65,6 @@ class HomeActivity : BaseActivity(), HomeView,
 
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragment.arguments = bundle
         fragmentTransaction.replace(R.id.fragment_containter, fragment)
         fragmentTransaction.commit()
 

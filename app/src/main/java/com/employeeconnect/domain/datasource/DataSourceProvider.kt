@@ -42,16 +42,16 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
          it.createChatRoom(ChatRoom("", usersId), callback)
     }
 
-    fun sendMessage(chatRoomId: String, message: Message) = requestToSources {
-        it.sendMessage(chatRoomId, message)
+    fun sendMessage(chatRoomId: String, message: Message, callback: () -> Unit) = requestToSources {
+        it.sendMessage(chatRoomId, message, callback)
     }
 
     fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit) = requestToSources {
         it.setMessageListener(chatRoomId, callback)
     }
 
-    fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String) = requestToSources{
-        it.addChatRoomIdToUsers(users, chatRoomId)
+    fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String, callback: () -> Unit) = requestToSources{
+        it.addChatRoomIdToUsers(users, chatRoomId, callback)
     }
 
     fun getLatestMessages(chatRooms: ArrayList<String>, callback: (ArrayList<Message>) -> Unit) = requestToSources {

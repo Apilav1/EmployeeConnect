@@ -4,9 +4,10 @@ import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.datasource.DataSourceProvider
 
 class SendMessageCommand(private val chatRoomId: String, private val message: Message,
-                         private val dataSourceProvider: DataSourceProvider = DataSourceProvider()) : Command<Unit>  {
+                         private val dataSourceProvider: DataSourceProvider = DataSourceProvider(),
+                         private val callback: () -> Unit) : Command<Unit>  {
 
     override fun execute() {
-         dataSourceProvider.sendMessage(chatRoomId, message)
+         dataSourceProvider.sendMessage(chatRoomId, message, callback)
     }
 }

@@ -10,7 +10,7 @@ import android.widget.SearchView
 import com.employeeconnect.R
 
 import com.employeeconnect.domain.Models.User
-import com.employeeconnect.ui.activities.ChatLogActivity
+import com.employeeconnect.ui.chatLog.ChatLogActivity
 import com.employeeconnect.ui.view.UserRow
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder

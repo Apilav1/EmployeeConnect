@@ -22,3 +22,14 @@ data class User (
     constructor(): this("", "", "","",
         "", "", "", "", "", "", false, false, HashMap())
 }
+
+@Parcelize
+class ChatRoom(val uid: String, val usersId: ArrayList<String>) : Parcelable {
+    constructor(): this("", ArrayList())
+}
+
+@Parcelize
+class Message(val fromUser: String, val toUser: String, val text: String, val timeStamp: Long,
+              val chatRoomId: String, var seen: Boolean): Parcelable{
+    constructor(): this("", "", "", 0L, "", false)
+}

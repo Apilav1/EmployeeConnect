@@ -4,6 +4,7 @@ import android.util.Log
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.ui.activities.BaseActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import com.employeeconnect.data.Server.firebase.Message as ServerMessage
 
 class GetLatestMessagesRequest {
 
@@ -24,7 +25,8 @@ class GetLatestMessagesRequest {
                 if(snapshot != null){
                     result = ArrayList()
                     for(message in snapshot){
-                        result.add(message.toObject(Message::class.java))
+                        val res = message.toObject(ServerMessage::class.java)
+                        result.add(FirebaseDataMapper().convertMessageToDomain(res))
                     }
                     Log.d(FirebaseServer.TAG, "GET LATEST MESSAGES: ${result.size.toString()}")
                     callback(result)

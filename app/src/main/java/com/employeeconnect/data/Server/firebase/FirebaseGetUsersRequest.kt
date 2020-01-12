@@ -30,17 +30,5 @@ class FirebaseGetUsersRequest {
             }
             callback(FirebaseDataMapper().convertToDomain(users))
         }
-
-//        docRef.get()
-//            .addOnSuccessListener { documents ->
-//                for(document in documents){
-//                    users.add(document.toObject(ServerUser::class.java))
-//                    Log.d("Homeee", "izvorno"+users.size.toString())
-//                }
-//                callback(FirebaseDataMapper().convertToDomain(users))
-//            }
-//            .addOnFailureListener {
-//                throw (it)
-//            }
     }
 }

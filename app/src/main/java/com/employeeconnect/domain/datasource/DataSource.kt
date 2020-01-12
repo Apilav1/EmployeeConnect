@@ -16,11 +16,11 @@ interface DataSource {
 
     fun createChatRoom(chatRoom: ChatRoom, callback: (chatRoomId: String) -> Unit)
 
-    fun sendMessage(chatRoomId: String, message: Message)
+    fun sendMessage(chatRoomId: String, message: Message, callback: () -> Unit)
 
     fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit)
 
-    fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String)
+    fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String, onSuccess: () -> Unit)
 
     fun getLatestMessages(chatRooms: ArrayList<String>, callback: (ArrayList<Message>) -> Unit)
 

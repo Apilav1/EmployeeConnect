@@ -27,8 +27,7 @@ class LatestMessageRow(val toUser: User, val message: Message): Item<GroupieView
         else
             viewHolder.itemView.messagetext_fragment_messages.text = message.text
 
-        if(!message.seen){
-            Log.d("CHATTT", "not seen")
+        if(!message.seen && message!!.fromUser == toUser.uid){
             viewHolder.itemView.messagetext_fragment_messages.setTypeface(null, Typeface.BOLD)
         }
 

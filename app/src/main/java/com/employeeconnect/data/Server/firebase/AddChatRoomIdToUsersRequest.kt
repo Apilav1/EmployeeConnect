@@ -7,7 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class AddChatRoomIdToUsersRequest {
 
-    fun execute(users: ArrayList<User>, chatRoomId: String) {
+    fun execute(users: ArrayList<User>, chatRoomId: String, callback: () -> Unit) {
 
         if(!BaseActivity.deviceIsConnected) return
 
@@ -26,6 +26,7 @@ class AddChatRoomIdToUsersRequest {
         ref.document(user2.uid).update("chatRooms", map2)
             .addOnSuccessListener {
                 Log.d(FirebaseServer.TAG, "dodao ")
+                callback()
             }
 
     }

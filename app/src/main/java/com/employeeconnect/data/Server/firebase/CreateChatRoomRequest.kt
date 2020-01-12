@@ -11,8 +11,10 @@ class CreateChatRoomRequest {
 
         if(!BaseActivity.deviceIsConnected) return
 
+        val serverChatRoom = FirebaseDataMapper().convertChatRoomToServer(chatRoom)
+
         FirebaseFirestore.getInstance().collection("chatRooms")
-            .add(chatRoom)
+            .add(serverChatRoom)
             .addOnSuccessListener {
                 Log.d(FirebaseServer.TAG, "New chat room is created")
                 updateChatRoomWithId(it.id)

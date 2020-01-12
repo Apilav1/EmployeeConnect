@@ -12,7 +12,7 @@ interface DataSource {
 
     fun getCurrentUserId(callback: (uid: String?) -> Unit)
 
-    fun fetchCurrentUser()
+    fun fetchCurrentUser(callback: (user: User) -> Unit)
 
     fun createChatRoom(chatRoom: ChatRoom, callback: (chatRoomId: String) -> Unit)
 
@@ -23,6 +23,8 @@ interface DataSource {
     fun addChatRoomIdToUsers(users: ArrayList<User>, chatRoomId: String)
 
     fun getLatestMessages(chatRooms: ArrayList<String>, callback: (ArrayList<Message>) -> Unit)
+
+    fun updateLatestMessages( message: Message, callback: () -> Unit)
 
     fun getUserById(userId: String, callback: (User) -> Unit)
 

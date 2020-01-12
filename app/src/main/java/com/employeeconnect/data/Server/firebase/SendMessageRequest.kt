@@ -17,7 +17,7 @@ class SendMessageRequest {
             .add(message)
             .addOnSuccessListener {
                 Log.d(FirebaseServer.TAG, "message sent")
-                UpdateLatestMessageRequest().execute(chatRoomId, message)
+                UpdateLatestMessageRequest().execute(chatRoomId, message){}
             }
             .addOnFailureListener {
                 Log.d(FirebaseServer.TAG, "message was not sent")

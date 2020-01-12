@@ -1,54 +1,38 @@
 package com.employeeconnect.ui.home
 
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import com.employeeconnect.R
+import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
-import com.employeeconnect.domain.commands.FetchCurrentUserCommand
-import com.employeeconnect.domain.commands.GetCurrentUserIdCommand
 import com.employeeconnect.networks.ConnectivityReceiver
 import com.employeeconnect.ui.activities.BaseActivity
 import com.employeeconnect.ui.activities.ChatLogActivity
 import com.employeeconnect.ui.login.LoginActivity
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.badge.BadgeDrawable
 import kotlinx.android.synthetic.main.activity_home.*
 
 
-class HomeActivity : BaseActivity(),
+class HomeActivity : BaseActivity(), HomeView,
                                         EmployeesFragment.OnListEmployeesFragmentInteractionListener,
                                         LatestMessagesFragment.OnMessagesListFragmentInteractionListener,
                                         UserProfileFragment.OnUserProfileFragmentInteractionListener,
                                         ConnectivityReceiver.ConnectivityReceiverListener {
-//    lateinit var mRegistrationBroadcastReceiver: BroadcastReceiver
+
+
+    private val presenter = HomePresenter(this, HomeInteractor())
+    private val bundle = Bundle()
+    private var latestMessagesWithoutUsers: ArrayList<Message>? = null
+    private var badge: BadgeDrawable? = null
+    private var CHAT_LOG_CODE = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        verifyUserIsLoggedIn()
-
-
-//        mRegistrationBroadcastReceiver = object:BroadcastReceiver(){
-//            override fun onReceive(context: Context?, intent: Intent?) {
-//                Log.d(TAG, "primio")
-//                if(intent!!.action == Config.STR_PUSH){
-//                    Log.d(TAG, "IF ispunjen")
-//                     val message = intent.getStringExtra("message")
-//                     showNotification("New message", message.toString())
-//                }
-//            }
-//
-//        }
-
+        presenter.verifyUserIsLoggedIn()
 
         bottom_navigation.setOnNavigationItemSelectedListener {
 
@@ -65,49 +49,8 @@ class HomeActivity : BaseActivity(),
                 else -> false
             }
         }
-    }
 
-    private fun verifyUserIsLoggedIn() {
-
-//        viewModel.validate()dfsfsdfs
-
-        GetCurrentUserIdCommand{result->
-
-            currentUserId = result
-
-            if(currentUserId == null){
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-            else{
-                FetchCurrentUserCommand().execute()
-
-                replaceFragment(currentFragmet)
-            }
-
-        }.execute()
-    }
-
-
-    private fun showNotification(tittle: String, message: String?) {
-        Log.d(TAG, tittle+" "+message)
-
-        val intent = Intent(applicationContext, HomeActivity::class.java)
-        val contentIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        //TODO: builder deprecated -> https://stackoverflow.com/questions/45462666/notificationcompat-builder-deprecated-in-android-o
-        val builder = NotificationCompat.Builder(applicationContext, "1")
-        builder.setAutoCancel(true)
-            .setDefaults(Notification.DEFAULT_ALL)
-            .setWhen(System.currentTimeMillis())
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentText(title)
-            .setContentText(message)
-            .setContentIntent(contentIntent)
-
-        val notificationManager = baseContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        notificationManager.notify(1, builder.build())
+        badge = bottom_navigation.getOrCreateBadge(R.id.nav_messages)
     }
 
     private fun replaceFragment(fragment: Fragment): Boolean{
@@ -118,9 +61,11 @@ class HomeActivity : BaseActivity(),
             return false
         }
 
+        currentFragmet = fragment
+
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        //fragment.arguments = bundle
+        fragment.arguments = bundle
         fragmentTransaction.replace(R.id.fragment_containter, fragment)
         fragmentTransaction.commit()
 
@@ -133,40 +78,179 @@ class HomeActivity : BaseActivity(),
 
     override fun onListMessagesFragmentInteraction(user: User) {
         val intent = Intent(this, ChatLogActivity::class.java)
-        currentFragmet = EmployeesFragment()
+        intent.putExtra(USER_KEY, user)
+        startActivityForResult(intent, CHAT_LOG_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == CHAT_LOG_CODE){
+            currentFragmet = LatestMessagesFragment()
+            replaceFragment(currentFragmet)
+
+            (currentFragmet as LatestMessagesFragment).showLatestMessages(messages)
+        }
+    }
+
+    override fun onFetchCurrentUser(user: User) {
+         currentUser = user
+         presenter.getUsers()
+    }
+
+    override fun showUsers(users: ArrayList<User>) {
+
+        if(users.size == 0){
+            showError("No users fetched")
+            return
+        }
+
+        currentUsers = ArrayList()
+        currentUsers = users
+        replaceFragment(currentFragmet)
+
+        val chatRoomsIds = ArrayList<String>()
+        chatRoomsIds.addAll(currentUser?.chatRooms?.keys!!)
+
+        presenter.getLatestMessages(chatRoomsIds)
+    }
+
+    override fun noUserIsLoggedInError() {
+        val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+    }
+
+    override fun showError(error: String) {
+        Toast.makeText(applicationContext, error, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onFetchingLatestMessages(result: ArrayList<Message>) {
+
+        latestMessagesWithoutUsers = ArrayList()
+        latestMessagesWithoutUsers = result
+
+        val toUsersIds = ArrayList<String>()
+
+        latestMessagesWithoutUsers?.forEach {
+            for((key, value) in currentUser!!.chatRooms){
+                if(it.chatRoomId == key)
+                    toUsersIds.add(value)
+            }
+        }
+        presenter.getMultipleUsersById(toUsersIds)
+    }
+
+    override fun onFetchingMultipleUsersByIds(result: ArrayList<User>) {
+
+        if(result.size == 0 || latestMessagesWithoutUsers?.size == 0)
+            showError("fetching multiple users by id failed")
+
+        messages = HashMap()
+
+        for(i in 0 until result.size){
+            messages!![result[i]] = latestMessagesWithoutUsers?.get(i)!!
+        }
+
+        if(currentFragmet is LatestMessagesFragment){
+            (currentFragmet as LatestMessagesFragment).showLatestMessages(messages)
+        }
+
+        handleBadges()
+    }
+
+    fun handleBadges(){
+        var newMessages = 0
+
+        latestMessagesWithoutUsers!!.forEach {
+            if(it.toUser == currentUser!!.uid && !it.seen)
+                newMessages++
+        }
+
+        badge?.number = newMessages
+
+        badge?.isVisible = newMessages > 0
+    }
+
+    override fun updateMessageSeenField(message: Message) {
+         presenter.updateLatestMessage(message)
+    }
+
+    override fun showLatestMessageUpdated() {
+
+        val chatRoomsIds = ArrayList<String>()
+        chatRoomsIds.addAll(currentUser?.chatRooms?.keys!!)
+
+        presenter.getLatestMessages(chatRoomsIds)
+    }
+
+    override fun verifyUser(userId: String) {
+        presenter.verifyUser(userId)
+    }
+
+    override fun onVerificationSuccess() {
+        (currentFragmet as EmployeesFragment).onVerificationSuccess()
+    }
+
+    override fun makeUserAModerator(userId: String) {
+        presenter.makeUserAModerator(userId)
+    }
+
+    override fun onMakingUserAModeratorSuccess() {
+        (currentFragmet as EmployeesFragment).onMakingUserAModeratorSuccess()
+    }
+
+    override fun requestUsers() {
+        (currentFragmet as EmployeesFragment).showUsers(currentUsers!!)
+    }
+
+    override fun requestLatestMessages() {
+        (currentFragmet as LatestMessagesFragment).showLatestMessages(messages)
+    }
+
+    override fun updateUser(user: User, pictureIsChanged: Boolean) {
+        presenter.updateUser(user, pictureIsChanged)
+    }
+
+    override fun onUpdateUserSuccefully() {
+        Toast.makeText(applicationContext, "User updated succefully", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun logoutUser(user: User) {
+        presenter.logoutUser()
+    }
+
+    override fun onLogoutUser() {
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
-    override fun onUserProfileFragmentInteraction(uri: Uri) {
+    override fun deleteUser(user: User) {
+        presenter.deleteUser(user)
     }
 
-    override fun onPause() {
-        Log.d(TAG, "onPause()")
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver)
-        super.onPause()
-    }
+    override fun onDeletionUser() {
 
-    override fun onResume(){
-        super.onResume()
-        Log.d(TAG, "onResume()")
-        currentFragmet = EmployeesFragment()
-//        LocalBroadcastManager.getInstance(this)
-//            .registerReceiver(mRegistrationBroadcastReceiver, IntentFilter("newMessage"))
-//        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, IntentFilter(Config.STR_PUSH))
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+
+        Toast.makeText(applicationContext, "This user profile is successfully deleted", Toast.LENGTH_SHORT).show()
 
     }
-
 
     companion object{
-        private const val TAG =  "HomeAkttt"
+        private const val TAG =  "HomeActivity"
 
         var currentUser: User? = null
-        var currentUserId: String? = null
 
-        var currentFragmet: Fragment =
-            EmployeesFragment()
+        var currentFragmet: Fragment = EmployeesFragment()
+
+        var currentUsers: ArrayList<User>? = null
+
+        var messages: HashMap<User, Message>? = null
 
         const val USER_KEY = "USER_KEY"
+        const val USERS_KEY = "USERS_KEY"
     }
-
 }

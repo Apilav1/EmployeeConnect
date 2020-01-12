@@ -9,7 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class FetchCurrentUserRequest {
 
-    fun execute() {
+    fun execute(callback: (user: User) -> Unit) {
 
         if(!BaseActivity.deviceIsConnected) return
 
@@ -23,8 +23,8 @@ class FetchCurrentUserRequest {
                 return@addSnapshotListener
             }
             if (snapshot != null && snapshot.exists()) {
-                HomeActivity.currentUser = snapshot.toObject(User::class.java)
-                HomeActivity.currentUserId = HomeActivity.currentUser!!.uid
+                val result = snapshot.toObject(User::class.java)
+                callback(result!!)
             }
         }
     }

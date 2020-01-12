@@ -4,33 +4,26 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.SearchView
-import android.widget.Toast
 import com.employeeconnect.R
 
 import com.employeeconnect.domain.Models.User
-import com.employeeconnect.domain.commands.GetUsersCommand
-import com.employeeconnect.domain.commands.MakeUserAModeratorCommand
-import com.employeeconnect.domain.commands.VerifyUserCommand
 import com.employeeconnect.ui.activities.ChatLogActivity
 import com.employeeconnect.ui.view.UserRow
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.fragment_employees.*
 import kotlinx.android.synthetic.main.fragment_employees_list.*
-import java.lang.Exception
 
 /**
  * A fragment representing a list of Items.
  * Activities containing this fragment MUST implement the
  * [EmployeesFragment.OnListEmployeesFragmentInteractionListener] interface.
  */
-class EmployeesFragment : Fragment(){
+class EmployeesFragment : Fragment() {
 
-    // TODO: Customize parameters
     private var columnCount = 1
 
     private var listener: OnListEmployeesFragmentInteractionListener? = null
@@ -64,103 +57,15 @@ class EmployeesFragment : Fragment(){
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
 
-        getUsers()
-    }
-
-    private fun getUsers(){
-
-        adapter = GroupAdapter()
-        recycleview_employees.adapter = adapter
-
-        try {
-            GetUsersCommand{
-                adapter.clear()
-
-                it.forEach { user ->
-                    if(user.uid != HomeActivity.currentUserId) {
-                        users.add(user)
-                        adapter.add(UserRow(context!!, user))
-                    }
-                }
-
-                adapter.notifyDataSetChanged()
-            }.execute()
-        }
-        catch (e: Exception){
-            Toast.makeText(context, e.message.toString(), Toast.LENGTH_SHORT).show()
-        }
-
-        adapter.setOnItemClickListener { item, view ->
-            val userItem = item as UserRow
-
-            val intent = Intent(view.context, ChatLogActivity::class.java)
-            intent.putExtra(USER_KEY, userItem.user)
-            startActivity(intent)
-        }
-
-        adapter.setOnItemLongClickListener { item, view ->
-
-            if(!HomeActivity.currentUser!!.moderator) return@setOnItemLongClickListener true
-
-            val userItem = item as UserRow
-            val user = userItem.user
-
-            if(!user.verified){
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Confirm verification")
-                builder.setMessage("Are you sure you want to verify this profile?")
-
-                builder.setPositiveButton("YES"){ dialog, which ->
-
-                    VerifyUserCommand(user.uid){
-                        verification_icon_employees_list.alpha = 0.0F
-                    }.execute()
-                }
-
-                builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
-
-                val dialog = builder.create()
-                dialog.show()
-            }
-            else if(!user.moderator){
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Confirm this update")
-                builder.setMessage("Are you sure you want to allow this user to be moderator?")
-
-                builder.setPositiveButton("YES"){ dialog, which ->
-
-                    MakeUserAModeratorCommand(user.uid){
-                        moderator_imageview_employees_list.alpha = 1.0F
-                    }.execute()
-                }
-
-                builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
-
-                val dialog = builder.create()
-                dialog.show()
-            }
-
-            true
-        }
+        listener?.requestUsers()
     }
 
     override fun onDetach() {
         super.onDetach()
         listener = null
-    }
-
-    fun showKeyboard(ettext: SearchView) {
-        Log.d("OVOO", "POKAZUJEM")
-        ettext.requestFocus()
-//        ettext.postDelayed(Runnable {
-//            val keyboard =
-//                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//            keyboard.showSoftInput(ettext, 0)
-//        }
-//            , 200)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -209,8 +114,12 @@ class EmployeesFragment : Fragment(){
      * for more information.
      */
     interface OnListEmployeesFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         fun onListEmployeesFragmentInteraction(user: User)
+        fun verifyUser(userId: String)
+        fun makeUserAModerator(userId: String)
+        fun requestUsers()
+
     }
 
     companion object {
@@ -227,5 +136,77 @@ class EmployeesFragment : Fragment(){
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }
             }
+    }
+
+     fun showUsers(users: ArrayList<User>) {
+
+         if(users.size == 0) return
+
+        adapter.clear()
+         adapter = GroupAdapter()
+         recycleview_employees.adapter = adapter
+
+        users.forEach { user ->
+            if(user.uid != HomeActivity.currentUser!!.uid) {
+                adapter.add(UserRow(context!!, user))
+            }
+        }
+
+        adapter.notifyDataSetChanged()
+
+         adapter.setOnItemClickListener { item, view ->
+             val userItem = item as UserRow
+
+             val intent = Intent(view.context, ChatLogActivity::class.java)
+             intent.putExtra(USER_KEY, userItem.user)
+             startActivity(intent)
+         }
+
+         adapter.setOnItemLongClickListener { item, view ->
+
+             if(!HomeActivity.currentUser!!.moderator) return@setOnItemLongClickListener true
+
+             val userItem = item as UserRow
+             val user = userItem.user
+
+             if(!user.verified){
+                 val builder = AlertDialog.Builder(context)
+                 builder.setTitle("Confirm verification")
+                 builder.setMessage("Are you sure you want to verify this profile?")
+
+                 builder.setPositiveButton("YES"){ dialog, which ->
+                     listener?.verifyUser(user.uid)
+                 }
+
+                 builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+
+                 val dialog = builder.create()
+                 dialog.show()
+             }
+             else if(!user.moderator){
+                 val builder = AlertDialog.Builder(context)
+                 builder.setTitle("Confirm this update")
+                 builder.setMessage("Are you sure you want to allow this user to be moderator?")
+
+                 builder.setPositiveButton("YES"){ dialog, which ->
+                     listener?.makeUserAModerator(user.uid)
+                 }
+
+                 builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+
+                 val dialog = builder.create()
+                 dialog.show()
+             }
+
+             true
+         }
+    }
+
+    fun onVerificationSuccess(){
+        verification_icon_employees_list.alpha = 0.0F
+    }
+
+    fun onMakingUserAModeratorSuccess(){
+        moderator_imageview_employees_list.alpha = 1.0F
     }
 }

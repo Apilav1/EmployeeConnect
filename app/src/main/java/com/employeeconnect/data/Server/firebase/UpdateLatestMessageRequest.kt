@@ -7,7 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UpdateLatestMessageRequest {
 
-    fun execute(chatRoomId: String, message: Message){
+    fun execute(chatRoomId: String, message: Message, callback: () -> Unit){
 
         if(!BaseActivity.deviceIsConnected) return
 
@@ -27,9 +27,10 @@ class UpdateLatestMessageRequest {
             else {
                 docRef
                     .update("text", message.text, "fromUser", message.fromUser,
-                        "toUser", message.toUser, "timeStamp", message.timeStamp)
+                        "toUser", message.toUser, "timeStamp", message.timeStamp, "seen", message.seen)
                     .addOnSuccessListener {
                         Log.d(FirebaseServer.TAG, "latest messages updated")
+                        callback()
                     }
                     .addOnFailureListener {
                         Log.d(FirebaseServer.TAG, "latest message was not sent ${it.message}")

@@ -34,8 +34,8 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
             it.getCurrentUserId(callback)
     }
 
-    fun fetchCurrentUser() = requestToSources{
-          it.fetchCurrentUser()
+    fun fetchCurrentUser(callback: (user: User) -> Unit) = requestToSources{
+          it.fetchCurrentUser(callback)
     }
 
     fun createChatRoom(usersId: ArrayList<String>, callback: (chatRoomId: String) -> Unit) = requestToSources {
@@ -93,6 +93,10 @@ class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
 
     fun checkIfUserIsVerified(email: String, callback: (emailExists: Boolean, emailVerified: Boolean) -> Unit) = requestToSources {
         it.checkIfUserIsVerified(email, callback)
+    }
+
+    fun updateLatestMessages( message: Message, callback: () -> Unit) = requestToSources {
+        it.updateLatestMessages(message, callback)
     }
 
     private fun <T : Any> requestToSources(f: (DataSource) -> T?): T = sources.firstResult { f(it) }

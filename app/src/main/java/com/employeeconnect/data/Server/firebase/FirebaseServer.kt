@@ -42,9 +42,9 @@ class FirebaseServer : DataSource {
         GetCurrentUserIdRequest().execute(callback)
     }
 
-    override fun fetchCurrentUser() {
+    override fun fetchCurrentUser(callback: (user: User) -> Unit) {
 
-        FetchCurrentUserRequest().execute()
+        return FetchCurrentUserRequest().execute(callback)
     }
 
     override fun createChatRoom(chatRoom: ChatRoom, callback: (chatRoomId: String) -> Unit) {
@@ -119,6 +119,12 @@ class FirebaseServer : DataSource {
     override fun checkIfUserIsVerified(email: String, callback: (emailExists: Boolean, emailVerified: Boolean) -> Unit){
 
         CheckIfUserIsVerifiedRequest().execute(email, callback)
+    }
+
+    override fun updateLatestMessages(message: Message, callback: () -> Unit) {
+
+        UpdateLatestMessageRequest().execute(message.chatRoomId, message, callback)
+
     }
 
 }

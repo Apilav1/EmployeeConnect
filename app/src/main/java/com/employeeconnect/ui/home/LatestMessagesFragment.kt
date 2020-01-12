@@ -1,9 +1,7 @@
 package com.employeeconnect.ui.home
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +10,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
-import com.employeeconnect.domain.commands.GetLatestMessagesCommand
-import com.employeeconnect.domain.commands.GetMultipleUsersByIdCommand
-import com.employeeconnect.ui.activities.ChatLogActivity
 import com.employeeconnect.ui.view.LatestMessageRow
 
 import com.xwray.groupie.GroupAdapter
@@ -28,22 +23,16 @@ import kotlinx.android.synthetic.main.fragment_messages.*
  */
 class LatestMessagesFragment : Fragment() {
 
-    // TODO: Customize parameters
-    private var columnCount = 1
     private var adapter = GroupAdapter<GroupieViewHolder>()
     private var currentUser: User? = null
 
     private var listener: OnMessagesListFragmentInteractionListener? = null
-    private var latestMessagesWithoutUsers: ArrayList<Message>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         this.currentUser = HomeActivity.currentUser
 
-//        arguments?.let {
-//            columnCount = it.getInt(ARG_COLUMN_COUNT)
-//        }
     }
 
     override fun onCreateView(
@@ -61,66 +50,14 @@ class LatestMessagesFragment : Fragment() {
         recycleview_messages.addItemDecoration(
             DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-        getLatestMessages()
     }
 
-    private fun getLatestMessages(){
+    override fun onResume() {
+        super.onResume()
 
-        var chatRooms: ArrayList<String> = ArrayList()
-
-        for((key, value) in currentUser!!.chatRooms){
-            chatRooms.add(key)
-        }
-
-        GetLatestMessagesCommand(chatRooms){ messages ->
-            if(messages.size == 0) return@GetLatestMessagesCommand
-
-            latestMessagesWithoutUsers = messages
-
-            val toUserIds: ArrayList<String> = ArrayList()
-
-            latestMessagesWithoutUsers!!.sortBy { it.timeStamp }
-
-
-            latestMessagesWithoutUsers!!.forEach {
-                //toUserIds.add(it.toUser)
-                for((key, value) in currentUser!!.chatRooms){
-                    if(it.chatRoomId == key)
-                        toUserIds.add(value)
-                }
-            }
-            Log.d("CHATTT", "toUserids: "+toUserIds.size)
-
-            for(id in toUserIds)
-                Log.d("CHATTT", "id->"+id)
-
-            GetMultipleUsersByIdCommand(toUserIds){ users ->
-
-                adapter.clear()
-
-                latestMessagesWithoutUsers!!.forEach { message ->
-                    for(user in users){
-                        if(user.uid == message.toUser || user.uid == message.fromUser ){
-                            adapter.add(LatestMessageRow(user, message))
-                            break
-                        }
-                    }
-                }
-
-            }.execute()
-
-        }.execute()
-
-        adapter.setOnItemClickListener { item, view ->
-            val userItem = item as LatestMessageRow
-            val intent = Intent(view.context, ChatLogActivity::class.java)
-            intent.putExtra(EmployeesFragment.USER_KEY, userItem.toUser)
-
-            HomeActivity.currentFragmet =
-                LatestMessagesFragment()
-            startActivity(intent)
-        }
+        listener?.requestLatestMessages()
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnMessagesListFragmentInteractionListener) {
@@ -151,6 +88,8 @@ class LatestMessagesFragment : Fragment() {
     interface OnMessagesListFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onListMessagesFragmentInteraction(user: User)
+        fun requestLatestMessages()
+        fun updateMessageSeenField(message: Message)
     }
 
     companion object {
@@ -166,5 +105,33 @@ class LatestMessagesFragment : Fragment() {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }
             }
+    }
+
+    fun showLatestMessages(messages: HashMap<User, Message>?) {
+
+        if(messages?.size == 0 || recycleview_messages == null) return
+
+        adapter.clear()
+        adapter = GroupAdapter()
+        recycleview_messages.adapter = adapter
+
+        for((key, value) in messages!!){
+            adapter.add(LatestMessageRow(key, value))
+        }
+        adapter.notifyDataSetChanged()
+
+        adapter.setOnItemClickListener { item, view ->
+            val userItem = item as LatestMessageRow
+
+            userItem.message.seen = true
+
+            listener?.updateMessageSeenField(userItem.message)
+
+//            val intent = Intent(view.context, ChatLogActivity::class.java)
+//            intent.putExtra(EmployeesFragment.USER_KEY, userItem.toUser)
+            listener?.onListMessagesFragmentInteraction(userItem.toUser)
+
+            HomeActivity.currentFragmet = LatestMessagesFragment()
+        }
     }
 }

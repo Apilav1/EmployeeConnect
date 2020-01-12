@@ -1,6 +1,7 @@
 package com.employeeconnect.ui.view
 
 import android.content.Context
+import android.view.View
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
 import com.squareup.picasso.Picasso
@@ -26,17 +27,18 @@ class UserRow (val context: Context, val user: User) : Item<GroupieViewHolder>()
         Picasso.get().load(user.profileImageUrl).into(targetImageView)
 
         val logo = view.github_logo_imageview
-        Picasso.get().load(R.drawable.icon).into(logo)
+        logo.setBackgroundResource(R.drawable.icon)
+        //Picasso.get().load(R.drawable.icon).into(logo)
 
         val linkeInlogo = view.linkedin_logo_imageview
-        Picasso.get().load(R.drawable.linkedin_icon2).into(linkeInlogo)
+        linkeInlogo.setBackgroundResource(R.drawable.linkedin_icon2)
 
         val arrow = view.arrow_fragment_employees_list
-        Picasso.get().load(R.drawable.arrow_icon).into(arrow)
+        arrow.setBackgroundResource(R.drawable.arrow_icon)
 
         val wrenchIcon = view.moderator_imageview_employees_list
 
-        Picasso.get().load(R.drawable.wrench_icon_48).into(wrenchIcon)
+        wrenchIcon.setBackgroundResource(R.drawable.wrench_icon_48)
 
         if(user.moderator){
             wrenchIcon.alpha = 1.0F
@@ -50,7 +52,7 @@ class UserRow (val context: Context, val user: User) : Item<GroupieViewHolder>()
 
         if(!user.verified){
             validationIcon.alpha = 1.0F
-            Picasso.get().load(R.drawable.exclamation_mark_icon).into(validationIcon)
+            validationIcon.setBackgroundResource(R.drawable.exc_mark2)
         }
         else{
             validationIcon.alpha = 0.0F

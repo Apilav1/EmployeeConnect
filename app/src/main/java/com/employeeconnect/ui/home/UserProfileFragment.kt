@@ -7,26 +7,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
-import com.employeeconnect.domain.commands.DeleteUserCommand
-import com.employeeconnect.domain.commands.LogoutUserCommand
-import com.employeeconnect.domain.commands.UpdateUserCommand
-import com.employeeconnect.ui.login.LoginActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_basic_info_register.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.android.synthetic.main.fragment_user_profile.view.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -39,7 +31,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class UserProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
     private var param1: String? = null
     private var param2: String? = null
     private var listenerUserProfile: OnUserProfileFragmentInteractionListener? = null
@@ -62,7 +54,6 @@ class UserProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_user_profile, container, false)
 
         view.username_user_profile.setText(currentUser!!.username)
@@ -81,17 +72,12 @@ class UserProfileFragment : Fragment() {
         return view
     }
 
-    fun disableEditing(){
+    private fun disableEditing(){
         view?.username_user_profile?.setFocusable(false) // to disable editing
         view?.email_user_profile?.setFocusable(false)
         view?.skills_user_profile?.setFocusable(false)
         view?.currentProject_user_profile?.setFocusable(false)
         view?.team_user_profile?.setFocusable(false)
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listenerUserProfile?.onUserProfileFragmentInteraction(uri)
     }
 
     override fun onAttach(context: Context) {
@@ -107,11 +93,7 @@ class UserProfileFragment : Fragment() {
         super.onStart()
 
         disableEditing()
-        val picture = view?.picture_user_profile
 
-        picture?.setOnClickListener{
-            Log.d("TAG", "oooo")
-        }
         var editMode = false
 
         edit_button_profile_user_profile?.setOnClickListener {
@@ -150,9 +132,7 @@ class UserProfileFragment : Fragment() {
             currentUser!!.teamName = team_user_profile.text.toString()
             currentUser!!.currentProject = currentProject_user_profile.text.toString()
 
-            UpdateUserCommand(currentUser!!, pictureIsChanged){
-                Toast.makeText(context, "User updated", Toast.LENGTH_SHORT).show()
-            }.execute()
+            listenerUserProfile?.updateUser(currentUser!!, pictureIsChanged)
 
             editMode = false
         }
@@ -172,15 +152,7 @@ class UserProfileFragment : Fragment() {
             builder.setMessage("Are you sure you want to permanently delete your EConnect profile?")
 
             builder.setPositiveButton("YES"){ dialog, which ->
-
-                val intent = Intent(context, LoginActivity::class.java)
-
-                DeleteUserCommand(currentUser!!.uid){
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-
-                    Toast.makeText(context, "This user profile is successfully deleted", Toast.LENGTH_SHORT).show()
-                }.execute()
+                listenerUserProfile?.deleteUser(currentUser!!)
             }
 
             builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
@@ -191,15 +163,8 @@ class UserProfileFragment : Fragment() {
         }
 
         logout_user_profile.setOnClickListener {
-            val intent = Intent(context, LoginActivity::class.java)
-
-            LogoutUserCommand{
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }.execute()
-
-            HomeActivity.currentFragmet =
-                EmployeesFragment()
+            listenerUserProfile?.logoutUser(currentUser!!)
+            HomeActivity.currentFragmet = EmployeesFragment()
         }
     }
 
@@ -237,8 +202,9 @@ class UserProfileFragment : Fragment() {
      * for more information.
      */
     interface OnUserProfileFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onUserProfileFragmentInteraction(uri: Uri)
+        fun updateUser(user: User, pictureIsChanged: Boolean)
+        fun logoutUser(user: User)
+        fun deleteUser(user: User)
     }
     companion object {
         /**
@@ -259,4 +225,5 @@ class UserProfileFragment : Fragment() {
                 }
             }
     }
+
 }

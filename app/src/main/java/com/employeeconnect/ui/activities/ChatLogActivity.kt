@@ -46,7 +46,7 @@ class ChatLogActivity : AppCompatActivity() {
     private fun performSendMessage(){
 
         val message = Message(currentUser!!.uid, toUser!!.uid, edittext_chat_log.text.toString(),
-                                System.currentTimeMillis() / 1000, currentCharRoomId!!)
+                                System.currentTimeMillis() / 1000, currentCharRoomId!!, false)
         SendMessageCommand(currentCharRoomId!!, message).execute()
 
         edittext_chat_log.text.clear()

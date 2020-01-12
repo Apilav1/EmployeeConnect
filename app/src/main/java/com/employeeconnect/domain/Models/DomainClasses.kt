@@ -32,12 +32,9 @@ class ChatRoom(val uid: String, val usersId: ArrayList<String>) : Parcelable {
 }
 
 @Parcelize
-class Message(val fromUser: String, val toUser: String, val text: String, val timeStamp: Long, val chatRoomId: String): Parcelable{
-    constructor(): this("", "", "", 0L, "")
+class Message(val fromUser: String, val toUser: String, val text: String, val timeStamp: Long,
+                val chatRoomId: String, var seen: Boolean): Parcelable{
+    constructor(): this("", "", "", 0L, "", false)
 }
 
-
-class ChatMessage(val id: String, val text: String, val timeStamp: Long){
-    constructor(): this("", "", 0L)
-}
 

@@ -41,6 +41,12 @@ class RegisterActivity : AppCompatActivity(), RegisterView,
             .commit()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        finish()
+    }
+
     override fun onBasicInfoRegisterFragmentInteraction(view: View, username: String,
                                                         email: String, password: String, isPhotoSet: Boolean) {
         when(view.id){

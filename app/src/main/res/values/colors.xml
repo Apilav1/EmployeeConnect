@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="oceanBlue">#1E3152</color>
+    <color name="oceanBlueTransparent">#801E3152</color>
     <color name="profileBackgroundColor">#3e63a3</color>
+    <color name="transparentBlueBackgroundColor">#803e63a3</color>
     <color name="lightBlue">#ddeefd</color>
     <color name="register_background_gray_color">#f9f9f9</color>
     <color name="unverified_user_yellow">#FFFF00</color>

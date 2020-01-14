@@ -37,6 +37,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
         }
     }
 
+
     private fun performLogin(email: String, password: String){
         presenter.performLogin(email, password)
     }

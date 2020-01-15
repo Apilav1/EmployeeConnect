@@ -31,10 +31,14 @@ Implementation of this app and methods that I used are highly influenced by **Go
 - after profile validation, user is free to use **EConnect** app
 
 ## Registration  
-![](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)  
+![Demo Registration of new User alpha](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)    
+
+if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)
 
 ## Verification  
-![](https://media.giphy.com/media/U5Op3ycS23DYmgMuGg/giphy.gif)  
+![Demo New User alpha](https://media.giphy.com/media/U5Op3ycS23DYmgMuGg/giphy.gif)   
+
+if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)
 
 # What I learned
  - Developed a user interface within the xml files using ConstraintLayout, RecyclerView, CardView, ScrollView, navigation menu, bottom navigation bar, chancing shapes of different kind of views etc.

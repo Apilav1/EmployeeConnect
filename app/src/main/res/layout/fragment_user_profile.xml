@@ -4,17 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollview_user_profile"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         tools:context=".ui.home.UserProfileFragment">
 
         <ImageView
                 android:id="@+id/background_user_profile"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:background="@drawable/blue_triangle_background"
+                android:layout_height="400dp"
+                android:background="@drawable/new_user_background2"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -111,13 +114,17 @@
 
         <TextView
             android:id="@+id/skillsTittle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="90dp"
+            android:layout_height="25dp"
             android:layout_marginLeft="46dp"
             android:layout_marginTop="40dp"
             android:text="POSITION"
             android:textSize="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
+            android:background="@drawable/textview_borders"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@id/skills_user_profile"
             app:layout_constraintTop_toBottomOf="@id/background_user_profile" />
@@ -142,6 +149,10 @@
             android:layout_marginLeft="46dp"
             android:text="TEAM"
             android:textSize="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/textview_borders"
             android:textStyle="bold"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toTopOf="@id/team_user_profile"
@@ -169,6 +180,10 @@
             android:text="CURRENT PROJECT"
             android:textSize="16dp"
             android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:background="@drawable/textview_borders"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/team_user_profile"
@@ -229,7 +244,6 @@
             app:layout_constraintRight_toLeftOf="@id/logout_user_profile"
             app:layout_constraintTop_toBottomOf="@id/currentProject_user_profile"
             app:layout_constraintVertical_bias="0.529" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

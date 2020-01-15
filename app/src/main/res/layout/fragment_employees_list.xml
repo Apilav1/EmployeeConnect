@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="130dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/element_row_recycleview"
     android:layout_margin="4dp"
@@ -12,7 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="130dp"
         android:background="@drawable/element_row_recycleview"
         android:orientation="vertical">
 
@@ -64,7 +64,7 @@
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imageview_fragment_employees_list" />
 
@@ -72,24 +72,25 @@
             android:id="@+id/github_textview_fragment_employees_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="8dp"
             android:text="itsBreslav"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/github_logo_imageview"
             app:layout_constraintTop_toBottomOf="@id/position_fragment_employees_list"
-            app:layout_constraintVertical_bias="0.27" />
+            app:layout_constraintVertical_bias="0.373" />
 
         <ImageView
             android:id="@+id/linkedin_logo_imageview"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintBottom_toBottomOf="@id/github_textview_fragment_employees_list"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toRightOf="@id/github_textview_fragment_employees_list"
             app:layout_constraintRight_toLeftOf="@id/linkedin_textview_fragment_employees_list"
             app:layout_constraintTop_toBottomOf="@id/position_fragment_employees_list"
-            app:layout_constraintBottom_toBottomOf="@id/github_textview_fragment_employees_list"
-            android:layout_marginTop="12dp"/>
+            app:layout_constraintVertical_bias="0.812" />
 
         <TextView
             android:id="@+id/linkedin_textview_fragment_employees_list"
@@ -100,7 +101,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/linkedin_logo_imageview"
             app:layout_constraintTop_toBottomOf="@id/position_fragment_employees_list"
-            app:layout_constraintVertical_bias="0.255" />
+            app:layout_constraintVertical_bias="0.373" />
 
         <TextView
             android:id="@+id/sendmessage_textview_fragment_employees_list"

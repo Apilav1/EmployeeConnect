@@ -3,7 +3,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="company_name">Klika</string>
+    <string name="company_name">Symphony</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="search_hint">find by name, skills...</string>
 </resources>

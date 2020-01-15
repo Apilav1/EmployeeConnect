@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="@android:color/white"/>
-    <corners android:radius="3dp" />
+    <solid android:color="@color/oceanBlueTransparent"/>
+     <corners android:radius="3dp" />
     <stroke android:width="5px" android:color="@color/profileBackgroundColor"/>
 
 </shape>

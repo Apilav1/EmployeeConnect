@@ -3,7 +3,7 @@ package com.employeeconnect.ui.home
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 
-class HomePresenter (var homeView: HomeView?, var homeInteractor: HomeInteractor) : HomeInteractor.OnLoginFinishedListener{
+class HomePresenter (var homeView: HomeView?, var homeInteractor: HomeInteractor) : HomeInteractor.OnHomeListener{
 
     fun verifyUserIsLoggedIn(){
         homeInteractor.verifyUserIsLoggedIn(this)

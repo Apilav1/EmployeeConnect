@@ -8,7 +8,7 @@ class GetMultipleUsersByIdRequest {
 
     fun execute(usersIds: ArrayList<String>, callback: (ArrayList<com.employeeconnect.domain.Models.User>) -> Unit){
 
-        if(!BaseActivity.deviceIsConnected) return
+        if(!BaseActivity.deviceIsConnected || usersIds.isEmpty()) return
 
         val ref = FirebaseFirestore.getInstance().collection("users")
 

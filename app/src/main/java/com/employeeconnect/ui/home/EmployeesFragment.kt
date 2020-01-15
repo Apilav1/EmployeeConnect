@@ -127,6 +127,7 @@ class EmployeesFragment : Fragment() {
         // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
         const val USER_KEY = "USER_KEY"
+        const val TAG = "EmployeesFragment"
 
         // TODO: Customize parameter initialization
         @JvmStatic

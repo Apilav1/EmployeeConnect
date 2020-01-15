@@ -1,5 +1,7 @@
 package com.employeeconnect.ui.login
 
+import com.employeeconnect.domain.Models.User
+
 class LoginPresenter(var loginView: LoginView?, val loginInteractor: LoginInteractor) :
     LoginInteractor.OnLoginFinishedListener{
 
@@ -44,6 +46,14 @@ class LoginPresenter(var loginView: LoginView?, val loginInteractor: LoginIntera
         loginView?.apply {
             navigateToRegistration()
         }
+    }
+
+    fun verifyUserIsLoggedIn(){
+        loginInteractor.verifyUserIsLoggedIn(this)
+    }
+
+    override fun onUserLoggedIn() {
+        loginView?.userIsLoggedIn()
     }
 
     fun onDestroy() {

@@ -10,7 +10,7 @@ class GetLatestMessagesRequest {
 
     fun execute(chatRooms: ArrayList<String>, callback: (ArrayList<Message>) -> Unit) {
 
-        if(!BaseActivity.deviceIsConnected) return
+        if(!BaseActivity.deviceIsConnected || chatRooms.isEmpty()) return
 
         val ref = FirebaseFirestore.getInstance().collection("latestMessages")
         ref.whereIn("chatRoomId", chatRooms)

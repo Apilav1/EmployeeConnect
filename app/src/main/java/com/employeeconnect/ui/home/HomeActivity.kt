@@ -3,7 +3,9 @@ package com.employeeconnect.ui.home
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
@@ -66,9 +68,16 @@ class HomeActivity : BaseActivity(), HomeView,
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_containter, fragment)
-        fragmentTransaction.commit()
+        fragmentTransaction.commitAllowingStateLoss()
 
         return true
+    }
+
+    private fun clearFragmentStack(){
+        val fragmentManager = supportFragmentManager
+
+        for(i in 0 until fragmentManager.backStackEntryCount)
+            fragmentManager.popBackStack()
     }
 
     override fun onListEmployeesFragmentInteraction(user: User) {
@@ -99,8 +108,7 @@ class HomeActivity : BaseActivity(), HomeView,
 
     override fun showUsers(users: ArrayList<User>) {
 
-        if(users.size == 0){
-            showError("No users fetched")
+        if(users.size < 2){
             return
         }
 
@@ -141,9 +149,6 @@ class HomeActivity : BaseActivity(), HomeView,
     }
 
     override fun onFetchingMultipleUsersByIds(result: ArrayList<User>) {
-
-        if(result.size == 0 || latestMessagesWithoutUsers?.size == 0)
-            showError("fetching multiple users by id failed")
 
         messages = HashMap()
 
@@ -200,11 +205,13 @@ class HomeActivity : BaseActivity(), HomeView,
     }
 
     override fun requestUsers() {
-        (currentFragmet as EmployeesFragment).showUsers(currentUsers!!)
+        if(currentUsers != null && (currentUsers?.size != 0 || currentUsers?.size != 1))
+            (currentFragmet as EmployeesFragment).showUsers(currentUsers!!)
     }
 
     override fun requestLatestMessages() {
-        (currentFragmet as LatestMessagesFragment).showLatestMessages(messages)
+        if(messages != null && (messages?.size != 0 || messages?.size != 1) )
+            (currentFragmet as LatestMessagesFragment).showLatestMessages(messages)
     }
 
     override fun updateUser(user: User, pictureIsChanged: Boolean) {
@@ -220,6 +227,9 @@ class HomeActivity : BaseActivity(), HomeView,
     }
 
     override fun onLogoutUser() {
+
+        //clearFragmentStack()
+
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }

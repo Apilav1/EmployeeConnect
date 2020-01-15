@@ -207,6 +207,8 @@ class UserProfileFragment : Fragment() {
         fun deleteUser(user: User)
     }
     companion object {
+
+        const val TAG = "UserProfileFragment"
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

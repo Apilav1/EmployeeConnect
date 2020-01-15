@@ -96,6 +96,7 @@ class LatestMessagesFragment : Fragment() {
 
         // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
+        const val TAG = "LatestMessagesFragment"
 
         // TODO: Customize parameter initialization
         @JvmStatic
@@ -109,7 +110,7 @@ class LatestMessagesFragment : Fragment() {
 
     fun showLatestMessages(messages: HashMap<User, Message>?) {
 
-        if(messages?.size == 0 || recycleview_messages == null) return
+        if(messages == null || messages.size == 0 || recycleview_messages == null) return
 
         adapter.clear()
         adapter = GroupAdapter()

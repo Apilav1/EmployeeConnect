@@ -2,18 +2,14 @@ package com.employeeconnect.ui.register
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
-import com.employeeconnect.domain.commands.RegisterUserCommand
 import kotlinx.android.synthetic.main.fragment_basic_info_register.*
 import kotlinx.android.synthetic.main.fragment_contact_info_register.*
 import kotlinx.android.synthetic.main.fragment_employee_info_register.*
-import kotlinx.android.synthetic.main.fragment_user_profile.*
 
 class RegisterActivity : AppCompatActivity(), RegisterView,
                                             BasicInfoRegisterFragment.OnBasicInfoRegisterFragmentInteractionListener,
@@ -30,16 +26,18 @@ class RegisterActivity : AppCompatActivity(), RegisterView,
 
         supportActionBar?.hide()
 
-        replaceFragment(BasicInfoRegisterFragment())
+        replaceCurrentFragment(BasicInfoRegisterFragment())
     }
 
-    private fun replaceFragment(fragment: Fragment){
+    private fun replaceCurrentFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.add(R.id.fragment_containter_register, fragment)
             .addToBackStack(null)
-            .commit()
+            .commitAllowingStateLoss()
+
     }
+
 
     override fun onBackPressed() {
         super.onBackPressed()
@@ -87,14 +85,14 @@ class RegisterActivity : AppCompatActivity(), RegisterView,
 
     override fun onValidationSuccess() {
         if(!finalFragmentIsShown){
-            replaceFragment(nextFragment)
+            replaceCurrentFragment(nextFragment)
         }
         else{
             val user = User("", username_register.text.toString(),  BasicInfoRegisterFragment.selectedPhotoUriString,
                 email_register.text.toString(), github_username_register.text.toString(),
                 linkenin_link_register.text.toString(), skills_register.text.toString(),
                 position_register.text.toString(), team_register.text.toString(),
-                "", false, false, HashMap())
+                project_register.text.toString(), false, false, HashMap())
 
             val password = password_register.text.toString()
 
@@ -102,7 +100,16 @@ class RegisterActivity : AppCompatActivity(), RegisterView,
         }
     }
 
+    private fun clearFragmentStack(){
+        val fragmentManager = supportFragmentManager
+
+        for(i in 0 until fragmentManager.backStackEntryCount)
+            fragmentManager.popBackStackImmediate()
+    }
+
     override fun showSuccessfulRegistrationMessage() {
+
+            clearFragmentStack()
 
             val company = resources.getString(R.string.company_name)
             Toast.makeText(applicationContext, "Your registration is complete! New account will be soon" +

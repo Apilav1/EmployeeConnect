@@ -11,5 +11,6 @@ interface LoginView {
     fun showInvalidedEmailError()
     fun makeLoginButtonUnclickable()
     fun makeLoginButtonClickable()
+    fun userIsLoggedIn()
 
 }

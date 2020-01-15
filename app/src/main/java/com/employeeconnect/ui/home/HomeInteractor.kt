@@ -6,7 +6,7 @@ import com.employeeconnect.domain.commands.*
 
 class HomeInteractor {
 
-    interface OnLoginFinishedListener {
+    interface OnHomeListener {
 
         fun onSuccess()
         fun onError()
@@ -24,7 +24,7 @@ class HomeInteractor {
 
     }
 
-    fun verifyUserIsLoggedIn(listener: OnLoginFinishedListener) {
+    fun verifyUserIsLoggedIn(listener: OnHomeListener) {
 
         GetCurrentUserIdCommand{result->
 
@@ -40,7 +40,7 @@ class HomeInteractor {
         }.execute()
     }
 
-    fun getUsers(listener: OnLoginFinishedListener){
+    fun getUsers(listener: OnHomeListener){
 
         GetUsersCommand {
             listener.onFetchingUsersSuccess(it)
@@ -48,7 +48,7 @@ class HomeInteractor {
 
     }
 
-    fun getLatestMessages(chatRoomsIds: ArrayList<String>, listener: OnLoginFinishedListener){
+    fun getLatestMessages(chatRoomsIds: ArrayList<String>, listener: OnHomeListener){
 
         var result: ArrayList<Message>
 
@@ -65,7 +65,7 @@ class HomeInteractor {
             }.execute()
         }
 
-    fun getMultipleUsersByIds(usersIds: ArrayList<String>, listener: OnLoginFinishedListener){
+    fun getMultipleUsersByIds(usersIds: ArrayList<String>, listener: OnHomeListener){
 
 
        GetMultipleUsersByIdCommand(usersIds){ users ->
@@ -75,7 +75,7 @@ class HomeInteractor {
        }.execute()
    }
 
-    fun vefiryUser(userId: String, listener: OnLoginFinishedListener){
+    fun vefiryUser(userId: String, listener: OnHomeListener){
 
         VerifyUserCommand(userId){
 
@@ -85,7 +85,7 @@ class HomeInteractor {
 
     }
 
-    fun makeUserAModerator(userId: String, listener: OnLoginFinishedListener){
+    fun makeUserAModerator(userId: String, listener: OnHomeListener){
 
         MakeUserAModeratorCommand(userId){
 
@@ -95,7 +95,7 @@ class HomeInteractor {
 
     }
 
-    fun updateLatestMessage(message: Message, listener: OnLoginFinishedListener){
+    fun updateLatestMessage(message: Message, listener: OnHomeListener){
 
         UpdateLatestMessageCommand(message){
 
@@ -105,7 +105,7 @@ class HomeInteractor {
 
     }
 
-    fun updateUser(user: User, pictureIsChanged: Boolean, listener: OnLoginFinishedListener){
+    fun updateUser(user: User, pictureIsChanged: Boolean, listener: OnHomeListener){
 
         UpdateUserCommand(user, pictureIsChanged){
 
@@ -115,7 +115,7 @@ class HomeInteractor {
 
     }
 
-    fun logoutUser(listener: OnLoginFinishedListener){
+    fun logoutUser(listener: OnHomeListener){
 
         LogoutUserCommand {
 
@@ -125,7 +125,7 @@ class HomeInteractor {
 
     }
 
-    fun deleteUser(user: User, listener: OnLoginFinishedListener){
+    fun deleteUser(user: User, listener: OnHomeListener){
 
         DeleteUserCommand(user.uid){
 

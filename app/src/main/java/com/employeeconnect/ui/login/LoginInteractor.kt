@@ -1,16 +1,32 @@
 package com.employeeconnect.ui.login
 
+import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.CheckIfUserIsVerifiedByEmailCommand
+import com.employeeconnect.domain.commands.FetchCurrentUserCommand
+import com.employeeconnect.domain.commands.GetCurrentUserIdCommand
 import com.employeeconnect.domain.commands.SignInUserWithEmailAndPassword
 import com.employeeconnect.extensions.isEmailValid
 
 class LoginInteractor {
 
     interface OnLoginFinishedListener {
+
         fun onSuccess()
         fun onInvalidEmailError()
         fun onInvalidInfoError()
         fun onUnverifiedProfileError()
+        fun onUserLoggedIn()
+
+    }
+
+    fun verifyUserIsLoggedIn(listener: OnLoginFinishedListener) {
+
+        GetCurrentUserIdCommand{result->
+
+            if(result != null)
+                listener.onUserLoggedIn()
+
+        }.execute()
     }
 
     fun performLogin(email: String, password: String, listener: OnLoginFinishedListener){

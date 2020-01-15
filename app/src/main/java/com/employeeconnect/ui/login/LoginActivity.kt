@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.employeeconnect.R
+import com.employeeconnect.ui.home.EmployeesFragment
 import com.employeeconnect.ui.home.HomeActivity
 import com.employeeconnect.ui.register.RegisterActivity
 import kotlinx.android.synthetic.main.activity_login.*
@@ -25,6 +26,8 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
         getSupportActionBar()?.hide()
 
+        presenter.verifyUserIsLoggedIn()
+
         register_textview_login.setOnClickListener { presenter.navigateToRegistration() }
 
         button_login.setOnClickListener {
@@ -35,6 +38,11 @@ class LoginActivity : AppCompatActivity(), LoginView {
             performLogin(email, password)
 
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("CHATTT", "imam na stacku "+supportFragmentManager.backStackEntryCount)
     }
 
 
@@ -57,6 +65,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     override fun navigateToHome() {
 
         val intent = Intent(this, HomeActivity::class.java)
+        HomeActivity.currentFragmet = EmployeesFragment()
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
@@ -75,7 +84,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     }
 
     override fun showInvalidedEmailError() {
-        Toast.makeText(applicationContext, "Please enter a valid email!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Please enter a correct email!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy(){
@@ -89,6 +98,10 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
     override fun makeLoginButtonUnclickable() {
         button_login.isClickable = false
+    }
+
+    override fun userIsLoggedIn() {
+        navigateToHome()
     }
 
 }

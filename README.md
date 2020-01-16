@@ -23,7 +23,7 @@ Implementation of this app and methods that I used are highly influenced by **Go
 
 # How it works
 - when one wants to use this app  first he needs to register
-- after registration for the user to log in successfully, first, it needs to be verified by one of company's app moderators
+- after registration for the user to log in successfully, first it needs to be verified by one of company's app moderators
 - when the user is not verified, to other employees it is represented by yellow exclamation mark icon in the employees list
 - the moderator can verify unverified user with a long press on user profile shown in employees list
 - furthermore, the moderator can make other users a moderator with a long press on user profile shown in employees list after verification

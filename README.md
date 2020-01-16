@@ -33,10 +33,10 @@ Implementation of this app and methods that I used are highly influenced by **Go
 ## Registration  
 ![Demo](demo/demo_registration.gif)    
 
-if GIF does not work, check out [here](demo/demo2.gif)
+if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)
 
 ## Verification  
-![Demo](https://media.giphy.com/media/U5Op3ycS23DYmgMuGg/giphy.gif)   
+![Demo](demo/demo2.gif)   
 
 if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)
 

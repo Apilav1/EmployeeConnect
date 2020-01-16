@@ -50,3 +50,6 @@ if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg
 
 # To Do list
 - Implement local database (ObjectBox, Realm etc.)
+
+# For App testing
+moderator: andreybreslav@hotmail.com, password: 12345678

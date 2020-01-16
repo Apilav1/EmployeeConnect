@@ -31,12 +31,12 @@ Implementation of this app and methods that I used are highly influenced by **Go
 - after profile validation, the user is free to use **EConnect** app
 
 ## Registration  
-![Demo Registration of new User alpha](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)    
+![Demo](demo/demo_registration.gif)    
 
-if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)
+if GIF does not work, check out [here](demo/demo2.gif)
 
 ## Verification  
-![Demo New User alpha](https://media.giphy.com/media/U5Op3ycS23DYmgMuGg/giphy.gif)   
+![Demo](https://media.giphy.com/media/U5Op3ycS23DYmgMuGg/giphy.gif)   
 
 if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)
 

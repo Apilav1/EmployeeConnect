@@ -31,7 +31,7 @@ Implementation of this app and methods that I used are highly influenced by **Go
 - after profile validation, the user is free to use **EConnect** app
 
 ## Registration  
-![Demo](demo/demo_registration.gif)    
+![Demo](demo/demo_registration.gif = 250x250)    
 
 if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)
 

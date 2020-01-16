@@ -1,10 +1,10 @@
 # EmployeeConnect  (EConnect)
 
-This android app is developed to bring employees of a company closer by easing the way information are shared, such as contact information and other information related to programming (employee's programming skills, project he is working on, team he has been assigned to, etc.)
+This android app is developed to bring employees of a company closer by easing the way information is shared, such as contact information and other information related to programming (employee's programming skills, the project he is working on, the team he has been assigned to, etc.)
 
 ## Implementation
 
- For this app to be flexible, scalable, easily extensible and maintainable, it is implemented in accordance with **Clean architecture** principle. **MVP architectural pattern** is used to model the presentation layer.
+ For this app to be flexible, scalable, easily extensible and maintainable, it is implemented in accordance with the **Clean architecture** principle. **MVP architectural pattern** is used to model the presentation layer.
 
 Implementation of this app and methods that I used are highly influenced by **Google's and Jetbrains most recommended book**, ["Kotlin for Android Developers 6th edition"](https://antonioleiva.com/kotlin-android-developers-book/) by **Antonio Leiva** and some of his blogs* and other relevant blogs*.
 
@@ -23,12 +23,12 @@ Implementation of this app and methods that I used are highly influenced by **Go
 
 # How it works
 - when one wants to use this app  first he needs to register
-- after registration for user to login successfully, first it needs to be verified by one of company's app moderators
-- when user is not verified, to other employees it is represented by yellow explanation mark icon in the employees list
-- moderator can verify unverified user with long click on user profile shown in employees list
-- furthermore, moderator can make other user a moderator with long click on user profile shown in employees list after verification
-- when user is a moderator, to other employees it is represented with wrench icon by moderator's user picture  
-- after profile validation, user is free to use **EConnect** app
+- after registration for the user to log in successfully, first, it needs to be verified by one of company's app moderators
+- when the user is not verified, to other employees it is represented by yellow exclamation mark icon in the employees list
+- the moderator can verify unverified user with a long press on user profile shown in employees list
+- furthermore, the moderator can make other users a moderator with a long press on user profile shown in employees list after verification
+- when the user is a moderator, to other employees it is represented with wrench icon by the moderator's user picture  
+- after profile validation, the user is free to use **EConnect** app
 
 ## Registration  
 ![Demo Registration of new User alpha](https://media.giphy.com/media/ZFnwXWWuYVg8F17SEH/giphy.gif)    

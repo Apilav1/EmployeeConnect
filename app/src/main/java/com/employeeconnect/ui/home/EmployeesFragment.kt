@@ -27,7 +27,6 @@ class EmployeesFragment : Fragment() {
     private var columnCount = 1
 
     private var listener: OnListEmployeesFragmentInteractionListener? = null
-    private var users: ArrayList<User> = ArrayList()
 
     private var adapter = GroupAdapter<GroupieViewHolder>()
 
@@ -39,6 +38,7 @@ class EmployeesFragment : Fragment() {
         arguments?.let {
             columnCount = it.getInt(ARG_COLUMN_COUNT)
         }
+
     }
 
     override fun onCreateView(
@@ -85,12 +85,16 @@ class EmployeesFragment : Fragment() {
 
                 val filterPattern = newText.toString().toLowerCase().trim()
 
-                result.addAll(users.filter{
+                if(HomeActivity.currentUsers == null || HomeActivity.currentUsers?.size == 0
+                    || HomeActivity.currentUsers?.size == 1) return false
+
+                result.addAll(HomeActivity.currentUsers!!.filter{
                     it.username.toLowerCase().contains(filterPattern)
                 })
 
                 result.forEach {
-                    adapter.add(UserRow(context!!, it))
+                    if(it.uid != HomeActivity.currentUser?.uid)
+                        adapter.add(UserRow(context!!, it))
                 }
                 adapter.notifyDataSetChanged()
 

@@ -41,7 +41,7 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/rounded_edittext_gray_borders"
         android:ems="10"
-        android:hint="My LinkenIn account url"
+        android:hint="My LinkedIn account username"
         android:inputType="text"
         android:paddingLeft="16dp"
         app:layout_constraintEnd_toEndOf="@+id/github_username_register"

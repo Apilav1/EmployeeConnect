@@ -1,5 +1,6 @@
 package com.employeeconnect.domain.Models
 
+import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -9,6 +10,7 @@ data class User (
     var uid: String,
     var username: String,
     var profileImageUrl: String,
+    var profileImage: Bitmap?,
     var email: String,
     val githubUsername: String,
     val linkedInUsername: String,
@@ -21,18 +23,18 @@ data class User (
     val chatRooms: HashMap<String, String> // chatRoom id and users
 ): Parcelable {
 
-    constructor(): this("", "", "","",
+    constructor(): this("", "", "", null, "",
         "", "", "", "", "", "", false, false, HashMap())
 
 }
 
 @Parcelize
-class ChatRoom(val uid: String, val usersId: ArrayList<String>) : Parcelable {
+data class ChatRoom(val uid: String, val usersId: ArrayList<String>) : Parcelable {
     constructor(): this("", ArrayList())
 }
 
 @Parcelize
-class Message(val fromUser: String, val toUser: String, val text: String, val timeStamp: Long,
+data class Message(val fromUser: String, val toUser: String, val text: String, val timeStamp: Long,
                 val chatRoomId: String, var seen: Boolean): Parcelable{
     constructor(): this("", "", "", 0L, "", false)
 }

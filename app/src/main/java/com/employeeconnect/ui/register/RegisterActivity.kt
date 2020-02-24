@@ -88,7 +88,7 @@ class RegisterActivity : AppCompatActivity(), RegisterView,
             replaceCurrentFragment(nextFragment)
         }
         else{
-            val user = User("", username_register.text.toString(),  BasicInfoRegisterFragment.selectedPhotoUriString,
+            val user = User("", username_register.text.toString(),  BasicInfoRegisterFragment.selectedPhotoUriString, null,
                 email_register.text.toString(), github_username_register.text.toString(),
                 linkenin_link_register.text.toString(), skills_register.text.toString(),
                 position_register.text.toString(), team_register.text.toString(),

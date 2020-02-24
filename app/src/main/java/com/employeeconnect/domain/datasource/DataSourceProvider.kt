@@ -1,6 +1,6 @@
 package com.employeeconnect.domain.datasource
 
-import com.employeeconnect.data.Server.firebase.FirebaseServer
+import com.employeeconnect.data.server.firebase.FirebaseServer
 import com.employeeconnect.domain.Models.ChatRoom
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User

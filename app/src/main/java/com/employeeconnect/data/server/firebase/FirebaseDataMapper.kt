@@ -26,7 +26,7 @@ class FirebaseDataMapper {
 
     fun convertUserToDomain(user: ServerUser) : DomainUser {
 
-        return DomainUser(user.uid, user.username, user.profileImageUrl, null, user.email, user.githubUsername,
+        return DomainUser(user.uid, user.username, user.profileImageUrl, user.profileImage, user.email, user.githubUsername,
             user.linkedInUsername, user.skills, user.position, user.teamName, user.currentProject, user.verified,
             user.moderator, user.chatRooms)
     }

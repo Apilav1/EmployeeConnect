@@ -1,18 +1,36 @@
 package com.employeeconnect.data.server.firebase
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import com.employeeconnect.R
+import com.employeeconnect.ui.App
 import com.employeeconnect.ui.activities.BaseActivity
 import com.employeeconnect.data.server.firebase.User as ServerUser
 import com.employeeconnect.domain.Models.User as DomainUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.assist.FailReason
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Main
+import java.net.URL
 
 class FetchCurrentUserRequest {
+
+    private val parentJob = Job()
+
+    private val coroutineExceptionHandler: CoroutineExceptionHandler =
+        CoroutineExceptionHandler { _, throwable ->
+
+            coroutinScope.launch {
+                val errorMessage = App.instance?.getString(R.string.error_loading_message)
+                showToast(errorMessage)
+            }
+
+        }
+
+    private val coroutinScope = CoroutineScope(Dispatchers.Main + parentJob + coroutineExceptionHandler)
 
     fun execute(callback: (user: DomainUser) -> Unit) {
 
@@ -28,32 +46,31 @@ class FetchCurrentUserRequest {
                 return@addSnapshotListener
             }
             if (snapshot != null && snapshot.exists()) {
-                val result= snapshot.toObject(ServerUser::class.java)
 
-                val imageLoader = ImageLoader.getInstance()
+                val result = snapshot.toObject(ServerUser::class.java)
 
-                /*imageLoader.loadImage(result?.profileImageUrl, object : SimpleImageLoadingListener(){
-                    override fun onLoadingComplete(
-                        imageUri: String?,
-                        view: View?,
-                        loadedImage: Bitmap?
-                    ) {
-                        super.onLoadingComplete(imageUri, view, loadedImage)
-                        Log.d("CHATTT", "VALJA")
-                        result?.profileImage = loadedImage
-                    }
+                coroutinScope.launch(Dispatchers.Main){
 
-                    override fun onLoadingFailed(
-                        imageUri: String?,
-                        view: View?,
-                        failReason: FailReason?
-                    ) {
-                        super.onLoadingFailed(imageUri, view, failReason)
-                        Log.d("CHATTT", "ne valja")
-                    }
-                })*/
-                callback(FirebaseDataMapper().convertUserToDomain(result!!))
+                    result!!.profileImage = getBitmapOfURL(result.profileImageUrl)
+
+                    callback(FirebaseDataMapper().convertUserToDomain(result))
+                }
+
             }
+        }
+    }
+
+    private suspend fun getBitmapOfURL(url: String): Bitmap =
+        withContext(Dispatchers.IO){
+            URL(url).openStream().use {
+                return@withContext BitmapFactory.decodeStream(it)
+            }
+        }
+
+    private fun showToast(error: String?){
+        val context = App.instance
+        GlobalScope.launch(Main){
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
         }
     }
 }

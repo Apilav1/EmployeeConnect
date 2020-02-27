@@ -5,11 +5,6 @@ import android.util.Log
 import android.view.View
 import com.employeeconnect.data.db.EmployeeConnectDb
 import com.google.firebase.firestore.FirebaseFirestore
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.assist.FailReason
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
-import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.doAsync
 
 import com.employeeconnect.domain.Models.User as DomainUser
 import com.employeeconnect.data.server.firebase.User as ServerUser
@@ -40,10 +35,6 @@ class FirebaseGetUsersRequest( private val dataMapper: FirebaseDataMapper = Fire
                 users.add(userr)
             }
 
-//            doAsync {
-//                val imageLoader = ImageLoader.getInstance()
-//                userr.profileImage = imageLoader.loadImageSync(userr.profileImageUrl)
-//            }
             val converted = FirebaseDataMapper().convertToDomain(users)
             db.saveUsers(converted)
             callback(converted)

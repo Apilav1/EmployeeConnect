@@ -5,10 +5,6 @@ import android.util.Log
 import android.view.View
 import com.employeeconnect.ui.activities.BaseActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.assist.FailReason
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
-
 
 class GetMultipleUsersByIdRequest {
 
@@ -26,28 +22,6 @@ class GetMultipleUsersByIdRequest {
                 for (doc in value!!) {
                     val userr = doc.toObject(User::class.java)
                     users.add(userr)
-
-                    /*val imageLoader = ImageLoader.getInstance()
-                    imageLoader.loadImage(userr.profileImageUrl, object : SimpleImageLoadingListener(){
-                        override fun onLoadingComplete(
-                            imageUri: String?,
-                            view: View?,
-                            loadedImage: Bitmap?
-                        ) {
-                            super.onLoadingComplete(imageUri, view, loadedImage)
-                            Log.d("CHATTT", "VALJA")
-                            userr.profileImage = loadedImage
-                        }
-
-                        override fun onLoadingFailed(
-                            imageUri: String?,
-                            view: View?,
-                            failReason: FailReason?
-                        ) {
-                            super.onLoadingFailed(imageUri, view, failReason)
-                            Log.d("CHATTT", "ne valja")
-                        }
-                    })*/
                 }
                 callback(FirebaseDataMapper().convertToDomain(users))
             }

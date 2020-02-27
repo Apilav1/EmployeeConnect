@@ -6,4 +6,5 @@
     <string name="company_name">Symphony</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="search_hint">find by name, skills...</string>
+    <string name="error_loading_message">Error while loading image</string>
 </resources>

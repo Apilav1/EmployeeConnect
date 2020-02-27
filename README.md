@@ -47,9 +47,11 @@ if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg
 - Working with image processing library [Picasso](https://square.github.io/picasso/)
 - Working with library for complex RecyclerView layouts [Groupie](https://github.com/lisawray/groupie)
 - Working with Kotlin library [Anko](https://github.com/Kotlin/anko) library
+- Working with Bitmaps
+- Working with Kotlin coroutines (**concurrency**)
 
 # To Do list
-- Implement local database (ObjectBox, Realm etc.)
+- Implement local database (**in progress**)
 
 # For App testing
 moderator: andreybreslav@hotmail.com, password: 12345678

@@ -1,5 +1,6 @@
 package com.employeeconnect.extensions
 
+import android.graphics.Bitmap
 import java.lang.Exception
 
 inline fun <T, R : Any> Iterable<T>.firstResult(predicate: (T) -> R?): R {
@@ -10,5 +11,5 @@ inline fun <T, R : Any> Iterable<T>.firstResult(predicate: (T) -> R?): R {
     throw Exception("Data source providers problem")
 }
 
-fun <K, V : Any> Map<K, V?>.toVarargArray(): Array<out Pair<K, V?>> =
-map { Pair(it.key, it.value) }.toTypedArray()
+fun <K, V : Any> Map<K, V?>.toVarargArray(): Array<Pair<K, Any?>> =
+    map { Pair(it.key, if(it.value is Bitmap?) (it.value as Bitmap).getBytes() else it.value ) }.toTypedArray()

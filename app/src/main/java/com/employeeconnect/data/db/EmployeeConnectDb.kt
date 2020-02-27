@@ -17,7 +17,7 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
         //Db should not create a new User
     }
 
-    fun saveUsers(users: ArrayList<DomainUser>) = employeeConnectDbHelper.use {
+      fun saveUsers(users: ArrayList<DomainUser>) = employeeConnectDbHelper.use {
 
         clear(EmployeeTable.NAME)
         clear(ChatRoomTable.NAME)

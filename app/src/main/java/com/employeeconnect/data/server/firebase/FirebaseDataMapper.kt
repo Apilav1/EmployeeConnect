@@ -16,8 +16,8 @@ class FirebaseDataMapper {
         var usersResult = ArrayList<DomainUser>()
 
         for(user in users){
-            usersResult.add(DomainUser(user.uid, user.username, user.profileImageUrl,null,  user.email,
-                            user.githubUsername, user.linkedInUsername, user.skills, user.position, user.position,
+            usersResult.add(DomainUser(user.uid, user.username, user.profileImageUrl,user.profileImage, user.email,
+                            user.githubUsername, user.linkedInUsername, user.skills, user.position, user.teamName,
                             user.currentProject, user.verified, user.moderator, user.chatRooms))
         }
 

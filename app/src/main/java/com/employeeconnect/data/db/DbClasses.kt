@@ -34,6 +34,7 @@ data class User (var map: MutableMap<String, Any?>){
         this.currentProject = currentProject
         this.verified = verified
         this.moderator = moderator
+
     }
 }
 

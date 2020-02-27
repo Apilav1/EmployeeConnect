@@ -2,6 +2,8 @@ package com.employeeconnect.ui.view
 
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
+import com.employeeconnect.extensions.convertBitmapToUri
+import com.employeeconnect.ui.App
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -28,8 +30,7 @@ class ChatToUserItem(val text: String, val user: User): Item<GroupieViewHolder>(
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.textView_left_side_row.text = text
 
-        val uri = user.profileImageUrl
         val targetImageView = viewHolder.itemView.imageView_left_side_row
-        Picasso.get().load(uri).into(targetImageView)
+        Picasso.get().load(user.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext)).into(targetImageView)
     }
 }

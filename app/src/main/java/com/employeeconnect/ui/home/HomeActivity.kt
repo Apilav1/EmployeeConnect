@@ -171,6 +171,7 @@ class HomeActivity : BaseActivity(), HomeView,
                 newMessages++
         }
 
+
         badge?.number = newMessages
 
         badge?.isVisible = newMessages > 0

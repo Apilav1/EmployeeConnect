@@ -14,6 +14,8 @@ import android.view.ViewGroup
 
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
+import com.employeeconnect.extensions.convertBitmapToUri
+import com.employeeconnect.ui.App
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_basic_info_register.*
 import kotlinx.android.synthetic.main.fragment_user_profile.*
@@ -67,7 +69,8 @@ class UserProfileFragment : Fragment() {
         view.save_button_profile_user_profile.alpha = 0.0F
         view.cancel_button_profile_user_profile.alpha = 0.0F
 
-        Picasso.get().load(currentUser!!.profileImageUrl).into(view.picture_user_profile)
+        Picasso.get().load(currentUser!!.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext))
+                    .into(view.picture_user_profile)
 
         return view
     }

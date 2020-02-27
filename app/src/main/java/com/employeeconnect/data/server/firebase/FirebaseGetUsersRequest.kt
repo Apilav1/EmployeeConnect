@@ -3,7 +3,6 @@ package com.employeeconnect.data.server.firebase
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.employeeconnect.R
 import com.employeeconnect.data.db.EmployeeConnectDb
@@ -30,14 +29,14 @@ class FirebaseGetUsersRequest( private val dataMapper: FirebaseDataMapper = Fire
     private val coroutineExceptionHandler: CoroutineExceptionHandler =
         CoroutineExceptionHandler { _, throwable ->
 
-            coroutinScope.launch {
+            coroutineScope.launch {
                 val errorMessage = App.instance?.getString(R.string.error_loading_message)
                 showToast(errorMessage)
             }
 
         }
 
-    private val coroutinScope = CoroutineScope(Dispatchers.Main + parentJob + coroutineExceptionHandler)
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob + coroutineExceptionHandler)
 
     fun execute(callback: (ArrayList<DomainUser>) -> Unit){
 
@@ -61,12 +60,12 @@ class FirebaseGetUsersRequest( private val dataMapper: FirebaseDataMapper = Fire
             val converted = FirebaseDataMapper().convertToDomain(users)
 
             for(i in 0 until converted.size) {
-                coroutinScope.launch(Dispatchers.Main) {
+                coroutineScope.launch(Dispatchers.Main) {
 
                     converted[i].profileImage = getBitmapOfURL(converted[i].profileImageUrl)
 
                     if(checkUserProfilePics(converted))
-                        GlobalScope.launch {
+                        GlobalScope.launch(Dispatchers.Main) {
                             db.saveUsers(converted)
                             callback(converted)
                         }
@@ -76,6 +75,7 @@ class FirebaseGetUsersRequest( private val dataMapper: FirebaseDataMapper = Fire
     }
 
     private fun checkUserProfilePics(converted: ArrayList<DomainUser>): Boolean{
+        //checking if all bitmaps are set
         converted.forEach {
             if(it.profileImage == null) return false
         }

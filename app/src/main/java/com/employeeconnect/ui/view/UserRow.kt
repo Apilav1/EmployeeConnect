@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.View
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.User
+import com.employeeconnect.extensions.convertBitmapToUri
+import com.employeeconnect.ui.App
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
@@ -24,7 +26,8 @@ class UserRow (val context: Context, val user: User) : Item<GroupieViewHolder>()
         view.linkedin_textview_fragment_employees_list.text = user.linkedInUsername
 
         val targetImageView = view.imageview_fragment_employees_list
-        Picasso.get().load(user.profileImageUrl).into(targetImageView)
+        Picasso.get().load(user.profileImage!!.convertBitmapToUri(context)).into(targetImageView)
+
 
         val logo = view.github_logo_imageview
         logo.setBackgroundResource(R.drawable.icon)

@@ -5,7 +5,9 @@ import android.util.Log
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
+import com.employeeconnect.extensions.convertBitmapToUri
 import com.employeeconnect.extensions.getDateTimeFromTimestamp
+import com.employeeconnect.ui.App
 import com.employeeconnect.ui.home.HomeActivity
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
@@ -20,14 +22,14 @@ class LatestMessageRow(val toUser: User, val message: Message): Item<GroupieView
         val currentUserSentMessage = HomeActivity.currentUser!!.uid == message.fromUser
 
         viewHolder.itemView.username_fragment_messages.setText(toUser.username)
-        Picasso.get().load(toUser.profileImageUrl).into(viewHolder.itemView.imageView_fragment_messages)
+        Picasso.get().load(toUser.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext)).into(viewHolder.itemView.imageView_fragment_messages)
 
         if(currentUserSentMessage)
             viewHolder.itemView.messagetext_fragment_messages.text = "You: ${message.text}"
         else
             viewHolder.itemView.messagetext_fragment_messages.text = message.text
 
-        if(!message.seen && message!!.fromUser == toUser.uid){
+        if(!message.seen && message.fromUser == toUser.uid){
             viewHolder.itemView.messagetext_fragment_messages.setTypeface(null, Typeface.BOLD)
         }
 

@@ -2,6 +2,7 @@ package com.employeeconnect.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -32,6 +33,8 @@ class HomeActivity : BaseActivity(), HomeView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        currentFragmet = EmployeesFragment()
 
         presenter.verifyUserIsLoggedIn()
 
@@ -86,7 +89,8 @@ class HomeActivity : BaseActivity(), HomeView,
 
     override fun onListMessagesFragmentInteraction(user: User) {
         val intent = Intent(this, ChatLogActivity::class.java)
-        intent.putExtra(USER_KEY, user)
+        //intent.putExtra(USER_KEY, user)   TransactionTooLargeException: data parcel size 805756 bytes
+        toUser = user
         startActivityForResult(intent, CHAT_LOG_CODE)
     }
 
@@ -95,7 +99,7 @@ class HomeActivity : BaseActivity(), HomeView,
 
         if(requestCode == CHAT_LOG_CODE){
             currentFragmet = LatestMessagesFragment()
-            replaceFragment(currentFragmet)
+            replaceFragment(currentFragmet!!)
 
             (currentFragmet as LatestMessagesFragment).showLatestMessages(messages)
         }
@@ -114,7 +118,7 @@ class HomeActivity : BaseActivity(), HomeView,
 
         currentUsers = ArrayList()
         currentUsers = users
-        replaceFragment(currentFragmet)
+        replaceFragment(currentFragmet!!)
 
         val chatRoomsIds = ArrayList<String>()
         chatRoomsIds.addAll(currentUser?.chatRooms?.keys!!)
@@ -254,11 +258,13 @@ class HomeActivity : BaseActivity(), HomeView,
 
         var currentUser: User? = null
 
-        var currentFragmet: Fragment = EmployeesFragment()
+        var currentFragmet: Fragment? = null
 
         var currentUsers: ArrayList<User>? = null
 
         var messages: HashMap<User, Message>? = null
+
+        var toUser: User? = null
 
         const val USER_KEY = "USER_KEY"
         const val USERS_KEY = "USERS_KEY"

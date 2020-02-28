@@ -28,7 +28,17 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
         with(dataMapper.convertUsersToDbModel(users)){
 
             this.forEach {
+                //inserting employee info
                 insert(EmployeeTable.NAME, *it.map.toVarargArray())
+                //inserting employee-chatRoom info & chatRoom ids
+                for((_, value) in it.chatRooms){
+                    insert(EmployeeChatRoomTable.NAME,
+                        EmployeeChatRoomTable.EMPLOYEE_ID to it.uid,
+                                EmployeeChatRoomTable.CHATROOM_ID to value)
+
+                    insert(ChatRoomTable.NAME, ChatRoomTable.ID to value)
+                }
+
             }
         }
     }

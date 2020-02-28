@@ -14,7 +14,7 @@ class DbDataMapper {
 
     fun convertToDomain(users: ArrayList<DbUser>): ArrayList<DomainUser>{
 
-        var usersResult = ArrayList<DomainUser>()
+        val usersResult = ArrayList<DomainUser>()
 
         for(user in users){
             usersResult.add(DomainUser(user.uid, user.username, user.profileImageUrl, user.profileImage, user.email,
@@ -36,7 +36,7 @@ class DbDataMapper {
 
         return DbUser(user.uid, user.username, user.profileImageUrl, user.profileImage, user.email, user.githubUsername,
             user.linkedInUsername, user.skills, user.position, user.teamName, user.currentProject, user.verified,
-            user.moderator)
+            user.moderator, user.chatRooms)
     }
 
     fun convertUsersToDbModel (users: ArrayList<DomainUser>): ArrayList<DbUser>{
@@ -46,7 +46,7 @@ class DbDataMapper {
         for(user in users){
             usersResult.add(DbUser(user.uid, user.username, user.profileImageUrl, user.profileImage,  user.email,
                 user.githubUsername, user.linkedInUsername, user.skills, user.position, user.teamName,
-                user.currentProject, user.verified, user.moderator))
+                user.currentProject, user.verified, user.moderator, user.chatRooms))
         }
 
         return usersResult

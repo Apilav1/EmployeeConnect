@@ -28,7 +28,8 @@ class ChatLogActivity : AppCompatActivity(), ChatLogView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
 
-        toUser = intent.getParcelableExtra(EmployeesFragment.USER_KEY)
+        //toUser = intent.getParcelableExtra(EmployeesFragment.USER_KEY) TransactionTooLargeException: data parcel size 805756 bytes
+        toUser = HomeActivity.toUser
 
         currentUser = HomeActivity.currentUser
 

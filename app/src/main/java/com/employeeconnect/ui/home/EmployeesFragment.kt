@@ -163,7 +163,7 @@ class EmployeesFragment : Fragment() {
              val userItem = item as UserRow
 
              val intent = Intent(view.context, ChatLogActivity::class.java)
-             intent.putExtra(USER_KEY, userItem.user)
+             //intent.putExtra(USER_KEY, userItem.user) TransactionTooLargeException: data parcel size 805756 bytes
              startActivity(intent)
          }
 

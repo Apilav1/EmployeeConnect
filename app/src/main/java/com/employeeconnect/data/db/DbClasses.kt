@@ -16,10 +16,11 @@ data class User (var map: MutableMap<String, Any?>){
     var currentProject: String by map
     var verified: Boolean by map
     var moderator: Boolean by map
+    lateinit var chatRooms: HashMap<String, String> //chatRoom id as key, id of toUser as value
 
     constructor(uid: String, username: String, profileImageUrl: String, profileImage: Bitmap?, email: String, githubUsername: String,
                 linkedInUsername: String, skills: String, position: String, teamName: String, currentProject: String,
-                verified: Boolean, moderator: Boolean): this(HashMap()){
+                verified: Boolean, moderator: Boolean, chatRooms: HashMap<String, String>): this(HashMap()){
 
         this.uid = uid
         this.username = username
@@ -34,6 +35,7 @@ data class User (var map: MutableMap<String, Any?>){
         this.currentProject = currentProject
         this.verified = verified
         this.moderator = moderator
+        this.chatRooms = chatRooms
 
     }
 }

@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.OutputStream

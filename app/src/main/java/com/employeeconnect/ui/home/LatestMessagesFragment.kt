@@ -116,7 +116,7 @@ class LatestMessagesFragment : Fragment() {
         adapter = GroupAdapter()
         recycleview_messages.adapter = adapter
 
-        for((key, value) in messages!!){
+        for((key, value) in messages){
             adapter.add(LatestMessageRow(key, value))
         }
         adapter.notifyDataSetChanged()

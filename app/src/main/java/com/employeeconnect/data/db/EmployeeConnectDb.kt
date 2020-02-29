@@ -5,9 +5,11 @@ import com.employeeconnect.extensions.*
 import com.employeeconnect.domain.Models.ChatRoom
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User as DomainUser
+import com.employeeconnect.data.db.User as DbUser
 import com.employeeconnect.domain.datasource.DataSource
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.db.update
 
 class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbHelper = EmployeeConnectDbHelper.instance,
                          private val dataMapper: DbDataMapper = DbDataMapper()
@@ -22,8 +24,6 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
         clear(EmployeeTable.NAME)
         clear(ChatRoomTable.NAME)
         clear(EmployeeChatRoomTable.NAME)
-        clear(MessagesTable.NAME)
-        clear(ChatRoomMessageTable.NAME)
 
         with(dataMapper.convertUsersToDbModel(users)){
 
@@ -32,16 +32,69 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
                 insert(EmployeeTable.NAME, *it.map.toVarargArray())
                 //inserting employee-chatRoom info & chatRoom ids
                 for((_, value) in it.chatRooms){
+
                     insert(EmployeeChatRoomTable.NAME,
                         EmployeeChatRoomTable.EMPLOYEE_ID to it.uid,
                                 EmployeeChatRoomTable.CHATROOM_ID to value)
 
                     insert(ChatRoomTable.NAME, ChatRoomTable.ID to value)
+
+
                 }
 
             }
         }
     }
+
+    fun saveMessages(messages: ArrayList<Message>) = employeeConnectDbHelper.use {
+
+        clear(MessagesTable.NAME)
+        clear(ChatRoomMessageTable.NAME)
+
+
+        with(dataMapper.convertMessagesToDbMessage(messages)){
+
+            var rowCounter = 1
+
+            this.forEach {
+
+                it.uid = insert(MessagesTable.NAME, *it.map.toVarargArray()).toString()
+
+                update(MessagesTable.NAME, MessagesTable.ID to it.uid)
+                    .whereSimple("ROWID = ?", rowCounter++.toString())
+                    .exec()
+
+                insert(ChatRoomMessageTable.NAME, ChatRoomMessageTable.MESSAGE_ID to it.uid,
+                            ChatRoomMessageTable.CHATROOM_ID to it.chatRoomId)
+
+            }
+        }
+
+    }
+
+    fun saveLatestMessages(messages: ArrayList<Message>) = employeeConnectDbHelper.use {
+
+        clear(LatestMessagesTable.NAME)
+
+        with(dataMapper.convertMessagesToDbMessage(messages)){
+
+            var rowCounter = 1
+
+            this.forEach {
+
+                Log.d("CHATTT", "insert into latest")
+
+                it.uid = insert(LatestMessagesTable.NAME, *it.map.toVarargArray()).toString()
+
+                update(LatestMessagesTable.NAME, MessagesTable.ID to it.uid)
+                    .whereSimple("ROWID = ?", rowCounter++.toString())
+                    .exec()
+
+            }
+        }
+
+    }
+
 
     override fun getUsers(callback: (ArrayList<DomainUser>) -> Unit)  = employeeConnectDbHelper.use {
     }

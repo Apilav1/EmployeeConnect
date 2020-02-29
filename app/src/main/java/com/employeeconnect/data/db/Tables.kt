@@ -31,16 +31,27 @@ object ChatRoomTable {
 
 object ChatRoomMessageTable{
     const val NAME = "CHATROOM_MESSAGE"
-    const val ID = "_id"
+    const val ID = "uid"
     const val CHATROOM_ID = "chatroom_id"
     const val MESSAGE_ID = "message_id"
 }
 
 object MessagesTable {
     const val NAME = "MESSAGES"
-    const val ID = "_id"
-    const val FROM_USER_ID = "fromUser_id"
-    const val TO_USER_ID = "toUser_id"
+    const val ID = "uid"
+    const val FROM_USER_ID = "fromUser"
+    const val TO_USER_ID = "toUser"
+    const val TEXT = "text"
+    const val TIMESTAMP = "timestamp"
+    const val CHATROOM_ID = "chatRoomId"
+    const val SEEN  = "seen"
+}
+
+object LatestMessagesTable {
+    const val NAME = "LATEST_MESSAGES"
+    const val ID = "uid"
+    const val FROM_USER_ID = "fromUser"
+    const val TO_USER_ID = "toUser"
     const val TEXT = "text"
     const val TIMESTAMP = "timestamp"
     const val CHATROOM_ID = "chatRoomId"

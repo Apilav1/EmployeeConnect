@@ -57,15 +57,18 @@ class DbDataMapper {
         return DomainMessage(message.fromUser, message.toUser, message.text, message.timeStamp, message.chatRoomId, message.seen)
     }
 
-//    fun convertMessageToDbModel(message: DomainMessage) : DbMessage {
-//        return DbMessage(message.fromUser, message.toUser, message.text, message.timeStamp, message.chatRoomId, message.seen)
-//    }
+    fun convertMessageToDbModel(message: DomainMessage) : DbMessage {
+
+        return DbMessage(message.fromUser, message.toUser, message.text, message.timeStamp,
+                            message.chatRoomId, message.seen)
+
+    }
 
     fun convertMessagesToDomain(messages: ArrayList<DbMessage>) : ArrayList<DomainMessage> {
 
         val result = ArrayList<DomainMessage>()
 
-        messages.forEach { convertMessageToDomain(it) }
+        messages.forEach { result.add(convertMessageToDomain(it))}
 
         return result
     }
@@ -74,7 +77,7 @@ class DbDataMapper {
 
         val result = ArrayList<DbMessage>()
 
-       // messages.forEach { convertMessageToDbModel(it) }
+        messages.forEach { result.add(convertMessageToDbModel(it)) }
 
         return result
     }
@@ -83,15 +86,15 @@ class DbDataMapper {
         return DomainChatRoom(chatRoom.uid, chatRoom.usersId)
     }
 
-//    fun convertChatRoomToDbModel(chatRoom: DomainChatRoom) : DbChatRoom {
-//        return DbChatRoom(chatRoom.uid, chatRoom.usersId)
-//    }
+    fun convertChatRoomToDbModel(chatRoom: DomainChatRoom) : DbChatRoom {
+        return DbChatRoom(chatRoom.uid, chatRoom.usersId)
+    }
 
     fun converteDbChatRoomsToDomain(chatRooms: ArrayList<DbChatRoom>) : ArrayList<DomainChatRoom> {
 
         val result = ArrayList<DomainChatRoom>()
 
-        chatRooms.forEach { convertDbChatRoomToDomain(it) }
+        chatRooms.forEach { result.add(convertDbChatRoomToDomain(it) )}
 
         return result
 
@@ -101,7 +104,7 @@ class DbDataMapper {
 
         val result = ArrayList<DbChatRoom>()
 
-        //chatRooms.forEach { convertChatRoomToDbModel(it) }
+        chatRooms.forEach { result.add(convertChatRoomToDbModel(it)) }
 
         return result
 

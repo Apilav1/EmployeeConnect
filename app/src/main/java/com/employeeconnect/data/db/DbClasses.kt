@@ -41,20 +41,40 @@ data class User (var map: MutableMap<String, Any?>){
 }
 
 data class ChatRoom(var map: MutableMap<String, Any?>){
-    val uid: String by map
-    val usersId: ArrayList<String> by map
+    var uid: String by map
+    var usersId: ArrayList<String> by map
+
     constructor(): this(HashMap())
+
+    constructor(uid: String, usersId: ArrayList<String>): this(HashMap()){
+        this.uid = uid
+        this.usersId = usersId
+    }
 }
 
 data class Message(var map: MutableMap<String, Any?>){
-    val fromUser: String by map
-    val toUser: String by map
-    val text: String by map
-    val timeStamp: Long by map
-    val chatRoomId: String by map
+
+    var uid: String by map
+    var fromUser: String by map
+    var toUser: String by map
+    var text: String by map
+    var timeStamp: Long by map
+    var chatRoomId: String by map
     var seen: Boolean by map
 
     constructor(): this(HashMap())
+
+    constructor(fromUser: String, toUser: String, text: String,
+                timeStamp: Long, chatRoomId: String, seen: Boolean): this(HashMap()){
+
+        this.fromUser = fromUser
+        this.toUser = toUser
+        this.text = text
+        this.timeStamp = timeStamp
+        this.chatRoomId = chatRoomId
+        this.seen = seen
+
+    }
 }
 
 

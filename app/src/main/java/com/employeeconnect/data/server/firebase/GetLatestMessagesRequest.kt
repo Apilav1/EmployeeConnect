@@ -1,12 +1,15 @@
 package com.employeeconnect.data.server.firebase
 
 import android.util.Log
+import com.employeeconnect.data.db.EmployeeConnectDb
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.ui.activities.BaseActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.employeeconnect.data.server.firebase.Message as ServerMessage
 
-class GetLatestMessagesRequest {
+class GetLatestMessagesRequest( private val dataMapper: FirebaseDataMapper = FirebaseDataMapper(),
+                                private val db: EmployeeConnectDb = EmployeeConnectDb()
+) {
 
     fun execute(chatRooms: ArrayList<String>, callback: (ArrayList<Message>) -> Unit) {
 
@@ -28,7 +31,10 @@ class GetLatestMessagesRequest {
                         val res = message.toObject(ServerMessage::class.java)
                         result.add(FirebaseDataMapper().convertMessageToDomain(res))
                     }
+
                     Log.d(FirebaseServer.TAG, "GET LATEST MESSAGES: ${result.size.toString()}")
+
+                    db.saveLatestMessages(result)
                     callback(result)
                 }
             }

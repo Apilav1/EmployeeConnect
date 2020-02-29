@@ -1,12 +1,15 @@
 package com.employeeconnect.data.server.firebase
 
 import android.util.Log
+import com.employeeconnect.data.db.EmployeeConnectDb
 import com.employeeconnect.ui.activities.BaseActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.employeeconnect.data.server.firebase.Message as ServerMessage
 import com.employeeconnect.domain.Models.Message as DomainMessage
 
-class SetMessageListenerRequest {
+class SetMessageListenerRequest( private val dataMapper: FirebaseDataMapper = FirebaseDataMapper(),
+                                 private val db: EmployeeConnectDb = EmployeeConnectDb()
+) {
 
     fun execute(chatRoomId: String, callback: (ArrayList<DomainMessage>) -> Unit){
 
@@ -27,8 +30,10 @@ class SetMessageListenerRequest {
                     for(message in snapshot){
                         val res = message.toObject(ServerMessage::class.java)
                         result.add(FirebaseDataMapper().convertMessageToDomain(res))
-                        callback(result)
                     }
+
+                    db.saveMessages(result)
+                    callback(result)
                 }
             }
     }

@@ -82,8 +82,6 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
 
             this.forEach {
 
-                Log.d("CHATTT", "insert into latest")
-
                 it.uid = insert(LatestMessagesTable.NAME, *it.map.toVarargArray()).toString()
 
                 update(LatestMessagesTable.NAME, MessagesTable.ID to it.uid)

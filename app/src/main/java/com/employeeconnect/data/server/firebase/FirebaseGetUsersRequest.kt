@@ -1,15 +1,8 @@
 package com.employeeconnect.data.server.firebase
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
-import android.widget.Toast
-import com.employeeconnect.R
 import com.employeeconnect.data.db.EmployeeConnectDb
-import com.employeeconnect.ui.App
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.*
-import java.net.URL
 
 import com.employeeconnect.domain.Models.User as DomainUser
 import com.employeeconnect.data.server.firebase.User as ServerUser
@@ -23,20 +16,6 @@ class FirebaseGetUsersRequest( private val dataMapper: FirebaseDataMapper = Fire
         val TAG = "FirebaseGetUsersRequest"
 
     }
-
-    private val parentJob = Job()
-
-    private val coroutineExceptionHandler: CoroutineExceptionHandler =
-        CoroutineExceptionHandler { _, throwable ->
-
-            coroutineScope.launch {
-                val errorMessage = App.instance?.getString(R.string.error_loading_message)
-                showToast(errorMessage)
-            }
-
-        }
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob + coroutineExceptionHandler)
 
     fun execute(callback: (ArrayList<DomainUser>) -> Unit){
 
@@ -53,46 +32,19 @@ class FirebaseGetUsersRequest( private val dataMapper: FirebaseDataMapper = Fire
                 return@addSnapshotListener
             }
             for (doc in value!!) {
-                val userr = doc.toObject(ServerUser::class.java)
-                users.add(userr)
+                val serverUsers = doc.toObject(ServerUser::class.java)
+                users.add(serverUsers)
             }
+
+
+            GetUsersPicturesInBitmapsRequest(dataMapper, db).execute(users){ callback(it) }
 
             val converted = FirebaseDataMapper().convertToDomain(users)
 
-            for(i in 0 until converted.size) {
-                coroutineScope.launch(Dispatchers.Main) {
+            callback(converted)
 
-                    converted[i].profileImage = getBitmapOfURL(converted[i].profileImageUrl)
-
-                    if(checkUserProfilePics(converted))
-                        GlobalScope.launch(Dispatchers.Main) {
-                            db.saveUsers(converted)
-                            callback(converted)
-                        }
-                }
-            }
         }
     }
 
-    private fun checkUserProfilePics(converted: ArrayList<DomainUser>): Boolean{
-        //checking if all bitmaps are set
-        converted.forEach {
-            if(it.profileImage == null) return false
-        }
-        return true
-    }
 
-    private suspend fun getBitmapOfURL(url: String): Bitmap =
-        withContext(Dispatchers.IO){
-            URL(url).openStream().use {
-                return@withContext BitmapFactory.decodeStream(it)
-            }
-        }
-
-    private fun showToast(error: String?){
-        val context = App.instance
-        GlobalScope.launch(Dispatchers.Main){
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-        }
-    }
 }

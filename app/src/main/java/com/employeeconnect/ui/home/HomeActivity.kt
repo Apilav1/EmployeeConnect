@@ -76,13 +76,6 @@ class HomeActivity : BaseActivity(), HomeView,
         return true
     }
 
-    private fun clearFragmentStack(){
-        val fragmentManager = supportFragmentManager
-
-        for(i in 0 until fragmentManager.backStackEntryCount)
-            fragmentManager.popBackStack()
-    }
-
     override fun onListEmployeesFragmentInteraction(user: User) {
 
     }
@@ -119,6 +112,14 @@ class HomeActivity : BaseActivity(), HomeView,
         currentUsers = ArrayList()
         currentUsers = users
         replaceFragment(currentFragmet!!)
+
+        if(currentFragmet is EmployeesFragment)
+            (currentFragmet!! as EmployeesFragment).showUsers(currentUsers!!)
+
+        when(currentFragmet){
+            is EmployeesFragment -> (currentFragmet!! as EmployeesFragment).showUsers(currentUsers!!)
+            is UserProfileFragment -> (currentFragmet!! as UserProfileFragment).setUserInfo()
+        }
 
         val chatRoomsIds = ArrayList<String>()
         chatRoomsIds.addAll(currentUser?.chatRooms?.keys!!)

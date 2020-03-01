@@ -40,12 +40,6 @@ class LoginActivity : AppCompatActivity(), LoginView {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("CHATTT", "imam na stacku "+supportFragmentManager.backStackEntryCount)
-    }
-
-
     private fun performLogin(email: String, password: String){
         presenter.performLogin(email, password)
     }

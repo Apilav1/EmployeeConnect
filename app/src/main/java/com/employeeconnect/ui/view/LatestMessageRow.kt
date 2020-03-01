@@ -22,7 +22,12 @@ class LatestMessageRow(val toUser: User, val message: Message): Item<GroupieView
         val currentUserSentMessage = HomeActivity.currentUser!!.uid == message.fromUser
 
         viewHolder.itemView.username_fragment_messages.setText(toUser.username)
-        Picasso.get().load(toUser.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext)).into(viewHolder.itemView.imageView_fragment_messages)
+
+        if(toUser.profileImage != null)
+            Picasso.get().load(toUser.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext))
+                .into(viewHolder.itemView.imageView_fragment_messages)
+        else
+            Picasso.get().load(R.drawable.user_default_picture).into(viewHolder.itemView.imageView_fragment_messages)
 
         if(currentUserSentMessage)
             viewHolder.itemView.messagetext_fragment_messages.text = "You: ${message.text}"

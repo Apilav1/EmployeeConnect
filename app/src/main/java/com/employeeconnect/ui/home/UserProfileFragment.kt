@@ -40,11 +40,10 @@ class UserProfileFragment : Fragment() {
     private var currentUser: User? = null
     private var pictureIsChanged = false
     private var REQUESTCODE_PHOTO = 0
+    private lateinit var myView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        currentUser = HomeActivity.currentUser
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -56,44 +55,40 @@ class UserProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_user_profile, container, false)
+        myView = inflater.inflate(R.layout.fragment_user_profile, container, false)
 
-        view.username_user_profile.setText(currentUser!!.username)
-        view.email_user_profile.setText(currentUser!!.email)
-        view.skills_user_profile.setText(currentUser!!.position)
-        view.currentProject_user_profile.setText(currentUser!!.currentProject)
-        view.team_user_profile.setText(currentUser!!.teamName)
-
-        disableEditing()
-
-        view.save_button_profile_user_profile.alpha = 0.0F
-        view.cancel_button_profile_user_profile.alpha = 0.0F
-
-        Picasso.get().load(currentUser!!.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext))
-                    .into(view.picture_user_profile)
-
-        return view
-    }
-
-    private fun disableEditing(){
-        view?.username_user_profile?.setFocusable(false) // to disable editing
-        view?.email_user_profile?.setFocusable(false)
-        view?.skills_user_profile?.setFocusable(false)
-        view?.currentProject_user_profile?.setFocusable(false)
-        view?.team_user_profile?.setFocusable(false)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnUserProfileFragmentInteractionListener) {
-            listenerUserProfile = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+        return myView
     }
 
     override fun onStart() {
         super.onStart()
+
+        setUserInfo()
+
+        setListeners()
+    }
+
+    fun setUserInfo(){
+
+        currentUser = HomeActivity.currentUser
+
+        myView.username_user_profile.setText(currentUser!!.username)
+        myView.email_user_profile.setText(currentUser!!.email)
+        myView.skills_user_profile.setText(currentUser!!.position)
+        myView.currentProject_user_profile.setText(currentUser!!.currentProject)
+        myView.team_user_profile.setText(currentUser!!.teamName)
+
+        disableEditing()
+
+        myView.save_button_profile_user_profile.alpha = 0.0F
+        myView.cancel_button_profile_user_profile.alpha = 0.0F
+
+        Picasso.get().load(currentUser!!.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext))
+            .into(myView.picture_user_profile)
+
+    }
+
+    fun setListeners(){
 
         disableEditing()
 
@@ -168,6 +163,23 @@ class UserProfileFragment : Fragment() {
         logout_user_profile.setOnClickListener {
             listenerUserProfile?.logoutUser(currentUser!!)
             HomeActivity.currentFragmet = EmployeesFragment()
+        }
+    }
+
+    private fun disableEditing(){
+        myView?.username_user_profile?.setFocusable(false) // to disable editing
+        myView?.email_user_profile?.setFocusable(false)
+        myView?.skills_user_profile?.setFocusable(false)
+        myView?.currentProject_user_profile?.setFocusable(false)
+        myView?.team_user_profile?.setFocusable(false)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnUserProfileFragmentInteractionListener) {
+            listenerUserProfile = context
+        } else {
+            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
         }
     }
 

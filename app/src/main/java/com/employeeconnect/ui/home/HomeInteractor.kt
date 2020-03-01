@@ -1,5 +1,6 @@
 package com.employeeconnect.ui.home
 
+import android.util.Log
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.*
@@ -67,8 +68,7 @@ class HomeInteractor {
 
     fun getMultipleUsersByIds(usersIds: ArrayList<String>, listener: OnHomeListener){
 
-
-       GetMultipleUsersByIdCommand(usersIds){ users ->
+        GetMultipleUsersByIdCommand(usersIds){ users ->
 
            listener.onFetchingMultipleUsersByIds(users)
 

@@ -26,7 +26,11 @@ class UserRow (val context: Context, val user: User) : Item<GroupieViewHolder>()
         view.linkedin_textview_fragment_employees_list.text = user.linkedInUsername
 
         val targetImageView = view.imageview_fragment_employees_list
-        Picasso.get().load(user.profileImage!!.convertBitmapToUri(context)).into(targetImageView)
+
+        if(user.profileImage != null)
+            Picasso.get().load(user.profileImage!!.convertBitmapToUri(context)).into(targetImageView)
+        else
+            Picasso.get().load(R.drawable.user_default_picture).into(targetImageView)
 
 
         val logo = view.github_logo_imageview

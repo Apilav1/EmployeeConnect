@@ -145,9 +145,9 @@ class EmployeesFragment : Fragment() {
 
      fun showUsers(users: ArrayList<User>) {
 
-         if(users.size == 0) return
+         if(users.size == 0 || recycleview_employees == null) return
 
-        adapter.clear()
+         adapter.clear()
          adapter = GroupAdapter()
          recycleview_employees.adapter = adapter
 

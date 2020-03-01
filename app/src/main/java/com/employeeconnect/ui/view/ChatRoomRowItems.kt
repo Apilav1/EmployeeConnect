@@ -31,6 +31,11 @@ class ChatToUserItem(val text: String, val user: User): Item<GroupieViewHolder>(
         viewHolder.itemView.textView_left_side_row.text = text
 
         val targetImageView = viewHolder.itemView.imageView_left_side_row
-        Picasso.get().load(user.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext)).into(targetImageView)
+
+        if(user.profileImage != null)
+            Picasso.get().load(user.profileImage!!.convertBitmapToUri(App.instance()!!.applicationContext))
+                .into(targetImageView)
+        else
+            Picasso.get().load(R.drawable.user_default_picture).into(targetImageView)
     }
 }

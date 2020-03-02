@@ -22,6 +22,7 @@ object EmployeeChatRoomTable{
     const val ID = "_id"
     const val EMPLOYEE_ID = "employee_id"
     const val CHATROOM_ID = "chatroom_id"
+    const val TO_USER_ID = "toUser_id"
 }
 
 object ChatRoomTable {

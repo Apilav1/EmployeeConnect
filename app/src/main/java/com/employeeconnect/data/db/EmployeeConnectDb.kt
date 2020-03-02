@@ -8,6 +8,7 @@ import com.employeeconnect.domain.Models.User as DomainUser
 import com.employeeconnect.data.db.User as DbUser
 import com.employeeconnect.domain.datasource.DataSource
 import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.rowParser
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.db.update
 
@@ -16,8 +17,8 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
 ): DataSource {
 
     override fun registerNewUser(user: DomainUser, password: String, onSuccess: () -> Unit) {
-        //Db should not create a new User
-    }
+        //this action is currently not supported by db
+}
 
       fun saveUsers(users: ArrayList<DomainUser>) = employeeConnectDbHelper.use {
 
@@ -31,13 +32,14 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
                 //inserting employee info
                 insert(EmployeeTable.NAME, *it.map.toVarargArray())
                 //inserting employee-chatRoom info & chatRoom ids
-                for((_, value) in it.chatRooms){
+                for((key, value) in it.chatRooms){
 
                     insert(EmployeeChatRoomTable.NAME,
                         EmployeeChatRoomTable.EMPLOYEE_ID to it.uid,
-                                EmployeeChatRoomTable.CHATROOM_ID to value)
+                                EmployeeChatRoomTable.CHATROOM_ID to key,
+                                EmployeeChatRoomTable.TO_USER_ID to value)
 
-                    insert(ChatRoomTable.NAME, ChatRoomTable.ID to value)
+                    insert(ChatRoomTable.NAME, ChatRoomTable.ID to key)
 
 
                 }
@@ -95,91 +97,108 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
 
 
     override fun getUsers(callback: (ArrayList<DomainUser>) -> Unit)  = employeeConnectDbHelper.use {
+
+        val result = this.select(EmployeeTable.NAME).parseList { DbUser(HashMap(it)) }
+
+        val getChatRoomsRequest = "${EmployeeChatRoomTable.EMPLOYEE_ID} = ?"
+
+        result.forEach {
+
+            it.chatRooms = HashMap()
+
+            val parser = rowParser { chatRoomId: String, toUserId: String ->
+                it.chatRooms[chatRoomId] = toUserId
+            }
+
+            this.select(EmployeeChatRoomTable.NAME, EmployeeChatRoomTable.CHATROOM_ID, EmployeeChatRoomTable.TO_USER_ID)
+                .whereSimple(getChatRoomsRequest, it.uid)
+                .parseList {
+                    //parser(it)
+                }
+        }
     }
 
 
     override fun getCurrentUserId(callback: (uid: String?) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        
     }
 
     override fun fetchCurrentUser(callback: (user: DomainUser) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun createChatRoom(chatRoom: ChatRoom, callback: (chatRoomId: String) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        
     }
 
     override fun sendMessage(chatRoomId: String, message: Message, callback: () -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        //this action is currently not supported by db
+} 
+
+    override fun createChatRoom(chatRoom: ChatRoom, callback: (chatRoomId: String) -> Unit) {
+        //this action is currently not supported by db
+}
 
     override fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        //this action is currently not supported by db
+}
 
     override fun addChatRoomIdToUsers(
         users: ArrayList<DomainUser>,
         chatRoomId: String,
         onSuccess: () -> Unit
     ) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        //this action is currently not supported by db
+}
 
     override fun getLatestMessages(
         chatRooms: ArrayList<String>,
         callback: (ArrayList<Message>) -> Unit
     ) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        
     }
 
     override fun updateLatestMessages(message: Message, callback: () -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        //this action is currently not supported by db
+}
 
     override fun getUserById(userId: String, callback: (DomainUser) -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getMultipleUsersById(
         usersIds: ArrayList<String>,
         callback: (ArrayList<DomainUser>) -> Unit
     ) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun updateUser(user: DomainUser, pictureChanged: Boolean, callback: () -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        //this action is currently not supported by db
+}
 
     override fun deleteUser(userId: String, callback: () -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        //this action is currently not supported by db
+}
 
     override fun signInUserWithEmailAndPassword(
         email: String,
         password: String,
         callback: (signInSuccessful: Boolean) -> Unit
     ) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        //this action is currently not supported by db
+}
 
     override fun logoutUser(callback: () -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        //this action is currently not supported by db
+}
 
     override fun verifyUserProfile(userId: String, callback: () -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        
     }
 
     override fun makeUserAModerator(userId: String, callback: () -> Unit) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        
     }
 
     override fun checkIfUserIsVerified(
         email: String,
         callback: (emailExists: Boolean, emailVerified: Boolean) -> Unit
     ) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        
     }
 }

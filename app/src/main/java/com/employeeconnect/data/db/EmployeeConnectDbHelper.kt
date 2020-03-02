@@ -34,7 +34,8 @@ class EmployeeConnectDbHelper(ctx: Context = App.instance!!.applicationContext) 
             db.createTable(EmployeeChatRoomTable.NAME, true,
                 EmployeeChatRoomTable.ID to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
                         EmployeeChatRoomTable.EMPLOYEE_ID to TEXT,
-                        EmployeeChatRoomTable.CHATROOM_ID to TEXT)
+                        EmployeeChatRoomTable.CHATROOM_ID to TEXT,
+                        EmployeeChatRoomTable.TO_USER_ID to TEXT)
 
 
             db.createTable(ChatRoomTable.NAME, true, ChatRoomTable.ID to TEXT)

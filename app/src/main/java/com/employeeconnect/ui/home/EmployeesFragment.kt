@@ -45,7 +45,9 @@ class EmployeesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       return inflater.inflate(R.layout.fragment_employees, container, false)
+       val myView = inflater.inflate(R.layout.fragment_employees, container, false)
+
+        return myView
     }
 
     override fun onAttach(context: Context) {
@@ -55,6 +57,13 @@ class EmployeesFragment : Fragment() {
         } else {
             throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        setUpAdapter()
+
     }
 
     override fun onResume() {
@@ -106,6 +115,8 @@ class EmployeesFragment : Fragment() {
     }
 
 
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -143,13 +154,68 @@ class EmployeesFragment : Fragment() {
             }
     }
 
+    fun setUpAdapter(){
+
+        adapter = GroupAdapter()
+        recycleview_employees.adapter = adapter
+
+        adapter.setOnItemClickListener { item, view ->
+            val userItem = item as UserRow
+
+            val intent = Intent(view.context, ChatLogActivity::class.java)
+
+            HomeActivity.toUser = userItem.user
+            //intent.putExtra(USER_KEY, userItem.user) TransactionTooLargeException: data parcel size 805756 bytes
+            startActivity(intent)
+        }
+
+        adapter.setOnItemLongClickListener { item, view ->
+
+            if(!HomeActivity.currentUser!!.moderator) return@setOnItemLongClickListener true
+
+            val userItem = item as UserRow
+            val user = userItem.user
+
+            if(!user.verified){
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Confirm verification")
+                builder.setMessage("Are you sure you want to verify this profile?")
+
+                builder.setPositiveButton("YES"){ dialog, which ->
+                    listener?.verifyUser(user.uid)
+                }
+
+                builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+
+                val dialog = builder.create()
+                dialog.show()
+            }
+            else if(!user.moderator){
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Confirm this update")
+                builder.setMessage("Are you sure you want to allow this user to be moderator?")
+
+                builder.setPositiveButton("YES"){ dialog, which ->
+                    listener?.makeUserAModerator(user.uid)
+                }
+
+                builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+
+                val dialog = builder.create()
+                dialog.show()
+            }
+
+            true
+        }
+    }
+
      fun showUsers(users: ArrayList<User>) {
 
          if(users.size == 0 || recycleview_employees == null) return
 
          adapter.clear()
-         adapter = GroupAdapter()
-         recycleview_employees.adapter = adapter
+         //adapter = GroupAdapter()
+         //recycleview_employees.adapter = adapter
 
         users.forEach { user ->
             if(user.uid != HomeActivity.currentUser!!.uid) {
@@ -159,52 +225,52 @@ class EmployeesFragment : Fragment() {
 
         adapter.notifyDataSetChanged()
 
-         adapter.setOnItemClickListener { item, view ->
-             val userItem = item as UserRow
-
-             val intent = Intent(view.context, ChatLogActivity::class.java)
-             //intent.putExtra(USER_KEY, userItem.user) TransactionTooLargeException: data parcel size 805756 bytes
-             startActivity(intent)
-         }
-
-         adapter.setOnItemLongClickListener { item, view ->
-
-             if(!HomeActivity.currentUser!!.moderator) return@setOnItemLongClickListener true
-
-             val userItem = item as UserRow
-             val user = userItem.user
-
-             if(!user.verified){
-                 val builder = AlertDialog.Builder(context)
-                 builder.setTitle("Confirm verification")
-                 builder.setMessage("Are you sure you want to verify this profile?")
-
-                 builder.setPositiveButton("YES"){ dialog, which ->
-                     listener?.verifyUser(user.uid)
-                 }
-
-                 builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
-
-                 val dialog = builder.create()
-                 dialog.show()
-             }
-             else if(!user.moderator){
-                 val builder = AlertDialog.Builder(context)
-                 builder.setTitle("Confirm this update")
-                 builder.setMessage("Are you sure you want to allow this user to be moderator?")
-
-                 builder.setPositiveButton("YES"){ dialog, which ->
-                     listener?.makeUserAModerator(user.uid)
-                 }
-
-                 builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
-
-                 val dialog = builder.create()
-                 dialog.show()
-             }
-
-             true
-         }
+//         adapter.setOnItemClickListener { item, view ->
+//             val userItem = item as UserRow
+//
+//             val intent = Intent(view.context, ChatLogActivity::class.java)
+//             //intent.putExtra(USER_KEY, userItem.user) TransactionTooLargeException: data parcel size 805756 bytes
+//             startActivity(intent)
+//         }
+//
+//         adapter.setOnItemLongClickListener { item, view ->
+//
+//             if(!HomeActivity.currentUser!!.moderator) return@setOnItemLongClickListener true
+//
+//             val userItem = item as UserRow
+//             val user = userItem.user
+//
+//             if(!user.verified){
+//                 val builder = AlertDialog.Builder(context)
+//                 builder.setTitle("Confirm verification")
+//                 builder.setMessage("Are you sure you want to verify this profile?")
+//
+//                 builder.setPositiveButton("YES"){ dialog, which ->
+//                     listener?.verifyUser(user.uid)
+//                 }
+//
+//                 builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+//
+//                 val dialog = builder.create()
+//                 dialog.show()
+//             }
+//             else if(!user.moderator){
+//                 val builder = AlertDialog.Builder(context)
+//                 builder.setTitle("Confirm this update")
+//                 builder.setMessage("Are you sure you want to allow this user to be moderator?")
+//
+//                 builder.setPositiveButton("YES"){ dialog, which ->
+//                     listener?.makeUserAModerator(user.uid)
+//                 }
+//
+//                 builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
+//
+//                 val dialog = builder.create()
+//                 dialog.show()
+//             }
+//
+//             true
+//         }
     }
 
     fun onVerificationSuccess(){

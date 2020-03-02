@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.employeeconnect.R
+import com.employeeconnect.ui.activities.BaseActivity
 import com.employeeconnect.ui.home.EmployeesFragment
 import com.employeeconnect.ui.home.HomeActivity
 import com.employeeconnect.ui.register.RegisterActivity
@@ -65,7 +66,10 @@ class LoginActivity : AppCompatActivity(), LoginView {
     }
 
     override fun navigateToRegistration() {
-        startActivity(Intent(this, RegisterActivity::class.java))
+        if(BaseActivity.deviceIsConnected)
+            startActivity(Intent(this, RegisterActivity::class.java))
+        else
+            Toast.makeText(applicationContext, "Registration is not supported in a offline mode", Toast.LENGTH_LONG).show()
     }
 
     override fun showUnverifiedProfileError() {

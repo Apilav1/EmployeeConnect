@@ -1,5 +1,6 @@
 package com.employeeconnect.ui.login
 
+import android.util.Log
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.domain.commands.CheckIfUserIsVerifiedByEmailCommand
 import com.employeeconnect.domain.commands.FetchCurrentUserCommand
@@ -22,7 +23,6 @@ class LoginInteractor {
     fun verifyUserIsLoggedIn(listener: OnLoginFinishedListener) {
 
         GetCurrentUserIdCommand{result->
-
             if(result != null)
                 listener.onUserLoggedIn()
 

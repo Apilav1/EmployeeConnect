@@ -1,5 +1,6 @@
 package com.employeeconnect.domain.datasource
 
+import com.employeeconnect.data.db.EmployeeConnectDb
 import com.employeeconnect.data.server.firebase.FirebaseServer
 import com.employeeconnect.domain.Models.ChatRoom
 import com.employeeconnect.domain.Models.Message
@@ -9,7 +10,7 @@ import com.employeeconnect.extensions.firstResult
 class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
 
     companion object {
-        val SOURCES = listOf(FirebaseServer())
+        val SOURCES = listOf(EmployeeConnectDb(), FirebaseServer())
     }
 
     fun registerNewUser(user: User, password: String, onSuccess: () -> Unit) = requestToSources {

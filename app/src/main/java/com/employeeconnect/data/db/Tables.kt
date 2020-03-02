@@ -30,13 +30,6 @@ object ChatRoomTable {
     const val ID = "_id"
 }
 
-object ChatRoomMessageTable{
-    const val NAME = "CHATROOM_MESSAGE"
-    const val ID = "uid"
-    const val CHATROOM_ID = "chatroom_id"
-    const val MESSAGE_ID = "message_id"
-}
-
 object MessagesTable {
     const val NAME = "MESSAGES"
     const val ID = "uid"
@@ -57,4 +50,9 @@ object LatestMessagesTable {
     const val TIMESTAMP = "timestamp"
     const val CHATROOM_ID = "chatRoomId"
     const val SEEN  = "seen"
+}
+
+object AppInfo {
+    const val NAME = "AppInfo"
+    const val CURRENT_USER_ID = "currentUser_id"
 }

@@ -139,6 +139,8 @@ class HomeActivity : BaseActivity(), HomeView,
 
     override fun onFetchingLatestMessages(result: ArrayList<Message>) {
 
+        Log.d("CHATTT", result.size.toString())
+
         latestMessagesWithoutUsers = ArrayList()
         latestMessagesWithoutUsers = result
 
@@ -150,7 +152,16 @@ class HomeActivity : BaseActivity(), HomeView,
                     toUsersIds.add(value)
             }
         }
-        presenter.getMultipleUsersById(toUsersIds)
+        //presenter.getMultipleUsersById(toUsersIds)
+
+        val result = ArrayList<User>()
+
+        currentUsers?.forEach { user ->
+            toUsersIds.forEach { if(user.uid == it) result.add(user) }
+        }
+
+
+        onFetchingMultipleUsersByIds(result)
     }
 
     override fun onFetchingMultipleUsersByIds(result: ArrayList<User>) {
@@ -169,7 +180,7 @@ class HomeActivity : BaseActivity(), HomeView,
     }
 
     fun handleBadges(){
-        
+
         var newMessages = 0
 
         latestMessagesWithoutUsers!!.forEach {

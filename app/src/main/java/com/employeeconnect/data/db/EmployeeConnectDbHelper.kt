@@ -40,11 +40,6 @@ class EmployeeConnectDbHelper(ctx: Context = App.instance!!.applicationContext) 
 
             db.createTable(ChatRoomTable.NAME, true, ChatRoomTable.ID to TEXT)
 
-            db.createTable(ChatRoomMessageTable.NAME, true,
-                        ChatRoomMessageTable.ID to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
-                                ChatRoomMessageTable.CHATROOM_ID to TEXT,
-                                ChatRoomMessageTable.MESSAGE_ID to TEXT)
-
             db.createTable(MessagesTable.NAME, true,
                         MessagesTable.ID to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
                         MessagesTable.FROM_USER_ID to TEXT,
@@ -63,6 +58,9 @@ class EmployeeConnectDbHelper(ctx: Context = App.instance!!.applicationContext) 
                 LatestMessagesTable.CHATROOM_ID to TEXT,
                 LatestMessagesTable.SEEN to INTEGER)
 
+            db.createTable(AppInfo.NAME, true,
+                AppInfo.CURRENT_USER_ID to TEXT)
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -70,9 +68,9 @@ class EmployeeConnectDbHelper(ctx: Context = App.instance!!.applicationContext) 
             db.dropTable(EmployeeTable.NAME, true)
             db.dropTable(EmployeeChatRoomTable.NAME, true)
             db.dropTable(ChatRoomTable.NAME, true)
-            db.dropTable(ChatRoomMessageTable.NAME, true)
             db.dropTable(MessagesTable.NAME, true)
             db.dropTable(LatestMessagesTable.NAME, true)
+            db.dropTable(AppInfo.NAME, true)
 
             onCreate(db)
     }

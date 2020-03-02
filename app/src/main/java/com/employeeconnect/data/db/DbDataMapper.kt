@@ -1,6 +1,5 @@
 package com.employeeconnect.data.db
 
-import android.util.Log
 import com.employeeconnect.domain.Models.User as DomainUser
 import com.employeeconnect.data.db.User as DbUser
 
@@ -29,7 +28,7 @@ class DbDataMapper {
 
         return DomainUser(user.uid, user.username, user.profileImageUrl, user.profileImage, user.email, user.githubUsername,
             user.linkedInUsername, user.skills, user.position, user.teamName, user.currentProject, user.verified,
-            user.moderator, hashMapOf())
+            user.moderator, user.chatRooms)
     }
 
     fun convertUserToDbModel(user: DomainUser) : DbUser {
@@ -54,7 +53,7 @@ class DbDataMapper {
 
 
     fun convertMessageToDomain(message: DbMessage) : DomainMessage {
-        return DomainMessage(message.fromUser, message.toUser, message.text, message.timeStamp, message.chatRoomId, message.seen)
+        return DomainMessage(message.fromUser, message.toUser, message.text, message.timestamp, message.chatRoomId, message.seen)
     }
 
     fun convertMessageToDbModel(message: DomainMessage) : DbMessage {

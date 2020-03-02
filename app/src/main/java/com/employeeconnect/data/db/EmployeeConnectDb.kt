@@ -7,20 +7,28 @@ import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User as DomainUser
 import com.employeeconnect.data.db.User as DbUser
 import com.employeeconnect.domain.datasource.DataSource
+import com.employeeconnect.ui.App
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.rowParser
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.db.update
+import com.employeeconnect.data.db.Message as DbMessage
+import com.employeeconnect.domain.Models.Message as DomainMessage
 
 class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbHelper = EmployeeConnectDbHelper.instance,
                          private val dataMapper: DbDataMapper = DbDataMapper()
 ): DataSource {
 
+    private var currentUserId: String? = null
+
     override fun registerNewUser(user: DomainUser, password: String, onSuccess: () -> Unit) {
         //this action is currently not supported by db
-}
+    }
 
       fun saveUsers(users: ArrayList<DomainUser>) = employeeConnectDbHelper.use {
+
+
+        if (users.size == 0) return@use
 
         clear(EmployeeTable.NAME)
         clear(ChatRoomTable.NAME)
@@ -50,9 +58,9 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
 
     fun saveMessages(messages: ArrayList<Message>) = employeeConnectDbHelper.use {
 
-        clear(MessagesTable.NAME)
-        clear(ChatRoomMessageTable.NAME)
+        if(messages.size == 0) return@use
 
+        clear(MessagesTable.NAME)
 
         with(dataMapper.convertMessagesToDbMessage(messages)){
 
@@ -66,15 +74,14 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
                     .whereSimple("ROWID = ?", rowCounter++.toString())
                     .exec()
 
-                insert(ChatRoomMessageTable.NAME, ChatRoomMessageTable.MESSAGE_ID to it.uid,
-                            ChatRoomMessageTable.CHATROOM_ID to it.chatRoomId)
-
             }
         }
 
     }
 
     fun saveLatestMessages(messages: ArrayList<Message>) = employeeConnectDbHelper.use {
+
+        if (messages.size == 0) return@use
 
         clear(LatestMessagesTable.NAME)
 
@@ -98,33 +105,101 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
 
     override fun getUsers(callback: (ArrayList<DomainUser>) -> Unit)  = employeeConnectDbHelper.use {
 
-        val result = this.select(EmployeeTable.NAME).parseList { DbUser(HashMap(it)) }
+        val result = this.select(EmployeeTable.NAME).parseList {
+
+            var res = it.toMutableMap()
+            res[EmployeeTable.PROFILE_IMAGE] = (res[EmployeeTable.PROFILE_IMAGE] as ByteArray).getImage()
+
+            res[EmployeeTable.MODERATOR] = (res[EmployeeTable.MODERATOR] as Long).toBoolean()
+            res[EmployeeTable.VERIFIED] = (res[EmployeeTable.VERIFIED] as Long).toBoolean()
+
+            DbUser(HashMap(res))
+
+        }
 
         val getChatRoomsRequest = "${EmployeeChatRoomTable.EMPLOYEE_ID} = ?"
 
-        result.forEach {
+        result.forEach { user ->
 
-            it.chatRooms = HashMap()
+            user.chatRooms = HashMap()
 
-            val parser = rowParser { chatRoomId: String, toUserId: String ->
-                it.chatRooms[chatRoomId] = toUserId
-            }
 
             this.select(EmployeeChatRoomTable.NAME, EmployeeChatRoomTable.CHATROOM_ID, EmployeeChatRoomTable.TO_USER_ID)
-                .whereSimple(getChatRoomsRequest, it.uid)
+                .whereSimple(getChatRoomsRequest, user.uid)
                 .parseList {
-                    //parser(it)
+
+                    for((key, value) in it){
+                        if(key == EmployeeChatRoomTable.CHATROOM_ID && value != user.uid)
+                            user.chatRooms[value.toString()] = it[EmployeeChatRoomTable.TO_USER_ID].toString()
+                    }
+
                 }
         }
+
+        callback(dataMapper.convertToDomain(result as ArrayList<DbUser>))
+    }
+
+    fun saveCurrentUserId(id: String?) = employeeConnectDbHelper.use {
+
+        if(id == null) return@use
+
+        clear(AppInfo.NAME)
+
+        this.insert(AppInfo.NAME, AppInfo.CURRENT_USER_ID to id)
+
     }
 
 
-    override fun getCurrentUserId(callback: (uid: String?) -> Unit) {
+    override fun getCurrentUserId(callback: (uid: String?) -> Unit): Unit = employeeConnectDbHelper.use{
+
+         this.select(AppInfo.NAME, AppInfo.CURRENT_USER_ID)
+             .limit(1)
+             .parseOpt {
+                 currentUserId = it[AppInfo.CURRENT_USER_ID].toString()
+                 callback(it[AppInfo.CURRENT_USER_ID].toString())
+             }
         
     }
 
-    override fun fetchCurrentUser(callback: (user: DomainUser) -> Unit) {
-        
+    override fun fetchCurrentUser(callback: (user: DomainUser) -> Unit) = employeeConnectDbHelper.use{
+
+        val request = "${EmployeeTable.ID} = ?"
+
+        if(currentUserId != null) {
+
+            val result = this.select(EmployeeTable.NAME)
+                .whereSimple(request, currentUserId!!)
+                .parseOpt{
+                    var res = it.toMutableMap()
+                    res[EmployeeTable.PROFILE_IMAGE] = (res[EmployeeTable.PROFILE_IMAGE] as ByteArray).getImage()
+
+                    res[EmployeeTable.MODERATOR] = (res[EmployeeTable.MODERATOR] as Long).toBoolean()
+                    res[EmployeeTable.VERIFIED] = (res[EmployeeTable.VERIFIED] as Long).toBoolean()
+
+                    DbUser(HashMap(res))
+                }
+                ?: return@use
+
+            val getChatRoomsRequest = "${EmployeeChatRoomTable.EMPLOYEE_ID} = ?"
+
+            result.chatRooms = HashMap()
+
+            this.select(EmployeeChatRoomTable.NAME, EmployeeChatRoomTable.CHATROOM_ID, EmployeeChatRoomTable.TO_USER_ID)
+                .whereSimple(getChatRoomsRequest, result.uid)
+                .parseList {
+
+                    for((key, value) in it){
+                        if(key == EmployeeChatRoomTable.CHATROOM_ID && value != result.uid)
+                            result.chatRooms[value.toString()] = it[EmployeeChatRoomTable.TO_USER_ID].toString()
+                    }
+
+                }
+
+
+            callback(dataMapper.convertUserToDomain(result))
+        }
+
+
     }
 
     override fun sendMessage(chatRoomId: String, message: Message, callback: () -> Unit) {
@@ -150,8 +225,33 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
     override fun getLatestMessages(
         chatRooms: ArrayList<String>,
         callback: (ArrayList<Message>) -> Unit
-    ) {
-        
+    ) = employeeConnectDbHelper.use {
+
+        val request = "${MessagesTable.CHATROOM_ID} = ?"
+
+        val result = ArrayList<DbMessage>()
+
+        chatRooms.forEach { chatRoomId ->
+
+            val m = this.select(LatestMessagesTable.NAME)
+                    .whereSimple(request, chatRoomId)
+                    .parseOpt {
+
+                        var res = it.toMutableMap()
+
+                        if(res != null)
+                            res[LatestMessagesTable.SEEN] =
+                            (res[LatestMessagesTable.SEEN] as Long).toBoolean()
+
+                        DbMessage(HashMap(res))
+                    }
+
+            if(m != null) result.add(m)
+
+        }
+
+        callback(dataMapper.convertMessagesToDomain(result))
+
     }
 
     override fun updateLatestMessages(message: Message, callback: () -> Unit) {
@@ -164,7 +264,8 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
     override fun getMultipleUsersById(
         usersIds: ArrayList<String>,
         callback: (ArrayList<DomainUser>) -> Unit
-    ) {
+    )  {
+        //this action is not supported by db
     }
 
     override fun updateUser(user: DomainUser, pictureChanged: Boolean, callback: () -> Unit) {

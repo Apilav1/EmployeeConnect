@@ -58,7 +58,7 @@ data class Message(var map: MutableMap<String, Any?>){
     var fromUser: String by map
     var toUser: String by map
     var text: String by map
-    var timeStamp: Long by map
+    var timestamp: Long by map
     var chatRoomId: String by map
     var seen: Boolean by map
 
@@ -70,7 +70,7 @@ data class Message(var map: MutableMap<String, Any?>){
         this.fromUser = fromUser
         this.toUser = toUser
         this.text = text
-        this.timeStamp = timeStamp
+        this.timestamp = timeStamp
         this.chatRoomId = chatRoomId
         this.seen = seen
 

@@ -105,7 +105,7 @@ class FirebaseServer( private val dataMapper: FirebaseDataMapper = FirebaseDataM
         callback: (signInSuccessful: Boolean) -> Unit
     ) {
 
-        SignInUserWithEmailAndPasswordRequest().execute(email, password, callback)
+        SignInUserWithEmailAndPasswordRequest().execute(email, password, db, callback)
     }
 
     override fun logoutUser(callback: () -> Unit){

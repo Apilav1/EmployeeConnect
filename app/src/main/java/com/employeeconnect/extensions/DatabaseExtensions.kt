@@ -20,3 +20,6 @@ fun <T : Any> SelectQueryBuilder.parseOpt(parser: (Map<String, Any?>) -> T): T? 
         override fun parseRow(columns: Map<String, Any?>): T = parser(columns)
     })
 
+fun Long.toBoolean(): Boolean{
+    return this == 1L
+}

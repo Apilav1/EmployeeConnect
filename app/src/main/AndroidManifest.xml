@@ -23,12 +23,14 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.employeeconnect.ui.chatLog.ChatLogActivity">
+        <activity android:name="com.employeeconnect.ui.chatLog.ChatLogActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.employeeconnect.ui.home.HomeActivity" />
         </activity>
-        <activity android:name="com.employeeconnect.ui.home.HomeActivity">
+        <activity android:name="com.employeeconnect.ui.home.HomeActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -36,13 +38,15 @@
                 android:resource="@xml/searchable"/>
 
         </activity>
-        <activity android:name="com.employeeconnect.ui.register.RegisterActivity">
+        <activity android:name="com.employeeconnect.ui.register.RegisterActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.employeeconnect.ui.login.LoginActivity" />
         </activity>
 
-        <activity android:name="com.employeeconnect.ui.login.LoginActivity">
+        <activity android:name="com.employeeconnect.ui.login.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

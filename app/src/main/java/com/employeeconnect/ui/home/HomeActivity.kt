@@ -169,6 +169,7 @@ class HomeActivity : BaseActivity(), HomeView,
     }
 
     fun handleBadges(){
+        
         var newMessages = 0
 
         latestMessagesWithoutUsers!!.forEach {

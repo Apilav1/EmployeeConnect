@@ -1,20 +1,58 @@
 package com.employeeconnect.data.server.firebase
 
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.employeeconnect.data.db.EmployeeConnectDb
 import com.employeeconnect.domain.Models.User as DomainUser
 import com.employeeconnect.domain.Models.Message as DomainMessage
 import com.employeeconnect.domain.Models.ChatRoom as DomainChatRoom
 
 import com.employeeconnect.domain.datasource.DataSource
+import com.employeeconnect.networks.ConnectivityReceiver
+import com.employeeconnect.ui.App
+import com.employeeconnect.ui.activities.BaseActivity
 import kotlin.collections.ArrayList
 
 class FirebaseServer( private val dataMapper: FirebaseDataMapper = FirebaseDataMapper(),
-                      private val db: EmployeeConnectDb = EmployeeConnectDb()
+                      private val db: EmployeeConnectDb = EmployeeConnectDb.instance
 ) : DataSource {
 
     companion object{
-         val TAG = "FirebaseServerTag"
+         const val TAG = "FirebaseServerTag"
+    }
+
+    override var ready: Boolean = false
+
+    override var preferred: Boolean = false
+
+    var broadcastReceiver: BroadcastReceiver
+
+    init {
+        broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when(intent?.action){
+                    BaseActivity.BROADCAST_NETWORK_CHANGED -> {
+                        ready = intent.getBooleanExtra(BaseActivity.ISCONNECTED, false)
+
+                        if(ready){
+                            preferred = true
+                            db.preferred = false
+                        }
+                        else{
+                            db.preferred = true
+                        }
+                    }
+                }
+            }
+        }
+
+        LocalBroadcastManager.getInstance(App.instance!!.applicationContext).
+            registerReceiver(broadcastReceiver, IntentFilter(BaseActivity.BROADCAST_NETWORK_CHANGED))
     }
 
     override fun registerNewUser(
@@ -84,9 +122,9 @@ class FirebaseServer( private val dataMapper: FirebaseDataMapper = FirebaseDataM
         SetMessageListenerRequest().execute(chatRoomId, callback)
     }
 
-    override fun addChatRoomIdToUsers(users: ArrayList<DomainUser>, chatRoomId: String, callback: () -> Unit) {
+    override fun addChatRoomIdToUsers(users: ArrayList<DomainUser>, chatRoomId: String, onSuccess: () -> Unit) {
 
-        AddChatRoomIdToUsersRequest().execute(users, chatRoomId, callback)
+        AddChatRoomIdToUsersRequest().execute(users, chatRoomId, onSuccess)
     }
 
     override fun updateUser(user: DomainUser, pictureChanged: Boolean, callback: ()->Unit){

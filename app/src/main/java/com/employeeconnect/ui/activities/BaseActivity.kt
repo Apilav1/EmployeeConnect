@@ -1,10 +1,13 @@
 package com.employeeconnect.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.employeeconnect.networks.ConnectivityReceiver
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -56,6 +59,11 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
      * Callback will be called when there is change
      */
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        val intent = Intent(BROADCAST_NETWORK_CHANGED)
+        intent.putExtra(ISCONNECTED, isConnected)
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+
         showMessage(isConnected)
     }
 
@@ -65,6 +73,8 @@ open class BaseActivity : AppCompatActivity(), ConnectivityReceiver.Connectivity
     }
 
     companion object{
-         var deviceIsConnected = true
+         var deviceIsConnected = false
+         const val ISCONNECTED = "isConnected"
+         const val BROADCAST_NETWORK_CHANGED = "networkChanged"
     }
 }

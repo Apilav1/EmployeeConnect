@@ -10,7 +10,9 @@ import com.employeeconnect.extensions.firstResult
 class DataSourceProvider(private val sources: List<DataSource> = SOURCES) {
 
     companion object {
+
         val SOURCES = listOf(EmployeeConnectDb(), FirebaseServer())
+
     }
 
     fun registerNewUser(user: User, password: String, onSuccess: () -> Unit) = requestToSources {

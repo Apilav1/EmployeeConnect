@@ -6,6 +6,9 @@ import com.employeeconnect.domain.Models.User
 
 interface DataSource {
 
+    var ready: Boolean //is the source ready for the initial data flow
+    var preferred: Boolean //is the source the one to be preferred over the others
+
     fun registerNewUser(user: User, password: String, onSuccess: () -> Unit)
 
     fun getUsers(callback: (ArrayList<User>) -> Unit)

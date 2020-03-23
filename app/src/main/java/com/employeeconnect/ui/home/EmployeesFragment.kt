@@ -7,9 +7,11 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.SearchView
+import android.widget.Toast
 import com.employeeconnect.R
 
 import com.employeeconnect.domain.Models.User
+import com.employeeconnect.ui.activities.BaseActivity
 import com.employeeconnect.ui.chatLog.ChatLogActivity
 import com.employeeconnect.ui.view.UserRow
 import com.xwray.groupie.GroupAdapter
@@ -166,7 +168,10 @@ class EmployeesFragment : Fragment() {
 
             HomeActivity.toUser = userItem.user
             //intent.putExtra(USER_KEY, userItem.user) TransactionTooLargeException: data parcel size 805756 bytes
-            startActivity(intent)
+            if(BaseActivity.deviceIsConnected)
+                startActivity(intent)
+            else
+                Toast.makeText(context, "Please check your internet connection!", Toast.LENGTH_SHORT).show()
         }
 
         adapter.setOnItemLongClickListener { item, view ->
@@ -214,8 +219,6 @@ class EmployeesFragment : Fragment() {
          if(users.size == 0 || recycleview_employees == null) return
 
          adapter.clear()
-         //adapter = GroupAdapter()
-         //recycleview_employees.adapter = adapter
 
         users.forEach { user ->
             if(user.uid != HomeActivity.currentUser!!.uid) {
@@ -224,53 +227,6 @@ class EmployeesFragment : Fragment() {
         }
 
         adapter.notifyDataSetChanged()
-
-//         adapter.setOnItemClickListener { item, view ->
-//             val userItem = item as UserRow
-//
-//             val intent = Intent(view.context, ChatLogActivity::class.java)
-//             //intent.putExtra(USER_KEY, userItem.user) TransactionTooLargeException: data parcel size 805756 bytes
-//             startActivity(intent)
-//         }
-//
-//         adapter.setOnItemLongClickListener { item, view ->
-//
-//             if(!HomeActivity.currentUser!!.moderator) return@setOnItemLongClickListener true
-//
-//             val userItem = item as UserRow
-//             val user = userItem.user
-//
-//             if(!user.verified){
-//                 val builder = AlertDialog.Builder(context)
-//                 builder.setTitle("Confirm verification")
-//                 builder.setMessage("Are you sure you want to verify this profile?")
-//
-//                 builder.setPositiveButton("YES"){ dialog, which ->
-//                     listener?.verifyUser(user.uid)
-//                 }
-//
-//                 builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
-//
-//                 val dialog = builder.create()
-//                 dialog.show()
-//             }
-//             else if(!user.moderator){
-//                 val builder = AlertDialog.Builder(context)
-//                 builder.setTitle("Confirm this update")
-//                 builder.setMessage("Are you sure you want to allow this user to be moderator?")
-//
-//                 builder.setPositiveButton("YES"){ dialog, which ->
-//                     listener?.makeUserAModerator(user.uid)
-//                 }
-//
-//                 builder.setNegativeButton("TAKE ME BACK"){ _,_ ->  }
-//
-//                 val dialog = builder.create()
-//                 dialog.show()
-//             }
-//
-//             true
-//         }
     }
 
     fun onVerificationSuccess(){

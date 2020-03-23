@@ -1,16 +1,21 @@
 package com.employeeconnect.ui.home
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.employeeconnect.R
 import com.employeeconnect.domain.Models.Message
 import com.employeeconnect.domain.Models.User
 import com.employeeconnect.networks.ConnectivityReceiver
+import com.employeeconnect.ui.App
 import com.employeeconnect.ui.activities.BaseActivity
 import com.employeeconnect.ui.chatLog.ChatLogActivity
 import com.employeeconnect.ui.login.LoginActivity
@@ -29,6 +34,7 @@ class HomeActivity : BaseActivity(), HomeView,
     private var latestMessagesWithoutUsers: ArrayList<Message>? = null
     private var badge: BadgeDrawable? = null
     private var CHAT_LOG_CODE = 0
+    private lateinit var broadcastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,15 +62,26 @@ class HomeActivity : BaseActivity(), HomeView,
 
         badge = bottom_navigation.getOrCreateBadge(R.id.nav_messages)
         badge?.isVisible = false
+
+        broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when(intent?.action){
+                    BROADCAST_NETWORK_CHANGED -> {
+                        val isConnected = intent.getBooleanExtra(ISCONNECTED, false)
+
+                        if(isConnected){
+                            presenter.verifyUserIsLoggedIn()
+                        }
+                    }
+                }
+            }
+        }
+
+        LocalBroadcastManager.getInstance(App.instance!!.applicationContext).
+            registerReceiver(broadcastReceiver, IntentFilter(BROADCAST_NETWORK_CHANGED))
     }
 
     private fun replaceFragment(fragment: Fragment): Boolean{
-
-        if(!deviceIsConnected){
-            Toast.makeText(applicationContext, "Please check your internet connection!",
-                            Toast.LENGTH_SHORT).show()
-            return false
-        }
 
         currentFragmet = fragment
 
@@ -84,7 +101,12 @@ class HomeActivity : BaseActivity(), HomeView,
         val intent = Intent(this, ChatLogActivity::class.java)
         //intent.putExtra(USER_KEY, user)   TransactionTooLargeException: data parcel size 805756 bytes
         toUser = user
-        startActivityForResult(intent, CHAT_LOG_CODE)
+
+        if(deviceIsConnected)
+            startActivityForResult(intent, CHAT_LOG_CODE)
+        else
+            Toast.makeText(this, "Please check your internet connection!", Toast.LENGTH_SHORT).show()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -111,6 +133,7 @@ class HomeActivity : BaseActivity(), HomeView,
 
         currentUsers = ArrayList()
         currentUsers = users
+
         replaceFragment(currentFragmet!!)
 
         if(currentFragmet is EmployeesFragment)
@@ -139,8 +162,6 @@ class HomeActivity : BaseActivity(), HomeView,
 
     override fun onFetchingLatestMessages(result: ArrayList<Message>) {
 
-        Log.d("CHATTT", result.size.toString())
-
         latestMessagesWithoutUsers = ArrayList()
         latestMessagesWithoutUsers = result
 
@@ -154,14 +175,14 @@ class HomeActivity : BaseActivity(), HomeView,
         }
         //presenter.getMultipleUsersById(toUsersIds)
 
-        val result = ArrayList<User>()
+        val resultt = ArrayList<User>()
 
         currentUsers?.forEach { user ->
-            toUsersIds.forEach { if(user.uid == it) result.add(user) }
+            toUsersIds.forEach { if(user.uid == it) resultt.add(user) }
         }
 
 
-        onFetchingMultipleUsersByIds(result)
+        onFetchingMultipleUsersByIds(resultt)
     }
 
     override fun onFetchingMultipleUsersByIds(result: ArrayList<User>) {
@@ -264,6 +285,13 @@ class HomeActivity : BaseActivity(), HomeView,
 
         Toast.makeText(applicationContext, "This user profile is successfully deleted", Toast.LENGTH_SHORT).show()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        LocalBroadcastManager.getInstance(this)
+            .unregisterReceiver(broadcastReceiver)
     }
 
     companion object{

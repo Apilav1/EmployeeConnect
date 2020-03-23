@@ -1,6 +1,11 @@
 package com.employeeconnect.data.db
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.employeeconnect.extensions.*
 import com.employeeconnect.domain.Models.ChatRoom
 import com.employeeconnect.domain.Models.Message
@@ -8,6 +13,7 @@ import com.employeeconnect.domain.Models.User as DomainUser
 import com.employeeconnect.data.db.User as DbUser
 import com.employeeconnect.domain.datasource.DataSource
 import com.employeeconnect.ui.App
+import com.employeeconnect.ui.activities.BaseActivity
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.rowParser
 import org.jetbrains.anko.db.select
@@ -19,7 +25,46 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
                          private val dataMapper: DbDataMapper = DbDataMapper()
 ): DataSource {
 
+    companion object {
+        val instance by lazy { EmployeeConnectDb() }
+    }
+
     private var currentUserId: String? = null
+
+    override var ready: Boolean = false
+
+    override var preferred: Boolean = true
+
+    private lateinit var broadcastReceiver: BroadcastReceiver
+
+    init {
+
+
+        employeeConnectDbHelper.use {
+            getCurrentUserId {
+                if(it != null){
+                    ready = true
+                    currentUserId = it
+                }
+            }
+        }
+
+        broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                when(intent?.action){
+                    BaseActivity.BROADCAST_NETWORK_CHANGED -> {
+                        val isConnected = intent.getBooleanExtra(BaseActivity.ISCONNECTED, false)
+
+                        preferred = !isConnected
+
+                    }
+                }
+            }
+        }
+
+        LocalBroadcastManager.getInstance(App.instance!!.applicationContext).
+            registerReceiver(broadcastReceiver, IntentFilter(BaseActivity.BROADCAST_NETWORK_CHANGED))
+    }
 
     override fun registerNewUser(user: DomainUser, password: String, onSuccess: () -> Unit) {
         //this action is currently not supported by db
@@ -208,11 +253,11 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
 
     override fun createChatRoom(chatRoom: ChatRoom, callback: (chatRoomId: String) -> Unit) {
         //this action is currently not supported by db
-}
+    }
 
     override fun setMessageListener(chatRoomId: String, callback: (ArrayList<Message>) -> Unit) {
         //this action is currently not supported by db
-}
+    }
 
     override fun addChatRoomIdToUsers(
         users: ArrayList<DomainUser>,
@@ -220,7 +265,7 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
         onSuccess: () -> Unit
     ) {
         //this action is currently not supported by db
-}
+    }
 
     override fun getLatestMessages(
         chatRooms: ArrayList<String>,
@@ -237,11 +282,9 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
                     .whereSimple(request, chatRoomId)
                     .parseOpt {
 
-                        var res = it.toMutableMap()
+                        val res = it.toMutableMap()
 
-                        if(res != null)
-                            res[LatestMessagesTable.SEEN] =
-                            (res[LatestMessagesTable.SEEN] as Long).toBoolean()
+                        res[LatestMessagesTable.SEEN] = (res[LatestMessagesTable.SEEN] as Long).toBoolean()
 
                         DbMessage(HashMap(res))
                     }
@@ -259,6 +302,7 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
 }
 
     override fun getUserById(userId: String, callback: (DomainUser) -> Unit) {
+        //this action is currently not supported by db
     }
 
     override fun getMultipleUsersById(
@@ -282,24 +326,24 @@ class EmployeeConnectDb (private val employeeConnectDbHelper: EmployeeConnectDbH
         callback: (signInSuccessful: Boolean) -> Unit
     ) {
         //this action is currently not supported by db
-}
+    }
 
     override fun logoutUser(callback: () -> Unit) {
         //this action is currently not supported by db
-}
+    }
 
     override fun verifyUserProfile(userId: String, callback: () -> Unit) {
-        
+        //this action is currently not supported by db
     }
 
     override fun makeUserAModerator(userId: String, callback: () -> Unit) {
-        
+        //this action is currently not supported by db
     }
 
     override fun checkIfUserIsVerified(
         email: String,
         callback: (emailExists: Boolean, emailVerified: Boolean) -> Unit
     ) {
-        
+        //this action is currently not supported by db
     }
 }

@@ -42,16 +42,14 @@ if GIF does not work, check out [here](https://media.giphy.com/media/ZFnwXWWuYVg
 
 # What I learned
  - Developed a user interface within the xml files using ConstraintLayout, RecyclerView, CardView, ScrollView, navigation menu, bottom navigation bar, chancing shapes of different kind of views etc.
- - Working with Firebase (Cloud Firestore, Firebase Storage, Firebase Authentication)
- - Working with image processing library [hdodenhof/CircleImageView](https://github.com/hdodenhof/CircleImageView)
-- Working with image processing library [Picasso](https://square.github.io/picasso/)
-- Working with library for complex RecyclerView layouts [Groupie](https://github.com/lisawray/groupie)
-- Working with Kotlin library [Anko](https://github.com/Kotlin/anko) library
-- Working with Bitmaps
-- Working with Kotlin coroutines (**concurrency**)
-
-# To Do list
-- Implement local database (**in progress**)
+ - Working with a Firebase (Cloud Firestore, Firebase Storage, Firebase Authentication)
+ - Working with an image processing library [hdodenhof/CircleImageView](https://github.com/hdodenhof/CircleImageView)
+- Working with an image processing library [Picasso](https://square.github.io/picasso/)
+- Working with a library for complex RecyclerView layouts [Groupie](https://github.com/lisawray/groupie)
+- Working with a Kotlin library [Anko](https://github.com/Kotlin/anko) library
+- Working with a Bitmaps
+- Working with a Kotlin coroutines (**concurrency**)
+- Working with a local database [Anko SQLite]
 
 # For App testing
 moderator: andreybreslav@hotmail.com, password: 12345678
